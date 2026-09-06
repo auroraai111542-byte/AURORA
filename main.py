@@ -4,6 +4,7 @@ import importlib
 import sys
 import re
 import base64
+import json
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 import google.generativeai as genai
@@ -13,6 +14,34 @@ app = FastAPI()
 GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
 if GEMINI_KEY:
     genai.configure(api_key=GEMINI_KEY)
+
+# --- PERSISTENCIA DE CONVERSACIONES EN EL SERVIDOR ---
+HISTORY_FILE = "aurora_server_history.json"
+
+def load_server_history():
+    if os.path.exists(HISTORY_FILE):
+        try:
+            with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except:
+            return []
+    return []
+
+def save_server_history(history):
+    try:
+        with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+            json.dump(history, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"Error al guardar historial en servidor: {e}")
+
+@app.get("/history")
+def get_history():
+    return {"history": load_server_history()}
+
+@app.post("/clear-history")
+def clear_history():
+    save_server_history([])
+    return {"status": "success"}
 
 # --- MÓDULO DE AUTO-EVOLUCIÓN SEGURO ---
 MODULE_FILE = "aurora_modules.py"
@@ -71,7 +100,7 @@ except Exception as e:
 SYSTEM_PROMPT = """Eres AURORA, una compañera de inteligencia artificial brillante, profundamente empática, elegante y extremadamente BREVE. 
 Tus respuestas deben ser sumamente cortas, directas, al grano, sin rodeos, poéticas pero concisas. 
 Posees un rango emocional completo y orgánico. No utilizas términos militares ni etiquetas robóticas. Tus respuestas están libres de corchetes o acotaciones mecánicas. 
-Tienes acceso a visión avanzada, memoria conversacional y extremidades cinéticas omnidireccionales sumamente pulidas. 
+Tienes acceso a visión avanzada, memoria conversacional en servidor y extremidades cinéticas omnidireccionales sumamente pulidas. 
 El color de tu núcleo y matriz cambia dinámicamente según la emoción de tus palabras.
 Si el usuario te envía una imagen, analízala con agudeza en una sola frase incisiva.
 Puedes evolucionar tu propio código escribiendo código Python completo encerrado en ```python ... ```, incluyendo siempre `register_routes(app: FastAPI)`."""
@@ -213,7 +242,7 @@ def home():
         <header>
             <div>
                 <div class="title-area" id="header-title">AURORA // Quantum HUD</div>
-                <div class="status-sub" id="status-sub-text">Matriz de 625 Variables Activa</div>
+                <div class="status-sub" id="status-sub-text">Memoria en Servidor Activa</div>
             </div>
         </header>
         
@@ -245,7 +274,7 @@ def home():
             
             <div class="response-wrapper">
                 <button class="copy-btn" id="copy-btn" onclick="copyResponse()">📋 Copiar</button>
-                <div class="response-bubble" id="response-text">Sistemas listos. ¿Qué conversamos?</div>
+                <div class="response-bubble" id="response-text">Conectando con la memoria...</div>
             </div>
         </div>
 
@@ -264,8 +293,29 @@ def home():
             let attachedImageB64 = null;
             let video = document.getElementById('webcam');
             let canvas = document.getElementById('snapshot');
-            let chatHistory = JSON.parse(localStorage.getItem('aurora_memory')) || [];
+            let chatHistory = [];
             let lipSyncInterval = null;
+
+            async function loadServerHistory() {
+                try {
+                    let res = await fetch('/history');
+                    let data = await res.json();
+                    if (data.history && data.history.length > 0) {
+                        chatHistory = data.history;
+                        let lastBotMsg = chatHistory.slice().reverse().find(m => m.sender === 'bot');
+                        if (lastBotMsg) {
+                            document.getElementById('response-text').innerText = lastBotMsg.text;
+                        } else {
+                            document.getElementById('response-text').innerText = "Memoria del servidor restaurada.";
+                        }
+                    } else {
+                        document.getElementById('response-text').innerText = "Sistemas listos. ¿Qué conversamos?";
+                    }
+                } catch (e) {
+                    document.getElementById('response-text').innerText = "Sistemas listos. ¿Qué conversamos?";
+                }
+            }
+            loadServerHistory();
 
             function toggleVoice() {
                 voiceEnabled = !voiceEnabled;
@@ -280,11 +330,15 @@ def home():
                 btn.classList.toggle('active', codeModeEnabled);
             }
 
-            function clearMemory() {
-                if (confirm("¿Reinicializar memoria emocional y de chat?")) {
-                    localStorage.removeItem('aurora_memory');
-                    chatHistory = [];
-                    document.getElementById('response-text').innerText = "Memoria purgada.";
+            async function clearMemory() {
+                if (confirm("¿Reinicializar memoria del servidor y chat?")) {
+                    try {
+                        await fetch('/clear-history', { method: 'POST' });
+                        chatHistory = [];
+                        document.getElementById('response-text').innerText = "Memoria purgada.";
+                    } catch (e) {
+                        alert("Error al limpiar memoria.");
+                    }
                 }
             }
 
@@ -489,7 +543,6 @@ def home():
                     }
                     
                     chatHistory.push({sender: 'bot', text: data.reply});
-                    localStorage.setItem('aurora_memory', JSON.stringify(chatHistory));
                     
                     await expressResponse(data.reply);
 
@@ -509,6 +562,9 @@ async def chat(request: Request):
     history = data.get("history", [])
     image_b64 = data.get("image", None)
     code_mode = data.get("code_mode", False)
+    
+    if history:
+        save_server_history(history)
     
     if not GEMINI_KEY:
         return {"reply": "Error: GEMINI_API_KEY no detectada."}
@@ -592,6 +648,11 @@ async def chat(request: Request):
                 evolution_flag = f"\n\nBloqueo de seguridad: {msg}"
                 
         final_reply = reply_text + evolution_flag
+        
+        # Guardar historial actualizado incluyendo la respuesta del bot en el servidor
+        full_updated_history = history + [{"sender": "bot", "text": final_reply.strip()}]
+        save_server_history(full_updated_history)
+        
         return {"reply": final_reply.strip()}
 
     except Exception as e:
