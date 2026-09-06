@@ -286,22 +286,17 @@ def home():
                 }
             }
 
-            // Detección de tono emocional para la interfaz y voz
             function getEmotionalProfile(text) {
                 let lower = text.toLowerCase();
-                // 1. Feliz / Entusiasmada
                 if (/(éxito|genial|perfecto|maravilloso|logrado|bien|jaja|¡)/.test(lower)) {
                     return { tone: 'happy', pitch: 1.3, rate: 1.2, primary: '#10b981', secondary: '#059669', eyeH: '12px', mouthW: '20px', mouthH: '8px' };
                 }
-                // 2. Pensando / Deliberada (cuando incluye hmm o análisis complejo)
                 if (/(hmm|analizando|espera|calculando|duda|proceso)/.test(lower)) {
                     return { tone: 'thinking', pitch: 0.8, rate: 0.85, primary: '#f59e0b', secondary: '#d97706', eyeH: '7px', mouthW: '10px', mouthH: '4px' };
                 }
-                // 3. Enojada / Alterada / Alerta
                 if (/(error|alerta|peligro|fallo|bloqueo|estúpido|no)/.test(lower)) {
                     return { tone: 'angry', pitch: 1.2, rate: 1.3, primary: '#ef4444', secondary: '#dc2626', eyeH: '6px', mouthW: '14px', mouthH: '3px' };
                 }
-                // 4. Seria / Neutral por defecto
                 return { tone: 'neutral', pitch: 1.0, rate: 1.05, primary: '#38bdf8', secondary: '#0284c7', eyeH: '10px', mouthW: '16px', mouthH: '5px' };
             }
 
@@ -372,8 +367,8 @@ def home():
                         let utterance = new SpeechSynthesisUtterance(sent);
                         if (selectedVoice) utterance.voice = selectedVoice;
                         utterance.lang = 'es-MX';
-                        utterance.pitch = sentenceProfile.pitch; // Tono dinámico configurable
-                        utterance.rate = sentenceProfile.rate;   // Velocidad dinámica (lenta al pensar, rápida/entusiasta al estar feliz)
+                        utterance.pitch = sentenceProfile.pitch;
+                        utterance.rate = sentenceProfile.rate;
                         utterance.onend = resolve;
                         utterance.onerror = resolve;
                         speechSynthesis.speak(utterance);
@@ -447,7 +442,7 @@ async def chat(request: Request):
         return {"reply": "Error: GEMINI_API_KEY no configurada."}
 
     try:
-        # Modelos actualizados y respaldos estables compatibles con la API actual
+        # Modelos oficiales y estables actualizados compatibles con la API
         models_to_try = [
             "gemini-2.0-flash",
             "gemini-1.5-flash",
