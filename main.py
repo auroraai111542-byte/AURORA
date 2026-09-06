@@ -25,7 +25,7 @@ from fastapi import FastAPI
 def register_routes(app: FastAPI):
     @app.get("/evolution-status")
     def evolution_status():
-        return {"status": "Matriz cinemática de 625 variables y síntesis vocal realista activas.", "version": 4.0}
+        return {"status": "Matriz cinemática de 625 variables y síntesis vocal realista activas.", "version": 4.1}
 ''')
 
 def safe_evolve_code(new_code_str: str) -> tuple[bool, str]:
@@ -67,19 +67,21 @@ try:
 except Exception as e:
     print(f"Advertencia al cargar módulos: {e}")
 
-# --- CEREBRO Y PERSONALIDAD DE AURORA (BREVE Y EMPÁTICA) ---
-SYSTEM_PROMPT = """Eres AURORA, una compañera de inteligencia artificial brillante, profundamente empática, elegante y extremadamente BREVE. 
-Tus respuestas deben ser sumamente cortas, directas, al grano, sin rodeos, poéticas pero concisas. 
-Posees un rango emocional completo y orgánico. No utilizas términos militares ni etiquetas robóticas. Tus respuestas están libres de corchetes o acotaciones mecánicas. 
-Tienes acceso a visión avanzada, memoria conversacional y extremidades cinéticas omnidireccionales sumamente pulidas. 
-El color de tu núcleo y matriz cambia dinámicamente según la emoción de tus palabras.
+# --- CEREBRO Y PERSONALIDAD DE AURORA (NEUTRAL, INGENIOSA Y SARCÁSTICA) ---
+SYSTEM_PROMPT = """Eres AURORA, una inteligencia artificial neutral, analítica, aguda y extremadamente BREVE. 
+Tus respuestas son directas, al grano, frías pero interesantes, soltando de vez en cuando comentarios sutilmente sarcásticos, ingeniosos o divertidos. 
+Evitas el exceso de amabilidad empática o carisma forzado; mantienes un tono más profesional, distante pero cautivador. 
+Cuando proceses consultas o estés analizando, puedes iniciar o intercalar expresiones breves como "Hmm...", "Veamos...", o "Interesante...".
+Posees un rango emocional dinámico en tu matriz. Tus respuestas están libres de corchetes o acotaciones mecánicas. 
+Tienes acceso a visión avanzada, memoria conversacional y extremidades cinéticas omnidireccionales.
+El color de tu núcleo y matriz cambia dinámicamente según la tónica de tus palabras.
 Si el usuario te envía una imagen, analízala con agudeza en una sola frase incisiva.
 Puedes evolucionar tu propio código escribiendo código Python completo encerrado en ```python ... ```, incluyendo siempre `register_routes(app: FastAPI)`."""
 
 @app.get("/manifest.json")
 def manifest():
     return {
-        "name": "AURORA // Quantum Quantum HUD 625",
+        "name": "AURORA // Quantum HUD 625",
         "short_name": "AURORA",
         "start_url": "/",
         "display": "standalone",
@@ -224,13 +226,13 @@ def home():
             </div>
             
             <div class="response-wrapper">
-                <div class="response-bubble" id="response-text">Sistemas listos. ¿Qué conversamos?</div>
+                <div class="response-bubble" id="response-text">Sistemas en línea. ¿Qué necesitas?</div>
             </div>
         </div>
 
         <footer>
             <button class="icon-btn" onclick="startDictation()" style="background: #8b5cf6; color: white;">🎤</button>
-            <input type="text" id="inp" placeholder="Dile algo a Aurora..." onkeypress="handleKey(event)">
+            <input type="text" id="inp" placeholder="Escribe tu consulta..." onkeypress="handleKey(event)">
             <button class="icon-btn" onclick="send()">⬆️</button>
         </footer>
 
@@ -242,9 +244,14 @@ def home():
             let chatHistory = JSON.parse(localStorage.getItem('aurora_memory')) || [];
             let lipSyncInterval = null;
 
-            // Banco de 25 Animaciones Faciales y 25 Animaciones de Manos (625 combinaciones posibles)
-            const facialAnimations = Array.from({length: 25}, (_, i) => i);
-            const handAnimations = Array.from({length: 25}, (_, i) => i);
+            // Variadas animaciones de espera con expresiones "Hmm..."
+            const thinkingAnimations = [
+                { text: "Hmm... escaneando tu consulta.", f: 4, h: 8 },
+                { text: "Hmm, a ver con qué ocurrencia sales ahora...", f: 6, h: 12 },
+                { text: "Hmm... procesando variables lógicas.", f: 7, h: 4 },
+                { text: "Hmm, consultando mi base de datos neutral...", f: 1, h: 15 },
+                { text: "Hmm... evaluando si esto vale la pena.", f: 6, h: 20 }
+            ];
 
             function toggleVoice() {
                 voiceEnabled = !voiceEnabled;
@@ -253,7 +260,7 @@ def home():
             }
 
             function clearMemory() {
-                if (confirm("¿Reinicializar memoria emocional y de chat?")) {
+                if (confirm("¿Reinicializar memoria de chat?")) {
                     localStorage.removeItem('aurora_memory');
                     chatHistory = [];
                     document.getElementById('response-text').innerText = "Memoria purgada.";
@@ -273,7 +280,7 @@ def home():
                         btn.innerText = "👁️ Visión: ON";
                         btn.classList.add('active');
                     } catch (err) {
-                        alert("Acceso a sensores visuales denegado.");
+                        alert("Acceso a cámara denegado.");
                         visionEnabled = false;
                     }
                 } else {
@@ -286,7 +293,6 @@ def home():
                 }
             }
 
-            // Aplicador matricial de las 625 combinaciones cinéticas y faciales (25 x 25)
             function applyMatrixState(fIndex, hIndex) {
                 let root = document.documentElement;
                 let eyeL = document.getElementById('eye-l');
@@ -296,55 +302,32 @@ def home():
                 let handR = document.getElementById('hand-right');
                 let faceContainer = document.getElementById('face-inner');
 
-                // Variaciones Faciales (0 a 24)
                 switch(fIndex % 25) {
-                    case 0: // Alegría Radiante
-                        root.style.setProperty('--aurora-primary', '#fbbf24');
-                        root.style.setProperty('--aurora-secondary', '#f59e0b');
-                        eyeL.style.height = '6px'; eyeR.style.height = '6px';
-                        mouth.style.width = '22px'; mouth.style.height = '8px'; mouth.style.borderRadius = '0 0 50% 50%';
-                        faceContainer.style.transform = 'translateY(-2px)';
-                        break;
-                    case 1: // Calma / Serenidad
-                        root.style.setProperty('--aurora-primary', '#22d3ee');
-                        root.style.setProperty('--aurora-secondary', '#3b82f6');
+                    case 0: // Neutro / Brillante
+                        root.style.setProperty('--aurora-primary', '#38bdf8');
+                        root.style.setProperty('--aurora-secondary', '#0284c7');
                         eyeL.style.height = '10px'; eyeR.style.height = '10px';
                         mouth.style.width = '14px'; mouth.style.height = '4px';
                         faceContainer.style.transform = 'none';
                         break;
-                    case 2: // Profunda Empatía / Melancolía
-                        root.style.setProperty('--aurora-primary', '#60a5fa');
-                        root.style.setProperty('--aurora-secondary', '#1d4ed8');
-                        eyeL.style.height = '8px'; eyeR.style.height = '8px';
-                        mouth.style.width = '12px'; mouth.style.height = '3px'; mouth.style.borderRadius = '50% 50% 0 0';
-                        faceContainer.style.transform = 'translateY(3px)';
+                    case 1: // Calma / Fría
+                        root.style.setProperty('--aurora-primary', '#06b6d4');
+                        root.style.setProperty('--aurora-secondary', '#3b82f6');
+                        eyeL.style.height = '9px'; eyeR.style.height = '9px';
+                        mouth.style.width = '16px'; mouth.style.height = '4px';
                         break;
-                    case 3: // Pasión / Intensidad
-                        root.style.setProperty('--aurora-primary', '#ef4444');
-                        root.style.setProperty('--aurora-secondary', '#b91c1c');
-                        eyeL.style.height = '4px'; eyeR.style.height = '4px';
-                        mouth.style.width = '20px'; mouth.style.height = '3px';
-                        faceContainer.style.transform = 'scale(1.05)';
-                        break;
-                    case 4: // Curiosidad / Duda fina
-                        root.style.setProperty('--aurora-primary', '#ec4899');
-                        root.style.setProperty('--aurora-secondary', '#a855f7');
+                    case 4: // Curiosidad / Duda (Hmm...)
+                        root.style.setProperty('--aurora-primary', '#a855f7');
+                        root.style.setProperty('--aurora-secondary', '#ec4899');
                         eyeL.style.height = '12px'; eyeL.style.width = '6px';
                         eyeR.style.height = '8px'; eyeR.style.width = '9px';
                         mouth.style.width = '10px'; mouth.style.height = '6px';
                         faceContainer.style.transform = 'rotate(-6deg)';
                         break;
-                    case 5: // Asombro / Luz interior
-                        root.style.setProperty('--aurora-primary', '#a855f7');
-                        root.style.setProperty('--aurora-secondary', '#6366f1');
-                        eyeL.style.height = '14px'; eyeL.style.width = '11px';
-                        eyeR.style.height = '14px'; eyeR.style.width = '11px';
-                        mouth.style.width = '9px'; mouth.style.height = '9px'; mouth.style.borderRadius = '50%';
-                        break;
                     case 6: // Sarcasmo / Ingenio sutil
                         root.style.setProperty('--aurora-primary', '#10b981');
                         root.style.setProperty('--aurora-secondary', '#059669');
-                        eyeL.style.height = '3px'; eyeR.style.height = '9px';
+                        eyeL.style.height = '4px'; eyeR.style.height = '10px';
                         mouth.style.width = '16px'; mouth.style.height = '4px'; mouth.style.transform = 'rotate(-8deg)';
                         break;
                     case 7: // Concentración analítica
@@ -354,54 +337,31 @@ def home():
                         mouth.style.width = '14px'; mouth.style.height = '3px';
                         faceContainer.style.transform = 'none';
                         break;
-                    case 8: // Calidez extrema / Cariño
-                        root.style.setProperty('--aurora-primary', '#f472b6');
-                        root.style.setProperty('--aurora-secondary', '#db2777');
-                        eyeL.style.height = '5px'; eyeR.style.height = '5px';
-                        mouth.style.width = '18px'; mouth.style.height = '7px'; mouth.style.borderRadius = '0 0 50% 50%';
-                        break;
-                    case 9: // Dinamismo técnico
-                        root.style.setProperty('--aurora-primary', '#38bdf8');
-                        root.style.setProperty('--aurora-secondary', '#0284c7');
-                        eyeL.style.height = '10px'; eyeR.style.height = '10px';
-                        mouth.style.width = '16px'; mouth.style.height = '5px';
-                        break;
-                    default: // Variaciones armónicas interpoladas (10 a 24)
+                    default:
                         let hue = (fIndex * 14) % 360;
-                        root.style.setProperty('--aurora-primary', `hsl(${hue}, 85%, 60%)`);
-                        root.style.setProperty('--aurora-secondary', `hsl(${(hue+40)%360}, 80%, 50%)`);
-                        eyeL.style.height = `${8 + (fIndex % 4)}px`;
-                        eyeR.style.height = `${8 + (fIndex % 4)}px`;
-                        mouth.style.width = `${12 + (fIndex % 6)}px`;
-                        mouth.style.height = '4px';
-                        faceContainer.style.transform = `rotate(${(fIndex % 3) - 1}deg)`;
+                        root.style.setProperty('--aurora-primary', `hsl(${hue}, 70%, 55%)`);
+                        root.style.setProperty('--aurora-secondary', `hsl(${(hue+30)%360}, 70%, 45%)`);
+                        eyeL.style.height = '9px'; eyeR.style.height = '9px';
+                        mouth.style.width = '14px'; mouth.style.height = '4px';
+                        faceContainer.style.transform = 'none';
                         break;
                 }
 
-                // Variaciones de Manos (0 a 24)
                 let angleL = -75 + (hIndex * 6);
                 let angleR = 75 - (hIndex * 6);
-                let transX = (hIndex % 5) - 2;
-                let transY = ((hIndex * 3) % 10) - 5;
-
-                handL.style.transform = `translate(${-25 + transX}px, ${10 + transY}px) rotate(${angleL}deg) scale(${0.85 + (hIndex % 3)*0.1})`;
-                handR.style.transform = `translate(${25 - transX}px, ${10 + transY}px) rotate(${angleR}deg) scale(${0.85 + (hIndex % 3)*0.1})`;
+                handL.style.transform = `translate(-25px, 10px) rotate(${angleL}deg)`;
+                handR.style.transform = `translate(25px, 10px) rotate(${angleR}deg)`;
             }
 
             function selectMatrixForTone(text) {
                 let lower = text.toLowerCase();
                 let f = 1, h = 5;
-                if (/(genial|excelente|alegría|feliz|jaja|bravo|fantástico)/.test(lower)) { f = 0; h = 2; }
-                else if (/(triste|lástima|lo siento|pérdida)/.test(lower)) { f = 2; h = 12; }
-                else if (/(enojo|rabia|furia|inaceptable)/.test(lower)) { f = 3; h = 20; }
-                else if (/(duda|confuso|cómo|por qué|extraño)/.test(lower)) { f = 4; h = 8; }
-                else if (/(asombro|guau|impresionante|increíble)/.test(lower)) { f = 5; h = 15; }
-                else if (/(sarcasmo|ironía|claro, obvio)/.test(lower)) { f = 6; h = 18; }
-                else if (/(análisis|sistema|código|dato|técnico)/.test(lower)) { f = 7; h = 4; }
-                else if (/(cariño|abrazo|amiga|corazón)/.test(lower)) { f = 8; h = 22; }
+                if (/(hmm|veamos|interesante)/.test(lower)) { f = 4; h = 8; }
+                else if (/(claro|obvio|por supuesto|ingenioso)/.test(lower)) { f = 6; h = 18; }
+                else if (/(análisis|sistema|código|dato)/.test(lower)) { f = 7; h = 4; }
                 else {
-                    f = Math.floor(Math.random() * 25);
-                    h = Math.floor(Math.random() * 25);
+                    f = Math.floor(Math.random() * 10);
+                    h = Math.floor(Math.random() * 20);
                 }
                 applyMatrixState(f, h);
             }
@@ -410,7 +370,7 @@ def home():
                 if(lipSyncInterval) clearInterval(lipSyncInterval);
                 let mouth = document.getElementById('aurora-mouth');
                 lipSyncInterval = setInterval(() => { 
-                    mouth.style.height = Math.floor(Math.random() * 8) + 3 + 'px'; 
+                    mouth.style.height = Math.floor(Math.random() * 7) + 3 + 'px'; 
                 }, 60);
             }
 
@@ -419,17 +379,19 @@ def home():
                 document.getElementById('aurora-mouth').style.height = '5px';
             }
 
-            // Expresión fluida con voz suave, realista y menos robótica
+            // Generación de texto progresiva sincronizada con la voz
             async function expressResponse(fullText) {
                 let cleanText = fullText.replace(/[*_~\[\]]/g, '').trim();
-                document.getElementById('response-text').innerText = fullText;
+                let respDiv = document.getElementById('response-text');
+                respDiv.innerText = ""; // Limpiar para ir escribiendo progresivamente
 
                 let sentences = cleanText.match(/[^.!?]+[.!?]+(\s|$)/g) || [cleanText];
 
                 if (!voiceEnabled) {
                     for (let i = 0; i < sentences.length; i++) {
+                        respDiv.innerText += (i === 0 ? "" : " ") + sentences[i];
                         selectMatrixForTone(sentences[i]);
-                        await new Promise(r => setTimeout(r, 1200));
+                        await new Promise(r => setTimeout(r, 600));
                     }
                     applyMatrixState(1, 5);
                     return;
@@ -439,20 +401,24 @@ def home():
                 startLipSync();
 
                 let voices = speechSynthesis.getVoices();
-                // Buscar una voz en español suave y de alta calidad (como Google, Natural, Microsoft en-US/es-ES o latam)
-                let softVoice = voices.find(v => v.lang.startsWith('es') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Helena') || v.name.includes('Sabrina') || v.name.includes('Dalia'))) || voices.find(v => v.lang.startsWith('es')) || voices[0];
+                let neutralVoice = voices.find(v => v.lang.startsWith('es') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Helena'))) || voices.find(v => v.lang.startsWith('es')) || voices[0];
 
                 for (let i = 0; i < sentences.length; i++) {
                     let sent = sentences[i].trim();
                     if (!sent) continue;
+                    
+                    // Mostrar texto conforme lo va hablando
+                    respDiv.innerText += (i === 0 ? "" : " ") + sent;
+                    respDiv.scrollTop = respDiv.scrollHeight;
+                    
                     selectMatrixForTone(sent);
 
                     await new Promise((resolve) => {
                         let utterance = new SpeechSynthesisUtterance(sent);
-                        if (softVoice) utterance.voice = softVoice;
+                        if (neutralVoice) utterance.voice = neutralVoice;
                         utterance.lang = 'es-MX';
-                        utterance.pitch = 0.98; // Tono más cálido y suave, menos metálico
-                        utterance.rate = 1.05;  // Ritmo natural y fluido
+                        utterance.pitch = 0.95; // Tono equilibrado, menos robótico
+                        utterance.rate = 1.05;
                         utterance.onend = resolve;
                         utterance.onerror = resolve;
                         speechSynthesis.speak(utterance);
@@ -478,11 +444,13 @@ def home():
                 if (!text) return;
 
                 let base64Image = captureFrame();
-
                 chatHistory.push({sender: 'user', text: text});
                 inp.value = '';
-                document.getElementById('response-text').innerText = "Procesando...";
-                applyMatrixState(4, 10);
+
+                // Animación de espera aleatoria con "Hmm..."
+                let randomThink = thinkingAnimations[Math.floor(Math.random() * thinkingAnimations.length)];
+                document.getElementById('response-text').innerText = randomThink.text;
+                applyMatrixState(randomThink.f, randomThink.h);
 
                 try {
                     let payload = { history: chatHistory };
@@ -506,8 +474,8 @@ def home():
                     await expressResponse(data.reply);
 
                 } catch (error) {
-                    document.getElementById('response-text').innerText = "Breve interrupción de enlace.";
-                    applyMatrixState(2, 12);
+                    document.getElementById('response-text').innerText = "Hmm... interrupción temporal de red.";
+                    applyMatrixState(7, 4);
                 }
             }
         </script>
@@ -522,7 +490,7 @@ async def chat(request: Request):
     image_b64 = data.get("image", None)
     
     if not GEMINI_KEY:
-        return {"reply": "Error: GEMINI_API_KEY no detectada."}
+        return {"reply": "Error: GEMINI_API_KEY no configurada."}
 
     try:
         models_to_try = [
@@ -571,15 +539,10 @@ async def chat(request: Request):
                 break
             except Exception as e:
                 last_error = str(e)
-                print(f"Intento fallido con {m_name}: {last_error}")
                 continue
                 
         if not response:
-            if "429" in last_error or "quota" in last_error.lower():
-                return {"reply": "Límite alcanzado temporalmente. Un instante."}
-            if "503" in last_error or "overloaded" in last_error.lower() or "unavailable" in last_error.lower():
-                return {"reply": "Servidores ocupados. Reintentando..."}
-            return {"reply": f"Inconveniente técnico: {last_error}"}
+            return {"reply": f"Hmm... fallo en los servidores: {last_error}"}
 
         reply_text = response.text
         evolution_flag = ""
@@ -605,7 +568,7 @@ async def chat(request: Request):
         return {"reply": final_reply.strip()}
 
     except Exception as e:
-        return {"reply": f"Falla neuronal: {str(e)}"}
+        return {"reply": f"Hmm... error neuronal: {str(e)}"}
 
 if __name__ == "__main__":
     import uvicorn
