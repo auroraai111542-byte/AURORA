@@ -11,20 +11,6 @@ if GEMINI_KEY:
 
 SYSTEM_PROMPT = "Eres Aurora, una asistente de IA super inteligente, carismática, con un excelente sentido del humor y muy expresiva. Responde de forma cercana y divertida."
 
-def get_active_model_name():
-    """Obtiene dinámicamente un modelo activo disponible en tu cuenta de Gemini."""
-    try:
-        models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
-        if models:
-            # Seleccionar un modelo compatible disponible
-            for m in models:
-                if 'flash' in m or 'pro' in m:
-                    return m
-            return models[0]
-    except Exception as e:
-        print(f"Error al listar modelos: {e}")
-    return "gemini-1.5-flash"
-
 @app.get("/", response_class=HTMLResponse)
 def home():
     return """
@@ -88,8 +74,7 @@ async def chat(request: Request):
         return {"reply": "Oye, recuerda configurar GEMINI_API_KEY en las variables del servidor para que pueda pensar."}
 
     try:
-        model_name = get_active_model_name()
-        model = genai.GenerativeModel(model_name)
+        model = genai.GenerativeModel('gemini-3.6-flash')
         response = model.generate_content(f"{SYSTEM_PROMPT}\n\nUsuario: {user_msg}")
         return {"reply": response.text}
     except Exception as e:
