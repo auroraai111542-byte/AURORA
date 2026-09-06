@@ -442,14 +442,8 @@ async def chat(request: Request):
         return {"reply": "Error: GEMINI_API_KEY no configurada."}
 
     try:
-        models_to_try = [
-            "gemini-3.8-flash",
-            "gemini-3.7-flash",
-            "gemini-3.6-flash",
-            "gemini-1.5-flash"
-        ]
-        response = None
-        last_error = ""
+        # Único modelo oficial configurado
+        model_name = "gemini-1.5-flash"
         
         recent_history = history[-10:] if len(history) > 10 else history
         
@@ -474,18 +468,9 @@ async def chat(request: Request):
                 "data": image_b64
             })
 
-        for m_name in models_to_try:
-            try:
-                model = genai.GenerativeModel(model_name=m_name, system_instruction=SYSTEM_PROMPT)
-                chat_session = model.start_chat(history=gemini_history)
-                response = chat_session.send_message(message_parts)
-                break
-            except Exception as e:
-                last_error = str(e)
-                continue
-                
-        if not response:
-            return {"reply": f"Hmm... fallo en los servidores: {last_error}"}
+        model = genai.GenerativeModel(model_name=model_name, system_instruction=SYSTEM_PROMPT)
+        chat_session = model.start_chat(history=gemini_history)
+        response = chat_session.send_message(message_parts)
 
         reply_text = response.text
         evolution_flag = ""
