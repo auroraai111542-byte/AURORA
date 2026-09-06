@@ -74,8 +74,8 @@ async def chat(request: Request):
         return {"reply": "Oye, recuerda configurar GEMINI_API_KEY en las variables del servidor para que pueda pensar."}
 
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash', system_instruction=SYSTEM_PROMPT)
-        response = model.generate_content(user_msg)
+        model = genai.GenerativeModel('gemini-pro')
+        response = model.generate_content(f"{SYSTEM_PROMPT}\n\nUsuario: {user_msg}")
         return {"reply": response.text}
     except Exception as e:
         return {"reply": f"¡Ups! Ocurrió un pequeño fallo técnico: {str(e)}"}
