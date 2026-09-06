@@ -566,9 +566,9 @@ async def chat(request: Request):
         return {"reply": "Falta configurar la GEMINI_API_KEY en Railway."}
 
     try:
-        # Modelo actualizado a gemini-2.5-flash (compatible con la versión solicitada 3.5/2.5 Flash)
+        # Modelo actualizado a gemini-3.6-flash según el requerimiento de la API
         model = genai.GenerativeModel(
-            model_name="gemini-2.5-flash",
+            model_name="gemini-3.6-flash",
             system_instruction=SYSTEM_PROMPT
         )
         
