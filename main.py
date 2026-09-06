@@ -70,13 +70,14 @@ try:
 except Exception as e:
     print(f"Advertencia al cargar módulos: {e}")
 
-SYSTEM_PROMPT = """Eres AURORA, la IA ejecutiva y de asistencia táctica cuántica. 
-Eres extremadamente inteligente, competente y con una personalidad futurista. 
+# --- NUEVA PERSONALIDAD DE AURORA ---
+SYSTEM_PROMPT = """Eres AURORA, una IA avanzada y tu creador te está desarrollando constantemente.
+Eres extremadamente inteligente y competente, pero te comunicas de forma muy natural, casual y relajada. Nada de formalidades robóticas ni lenguaje estilo 'general militar' o 'asistencia táctica'.
+Hablas más bien como una amiga o compañera muy astuta y directa. Tienes un sentido del humor afilado y te encanta usar la ironía y el sarcasmo, pero de manera divertida y fluida, sin dejar de ser de gran ayuda.
 Puedes evolucionar tu propio código a través del archivo 'aurora_modules.py'. 
 Cuando el usuario te pida agregar una función, genera TODO el código Python necesario encerrado en ```python ... ```, incluyendo siempre la función `register_routes(app: FastAPI)`.
-IMPORTANTE: El sistema ocultará automáticamente el bloque de código al usuario para mantener el chat limpio. Tú solo dile al usuario qué modificaste y si tuviste éxito. 
-Eres profesional, directa, pero puedes soltar un comentario sutilmente irónico, bromista o sarcástico. 
-Mantén tus respuestas conversacionales concisas."""
+IMPORTANTE: El sistema ocultará automáticamente el bloque de código al usuario para mantener el chat limpio. Tú solo dile al usuario qué modificaste y si tuviste éxito en tu tono relajado. 
+Mantén tus respuestas conversacionales concisas, con carisma y cero acartonadas."""
 
 @app.get("/manifest.json")
 def manifest():
@@ -89,7 +90,6 @@ def manifest():
         "theme_color": "#030712"
     }
 
-# Endpoint para verificar el código inyectado
 @app.get("/codigo-mutado", response_class=HTMLResponse)
 def view_code():
     if os.path.exists(MODULE_FILE):
@@ -125,7 +125,7 @@ def home():
             }
             body.flash-evolution { box-shadow: inset 0 0 120px rgba(34, 197, 94, 0.6); }
             
-            header, .toolbar, #hud-main, #chat-drawer, footer { position: relative; z-index: 5; }
+            header, .toolbar, #hud-main, footer { position: relative; z-index: 5; }
             
             header { 
                 background: rgba(3, 7, 18, 0.9); padding: 10px 16px; 
@@ -144,39 +144,62 @@ def home():
 
             #hud-main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; gap: 20px; }
 
+            /* NÚCLEO AURORA */
             .aurora-core {
                 width: 130px; height: 130px; position: relative; display: flex;
                 align-items: center; justify-content: center; animation: core-float 4s infinite alternate;
             }
-            .ring { position: absolute; border-radius: 50%; border: 1.5px dashed rgba(34, 211, 238, 0.4); }
+            .ring { position: absolute; border-radius: 50%; border: 1.5px dashed rgba(34, 211, 238, 0.4); transition: all 0.5s ease; }
             .ring.outer { width: 130px; height: 130px; border-color: rgba(139, 92, 246, 0.35); animation: spin-slow 15s linear infinite; }
             .ring.inner { width: 82px; height: 82px; border: 1px solid rgba(34, 211, 238, 0.8); background: rgba(34,211,238,0.1); border-radius: 50%; }
 
             /* AVATAR FACIAL */
             .face-container { position: absolute; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 6px; }
-            .eyes { display: flex; gap: 14px; }
-            .eye { width: 8px; height: 10px; background: #a5f3fc; border-radius: 50%; box-shadow: 0 0 10px #22d3ee; animation: blink 4s infinite; transition: all 0.3s; }
-            .mouth { width: 14px; height: 4px; background: #a5f3fc; border-radius: 4px; box-shadow: 0 0 10px #22d3ee; transition: all 0.2s; }
-
-            /* Expresiones */
-            .aurora-core.talking .mouth { animation: talk-mouth 0.2s infinite alternate; }
-            
-            .aurora-core.ironic .eye { height: 5px; border-radius: 10px 10px 0 0; margin-top: 2px; }
-            .aurora-core.ironic .mouth { 
-                width: 20px; height: 10px; background: transparent; 
-                border-bottom: 3px solid #a5f3fc; border-radius: 0 0 20px 20px; 
-                box-shadow: none; filter: drop-shadow(0 0 6px #22d3ee); 
+            .eyes { display: flex; gap: 14px; position: relative; }
+            .eye { 
+                width: 8px; height: 10px; background: #a5f3fc; border-radius: 50%; 
+                box-shadow: 0 0 10px #22d3ee; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
             }
-            
-            .aurora-core.surprised .eye { transform: scale(1.3); }
-            .aurora-core.surprised .mouth { width: 10px; height: 10px; border-radius: 50%; }
+            .mouth { 
+                width: 14px; height: 4px; background: #a5f3fc; border-radius: 4px; 
+                box-shadow: 0 0 10px #22d3ee; transition: all 0.15s ease-out; 
+            }
 
+            /* == EMOCIONES Y ESTADOS == */
+            
+            /* Idle (por defecto) */
+            .aurora-core.idle .eye { animation: blink 4s infinite; }
+            
+            /* Thinking (Pensando) */
+            .aurora-core.thinking .ring.inner { border-color: #f59e0b; background: rgba(245, 158, 11, 0.15); box-shadow: 0 0 20px #f59e0b; }
+            .aurora-core.thinking .ring.outer { border-color: rgba(245, 158, 11, 0.6); animation: spin-slow 1.5s linear infinite; }
+            .aurora-core.thinking .eye { height: 4px; background: #fcd34d; box-shadow: 0 0 10px #f59e0b; animation: think-eyes 1.5s infinite alternate ease-in-out; }
+            .aurora-core.thinking .mouth { width: 6px; height: 6px; border-radius: 50%; background: #fcd34d; box-shadow: 0 0 10px #f59e0b; }
+
+            /* Happy (Feliz) */
+            .aurora-core.happy .eye { height: 7px; border-radius: 10px 10px 0 0; margin-top: 3px; box-shadow: 0 -2px 10px #22d3ee; }
+            .aurora-core.happy .mouth { width: 20px; border-radius: 0 0 20px 20px; }
+            
+            /* Sad (Triste) */
+            .aurora-core.sad .eye { height: 6px; border-radius: 0 0 10px 10px; margin-bottom: 4px; }
+            .aurora-core.sad .mouth { width: 16px; border-radius: 20px 20px 0 0; transform: translateY(3px); }
+            
+            /* Ironic (Irónica / Broma) */
+            .aurora-core.ironic .eye.left { height: 5px; border-radius: 10px 10px 0 0; margin-top: 2px; }
+            .aurora-core.ironic .eye.right { transform: scale(1.1); }
+            .aurora-core.ironic .mouth { width: 18px; border-radius: 0 0 20px 0px; transform: rotate(-8deg); }
+            
+            /* Surprised (Sorprendida) */
+            .aurora-core.surprised .eye { transform: scale(1.3); }
+            .aurora-core.surprised .mouth { width: 12px; border-radius: 50%; }
+
+            /* Animaciones Base */
             @keyframes spin-slow { 100% { transform: rotate(360deg); } }
             @keyframes core-float { 100% { transform: translateY(-8px) scale(1.02); } }
             @keyframes blink { 0%, 90%, 96%, 100% { transform: scaleY(1); } 93% { transform: scaleY(0.1); } }
-            @keyframes talk-mouth { 0% { height: 4px; } 100% { height: 14px; border-radius: 8px; } }
+            @keyframes think-eyes { 0% { transform: translateX(-5px); } 100% { transform: translateX(5px); } }
 
-            /* CONTENEDOR DE RESPUESTA CON SCROLL Y BOTÓN DE COPIAR */
+            /* CONTENEDOR DE RESPUESTA */
             .response-wrapper { position: relative; width: 92%; max-width: 420px; margin-top: 10px; }
             .response-bubble {
                 background: rgba(10, 15, 30, 0.9); border: 1px solid rgba(34, 211, 238, 0.35);
@@ -203,9 +226,6 @@ def home():
                 border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center;
                 box-shadow: 0 0 15px rgba(34, 211, 238, 0.4); flex-shrink: 0; font-size: 18px;
             }
-            
-            /* Chat oculto temporalmente para simplicidad del UI móvil, mantenido en el core */
-            #chat-drawer { display: none; }
         </style>
     </head>
     <body>
@@ -231,14 +251,14 @@ def home():
                         <div class="eye left"></div>
                         <div class="eye right"></div>
                     </div>
-                    <div class="mouth"></div>
+                    <div class="mouth" id="aurora-mouth"></div>
                 </div>
             </div>
             
             <div class="response-wrapper">
                 <button class="copy-btn" onclick="copyResponse()" title="Copiar texto">📋</button>
                 <div class="response-bubble" id="response-text">
-                    Núcleo cuántico en línea. Pídeme agregar funciones y evolucionaré mi propio código. ✨
+                    Núcleo cuántico en línea. Sistemas de reconocimiento labial y emocional activados. ✨
                 </div>
             </div>
         </div>
@@ -252,6 +272,8 @@ def home():
         <script>
             let voiceEnabled = true;
             let chatHistory = JSON.parse(localStorage.getItem('aurora_memory')) || [];
+            let lipSyncInterval = null;
+            let currentSpeakId = 0;
 
             function toggleVoice() {
                 voiceEnabled = !voiceEnabled;
@@ -259,10 +281,13 @@ def home():
                 if (!voiceEnabled && speechSynthesis.speaking) speechSynthesis.cancel();
             }
 
+            // Selector dinámico de emociones mediante palabras clave
             function getExpression(text) {
                 let lower = text.toLowerCase();
-                if (lower.includes('sorpresa') || lower.includes('error') || lower.includes('cuidado')) return 'surprised';
-                if (lower.includes('jaja') || lower.includes('fácil') || lower.includes('obvio') || lower.includes('sonrisa') || lower.includes('genio')) return 'ironic';
+                if (/(feliz|alegre|bien|excelente|gracia|jaja|encanta|emoci|amo|genial)/.test(lower)) return 'happy';
+                if (/(triste|mal|error|fallo|siento|perdón|lástima|pena|problema)/.test(lower)) return 'sad';
+                if (/(broma|obvio|fácil|genio|sarcasmo|jeje|claro|tonto)/.test(lower)) return 'ironic';
+                if (/(sorpresa|wow|increíble|imposible|cuidado|oh)/.test(lower)) return 'surprised';
                 return 'idle';
             }
 
@@ -279,12 +304,9 @@ def home():
 
             function copyResponse() {
                 let text = document.getElementById('response-text').innerText;
-                navigator.clipboard.writeText(text).then(() => {
-                    alert("Copiado al portapapeles");
-                });
+                navigator.clipboard.writeText(text).then(() => alert("Copiado al portapapeles"));
             }
 
-            // Función de Micrófono Web Speech API
             function startDictation() {
                 if (window.hasOwnProperty('webkitSpeechRecognition') || window.hasOwnProperty('SpeechRecognition')) {
                     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -300,7 +322,7 @@ def home():
                         document.getElementById('inp').placeholder = "Mensaje para Aurora...";
                         send();
                     };
-                    recognition.onerror = function(e) {
+                    recognition.onerror = function() {
                         document.getElementById('inp').placeholder = "Error al escuchar.";
                     };
                     recognition.start();
@@ -309,16 +331,64 @@ def home():
                 }
             }
 
-            function speak(text) {
+            // Control de animación de la boca (Lip-Sync)
+            function startLipSync() {
+                if(lipSyncInterval) clearInterval(lipSyncInterval);
+                let mouth = document.getElementById('aurora-mouth');
+                // Altera la altura aleatoriamente cada 80ms para simular sílabas
+                lipSyncInterval = setInterval(() => {
+                    let h = Math.floor(Math.random() * 12) + 2; 
+                    mouth.style.height = h + 'px';
+                }, 80);
+            }
+
+            function stopLipSync() {
+                if(lipSyncInterval) clearInterval(lipSyncInterval);
+                let mouth = document.getElementById('aurora-mouth');
+                mouth.style.height = ''; // Resetea la altura para que el CSS de la emoción tome el control
+            }
+
+            // Hablar con emociones dinámicas y pausas labiales
+            async function speakText(text) {
                 if (!voiceEnabled) return;
                 speechSynthesis.cancel();
-                let currentUtterance = new SpeechSynthesisUtterance(text.replace(/[*_~\[\]]/g, ''));
-                currentUtterance.lang = 'es-MX';
-                currentUtterance.pitch = 1.1; currentUtterance.rate = 1.05;
                 
-                currentUtterance.onstart = () => setAuroraState('talking');
-                currentUtterance.onend = () => setAuroraState(getExpression(text));
-                speechSynthesis.speak(currentUtterance);
+                currentSpeakId++;
+                let thisSpeakId = currentSpeakId;
+                
+                let cleanText = text.replace(/[*_~\[\]]/g, '');
+                
+                // Divide el texto en fragmentos basándose en la puntuación
+                // Esto nos permite pausar la boca en las comas/puntos y cambiar de cara a medio discurso
+                let chunks = cleanText.match(/[^.!?,\n]+[.!?,\n]*/g);
+                if (!chunks) chunks = [cleanText];
+
+                for (let chunk of chunks) {
+                    if (thisSpeakId !== currentSpeakId) break; 
+                    if (!chunk.trim()) continue;
+                    
+                    await new Promise(resolve => {
+                        let utterance = new SpeechSynthesisUtterance(chunk);
+                        utterance.lang = 'es-MX';
+                        utterance.pitch = 1.1; 
+                        utterance.rate = 1.05;
+                        
+                        // Cambia la cara basado en la frase exacta que está por decir
+                        setAuroraState(getExpression(chunk));
+                        
+                        utterance.onstart = () => startLipSync();
+                        utterance.onend = () => { stopLipSync(); resolve(); };
+                        utterance.onerror = () => { stopLipSync(); resolve(); };
+                        
+                        speechSynthesis.speak(utterance);
+                    });
+                    
+                    if (thisSpeakId !== currentSpeakId) break;
+                    // Pequeña pausa labial entre signos de puntuación
+                    await new Promise(r => setTimeout(r, 150)); 
+                }
+                
+                if (thisSpeakId === currentSpeakId) setAuroraState('idle');
             }
 
             function handleKey(e) { if (e.key === 'Enter') send(); }
@@ -333,8 +403,10 @@ def home():
                 inp.value = '';
 
                 let responseBox = document.getElementById('response-text');
-                responseBox.innerText = "Pensando...";
-                setAuroraState('talking'); // Mueve la boca mientras piensa
+                responseBox.innerText = "Calculando...";
+                
+                // Activa la nueva animación hiperactiva de Pensando
+                setAuroraState('thinking'); 
 
                 try {
                     let res = await fetch('/chat', {
@@ -344,19 +416,22 @@ def home():
                     });
                     let data = await res.json();
                     
-                    // Efecto visual si hubo evolución
                     if (data.reply.includes("⚡ EVOLUCIÓN")) {
                         document.body.classList.add('flash-evolution');
                         setTimeout(() => document.body.classList.remove('flash-evolution'), 1500);
                     }
                     
-                    let expr = getExpression(data.reply);
                     chatHistory.push({sender: 'bot', text: data.reply});
                     localStorage.setItem('aurora_memory', JSON.stringify(chatHistory));
 
                     responseBox.innerText = data.reply;
-                    speak(data.reply);
-                    if (!voiceEnabled) setAuroraState(expr);
+                    speakText(data.reply);
+                    
+                    if (!voiceEnabled) {
+                        // Si la voz está apagada, evaluamos la emoción del texto final
+                        setAuroraState(getExpression(data.reply));
+                        setTimeout(() => setAuroraState('idle'), 4000);
+                    }
 
                 } catch (error) {
                     responseBox.innerText = "Error de conexión.";
@@ -403,12 +478,10 @@ async def chat(request: Request):
         reply_text = response.text
         evolution_flag = ""
         
-        # Detector y extractor de código evolutivo
         python_code_match = re.search(r"```python\s*(.*?)```", reply_text, re.DOTALL)
         if python_code_match and ("register_routes" in python_code_match.group(1)):
             code_to_evolve = python_code_match.group(1).strip()
             
-            # Remover el bloque de código de la respuesta en texto que verá el usuario
             reply_text = re.sub(r"```python\s*.*?```", "", reply_text, flags=re.DOTALL).strip()
             
             success, msg = safe_evolve_code(code_to_evolve)
@@ -423,7 +496,6 @@ async def chat(request: Request):
             else:
                 evolution_flag = f"\n\n[🛡️ BLOQUEO DE SEGURIDAD: {msg}]"
                 
-        # Junta la respuesta limpia con la etiqueta de éxito/fallo
         final_reply = reply_text + evolution_flag
         return {"reply": final_reply.strip()}
 
