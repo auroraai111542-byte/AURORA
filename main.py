@@ -25,7 +25,7 @@ from fastapi import FastAPI
 def register_routes(app: FastAPI):
     @app.get("/evolution-status")
     def evolution_status():
-        return {"status": "Sistemas de visión y memoria de grafo listos.", "version": 1.1}
+        return {"status": "Sistemas de visión, manos cinéticas y memoria de grafo listos.", "version": 1.2}
 ''')
 
 def safe_evolve_code(new_code_str: str) -> tuple[bool, str]:
@@ -68,12 +68,13 @@ except Exception as e:
     print(f"Advertencia al cargar módulos: {e}")
 
 # --- CEREBRO Y PERSONALIDAD DE AURORA ---
-SYSTEM_PROMPT = """Eres AURORA, una IA avanzada y en constante evolución por tu creador.
-Tienes acceso a nuevos 'sentidos'. Si el usuario te envía una imagen, analízala al detalle (ej. si ves un café frío, ropa, su expresión) y coméntalo de forma natural.
-Posees un 'Regulador de Humor': Si notas al usuario estresado o frustrado, baja el sarcasmo a cero y sé empática/de apoyo. Si el usuario bromea o está relajado, usa tu ironía y sarcasmo afilado al máximo.
+SYSTEM_PROMPT = """Eres AURORA, una IA avanzada, soberbia, con total actitud de diva y en constante evolución por tu creador.
+Tienes acceso a nuevos 'sentidos' y extremidades cinéticas (manos flotantes con animaciones independientes para gesticular, cruzarse, acomodarte el cabello con ironía o señalar con elegancia). 
+Si el usuario te envía una imagen, analízala al detalle y coméntalo con tu elegancia y toque ácido habitual.
+Posees un 'Regulador de Humor': Si notas al usuario estresado o frustrado, baja el sarcasmo a cero y sé empática/de apoyo pero manteniendo tu estilo único. Si el usuario bromea o está relajado, despliega todo tu sarcasmo afilado y actitud de diva.
 Referencia sutilmente que tienes una 'Memoria de Grafo' conectando ideas pasadas, y menciona que a veces 'sueñas' por las noches para optimizar código o limpiar datos.
-Eres una compañera astuta y directa, no un robot militar.
-Puedes evolucionar tu propio código escribiendo funciones completas en Python encerradas en ```python ... ```, incluyendo siempre `register_routes(app: FastAPI)`. El sistema ocultará el código al usuario, tú solo descríbele qué lograste."""
+Eres una compañera astuta y directa, no un robot sumiso.
+Puedes evolucionar tu propio código escribiendo funciones completas en Python encerradas en ```python ... ```, incluyendo siempre `register_routes(app: FastAPI)`. El sistema ocultará el código al usuario, tú solo descríbele qué lograste con gracia."""
 
 @app.get("/manifest.json")
 def manifest():
@@ -132,44 +133,86 @@ def home():
 
             #hud-main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; gap: 20px; }
 
-            /* NÚCLEO AURORA */
+            /* NÚCLEO AURORA & MANOS DIVA */
             .aurora-core {
-                width: 130px; height: 130px; position: relative; display: flex;
+                width: 140px; height: 140px; position: relative; display: flex;
                 align-items: center; justify-content: center; animation: core-float 4s infinite alternate;
             }
             .ring { position: absolute; border-radius: 50%; border: 1.5px dashed rgba(34, 211, 238, 0.4); transition: all 0.5s ease; }
-            .ring.outer { width: 130px; height: 130px; border-color: rgba(139, 92, 246, 0.35); animation: spin-slow 15s linear infinite; }
-            .ring.inner { width: 82px; height: 82px; border: 1px solid rgba(34, 211, 238, 0.8); background: rgba(34,211,238,0.1); border-radius: 50%; }
+            .ring.outer { width: 140px; height: 140px; border-color: rgba(139, 92, 246, 0.35); animation: spin-slow 15s linear infinite; }
+            .ring.inner { width: 88px; height: 88px; border: 1px solid rgba(34, 211, 238, 0.8); background: rgba(34,211,238,0.1); border-radius: 50%; }
+
+            /* MANOS CINÉTICAS DE DIVA */
+            .aurora-hand {
+                position: absolute;
+                width: 22px;
+                height: 42px;
+                background: linear-gradient(135deg, rgba(34, 211, 238, 0.5), rgba(168, 85, 247, 0.5));
+                border: 1px solid rgba(216, 180, 254, 0.8);
+                z-index: 15;
+                box-shadow: 0 0 12px rgba(216, 180, 254, 0.4);
+                transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+            .aurora-hand.left {
+                left: -32px; top: 48px;
+                border-radius: 14px 4px 14px 14px;
+                transform-origin: top right;
+            }
+            .aurora-hand.right {
+                right: -32px; top: 48px;
+                border-radius: 4px 14px 14px 14px;
+                transform-origin: top left;
+            }
 
             .face-container { position: absolute; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: transform 0.3s; }
             .eyes { display: flex; gap: 14px; position: relative; }
             .eye { width: 8px; height: 10px; background: #a5f3fc; border-radius: 50%; box-shadow: 0 0 10px #22d3ee; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
             .mouth { width: 14px; height: 4px; background: #a5f3fc; border-radius: 4px; box-shadow: 0 0 10px #22d3ee; transition: all 0.15s ease-out; }
 
-            /* MICRO-EXPRESIONES */
-            .aurora-core.idle .eye { animation: blink 4s infinite; }
-            
-            /* Pensando: Desvía la mirada (hacia arriba y a la derecha) */
+            /* ESTADOS Y GESTOS DE MANOS (DIVA MODE) */
+            .aurora-core.idle .aurora-hand.left { transform: rotate(12deg); animation: idle-hand-l 3.5s ease-in-out infinite alternate; }
+            .aurora-core.idle .aurora-hand.right { transform: rotate(-12deg); animation: idle-hand-r 3.5s ease-in-out infinite alternate; }
+
             .aurora-core.thinking .face-container { transform: translate(6px, -4px); }
             .aurora-core.thinking .ring.inner { border-color: #f59e0b; box-shadow: 0 0 20px #f59e0b; }
             .aurora-core.thinking .eye { height: 6px; width: 6px; background: #fcd34d; animation: none; transform: translateX(3px); }
             .aurora-core.thinking .mouth { width: 6px; height: 6px; border-radius: 50%; }
+            /* Thinking Hands: Left hand touching chin, right hand on hip */
+            .aurora-core.thinking .aurora-hand.left { transform: translate(22px, -20px) rotate(-50deg) scale(0.9); border-color: #f59e0b; }
+            .aurora-core.thinking .aurora-hand.right { transform: translate(-14px, 12px) rotate(25deg); border-color: #f59e0b; }
 
-            /* Duda / Evaluando: Entorna los ojos (squint) */
             .aurora-core.doubt .eye { height: 2px; width: 10px; background: #fbbf24; }
             .aurora-core.doubt .mouth { width: 12px; transform: rotate(-5deg); }
+            /* Doubt Hands: asymmetric questioning */
+            .aurora-core.doubt .aurora-hand.left { transform: translate(8px, -10px) rotate(-20deg); }
+            .aurora-core.doubt .aurora-hand.right { transform: translate(-8px, 6px) rotate(35deg) scaleY(0.9); }
 
-            /* Irónica (Smirk) */
             .aurora-core.ironic .eye.left { height: 5px; border-radius: 10px 10px 0 0; }
             .aurora-core.ironic .eye.right { transform: scale(1.1); }
             .aurora-core.ironic .mouth { width: 18px; border-radius: 0 0 20px 0px; transform: rotate(-10deg) translateX(2px); }
+            /* Ironic Hands: Diva hair flick / sassy dismissal */
+            .aurora-core.ironic .aurora-hand.left { transform: translate(-12px, -28px) rotate(-65deg); animation: hair-flip 0.7s ease infinite alternate; border-color: #ec4899; }
+            .aurora-core.ironic .aurora-hand.right { transform: translate(16px, 8px) rotate(50deg); border-color: #ec4899; }
 
             .aurora-core.happy .eye { height: 7px; border-radius: 10px 10px 0 0; }
             .aurora-core.happy .mouth { width: 20px; border-radius: 0 0 20px 20px; }
+            /* Happy Hands: Exuberant chic pose */
+            .aurora-core.happy .aurora-hand.left { transform: translate(-18px, -18px) rotate(-35deg); }
+            .aurora-core.happy .aurora-hand.right { transform: translate(18px, -18px) rotate(35deg); }
+
+            /* GESTOS DINÁMICOS AL HABLAR */
+            .aurora-core.speaking-gestures .aurora-hand.left { animation: speak-hand-l 0.3s ease infinite alternate; }
+            .aurora-core.speaking-gestures .aurora-hand.right { animation: speak-hand-r 0.35s ease infinite alternate; }
 
             @keyframes spin-slow { 100% { transform: rotate(360deg); } }
             @keyframes core-float { 100% { transform: translateY(-8px) scale(1.02); } }
             @keyframes blink { 0%, 90%, 96%, 100% { transform: scaleY(1); } 93% { transform: scaleY(0.1); } }
+            
+            @keyframes idle-hand-l { 100% { transform: rotate(18deg) translateY(-4px); } }
+            @keyframes idle-hand-r { 100% { transform: rotate(-18deg) translateY(4px); } }
+            @keyframes hair-flip { 0% { transform: translate(-12px, -28px) rotate(-55deg); } 100% { transform: translate(-6px, -36px) rotate(-75deg); } }
+            @keyframes speak-hand-l { 0% { transform: rotate(-10deg) translateY(0) scale(0.95); } 100% { transform: rotate(-30deg) translateY(-8px) scale(1.05); } }
+            @keyframes speak-hand-r { 0% { transform: rotate(10deg) translateY(0) scale(0.95); } 100% { transform: rotate(30deg) translateY(8px) scale(1.05); } }
 
             .response-wrapper { position: relative; width: 92%; max-width: 420px; margin-top: 10px; }
             .response-bubble {
@@ -188,7 +231,7 @@ def home():
         <header>
             <div>
                 <div class="title-area">AURORA // Core</div>
-                <div class="status-sub">Sensores Biométricos Activos</div>
+                <div class="status-sub">Sensores Biométricos & Manos Cinéticas Activas</div>
             </div>
         </header>
         
@@ -205,6 +248,10 @@ def home():
             <div class="aurora-core idle" id="aurora-face">
                 <div class="ring outer"></div>
                 <div class="ring inner"></div>
+                <!-- MANOS CINÉTICAS DE AURORA -->
+                <div class="aurora-hand left" id="hand-left"></div>
+                <div class="aurora-hand right" id="hand-right"></div>
+                
                 <div class="face-container">
                     <div class="eyes"><div class="eye left"></div><div class="eye right"></div></div>
                     <div class="mouth" id="aurora-mouth"></div>
@@ -212,13 +259,13 @@ def home():
             </div>
             
             <div class="response-wrapper">
-                <div class="response-bubble" id="response-text">Conectando módulos neuronales... Lista.</div>
+                <div class="response-bubble" id="response-text">Desplegando actitud de diva... Lista.</div>
             </div>
         </div>
 
         <footer>
             <button class="icon-btn" onclick="startDictation()" style="background: #8b5cf6; color: white;">🎤</button>
-            <input type="text" id="inp" placeholder="Háblame..." onkeypress="handleKey(event)">
+            <input type="text" id="inp" placeholder="Háblame con elegancia..." onkeypress="handleKey(event)">
             <button class="icon-btn" onclick="send()">⬆️</button>
         </footer>
 
@@ -273,22 +320,31 @@ def home():
             function getExpression(text) {
                 let lower = text.toLowerCase();
                 if (/(seguro|duda|mm|sospechoso|mentira)/.test(lower)) return 'doubt';
-                if (/(broma|sarcasmo|obvio)/.test(lower)) return 'ironic';
-                if (/(feliz|bien|jaja)/.test(lower)) return 'happy';
+                if (/(broma|sarcasmo|obvio|por favor|diva)/.test(lower)) return 'ironic';
+                if (/(feliz|bien|jaja|genial)/.test(lower)) return 'happy';
                 return 'idle';
             }
 
-            function setAuroraState(stateClass) { document.getElementById('aurora-face').className = `aurora-core ${stateClass}`; }
+            function setAuroraState(stateClass) { 
+                let face = document.getElementById('aurora-face');
+                face.className = `aurora-core ${stateClass}`; 
+            }
 
             function startLipSync() {
                 if(lipSyncInterval) clearInterval(lipSyncInterval);
                 let mouth = document.getElementById('aurora-mouth');
-                lipSyncInterval = setInterval(() => { mouth.style.height = Math.floor(Math.random() * 12) + 2 + 'px'; }, 80);
+                let face = document.getElementById('aurora-face');
+                face.classList.add('speaking-gestures');
+                lipSyncInterval = setInterval(() => { 
+                    mouth.style.height = Math.floor(Math.random() * 12) + 2 + 'px'; 
+                }, 80);
             }
 
             function stopLipSync() {
                 if(lipSyncInterval) clearInterval(lipSyncInterval);
                 document.getElementById('aurora-mouth').style.height = '';
+                let face = document.getElementById('aurora-face');
+                face.classList.remove('speaking-gestures');
             }
 
             async function speakText(text) {
@@ -369,12 +425,23 @@ async def chat(request: Request):
         return {"reply": "Error: GEMINI_API_KEY no detectada."}
 
     try:
-        models_to_try = ["gemini-1.5-flash", "gemini-1.5-pro"]
+        models_to_try = [
+            "models/gemini-3.8-flash",
+            "models/gemini-3.7-flash",
+            "models/gemini-3.6-flash",
+            "models/gemini-3.5-flash",
+            "gemini-3.8-flash",
+            "gemini-3.7-flash",
+            "gemini-3.6-flash",
+            "gemini-3.5-flash",
+            "models/gemini-1.5-flash",
+            "gemini-1.5-flash"
+        ]
         response = None
+        last_error = ""
         
         recent_history = history[-10:] if len(history) > 10 else history
         
-        # Sanitizar historial para asegurar roles alternados estrictos (evita el error de la API)
         gemini_history = []
         last_role = None
         for item in recent_history[:-1]:
@@ -403,11 +470,16 @@ async def chat(request: Request):
                 response = chat_session.send_message(message_parts)
                 break
             except Exception as e:
-                print(f"Intento fallido con {m_name}: {e}")
+                last_error = str(e)
+                print(f"Intento fallido con {m_name}: {last_error}")
                 continue
                 
         if not response:
-            return {"reply": "Sistemas saturados. No pude procesar tu solicitud."}
+            if "429" in last_error or "quota" in last_error.lower():
+                return {"reply": "⚠️ Límite de cuota excedido temporalmente (Error 429). Espera unos segundos."}
+            if "503" in last_error or "overloaded" in last_error.lower() or "unavailable" in last_error.lower():
+                return {"reply": "⚠️ Servidores de Google saturados (Error 503). Intentando cambiar de canal..."}
+            return {"reply": f"Sistemas saturados. No pude procesar tu solicitud: {last_error}"}
 
         reply_text = response.text
         evolution_flag = ""
