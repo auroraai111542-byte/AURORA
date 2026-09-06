@@ -5,11 +5,30 @@ import google.generativeai as genai
 
 app = FastAPI()
 
-GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "")
+GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
 if GEMINI_KEY:
     genai.configure(api_key=GEMINI_KEY)
 
 SYSTEM_PROMPT = "Eres Aurora, una asistente de IA super inteligente, carismática, con un excelente sentido del humor y muy expresiva. Responde de forma cercana y divertida."
+
+def get_working_model():
+    """Busca dinámicamente en Google AI los modelos disponibles para tu clave de API."""
+    try:
+        available = []
+        for m in genai.list_models():
+            if 'generateContent' in m.supported_generation_methods:
+                available.append(m.name)
+        
+        # Priorizar versiones flash/pro si existen
+        for name in available:
+            if 'flash' in name or 'pro' in name:
+                return name
+        
+        if available:
+            return available[0]
+    except Exception as err:
+        print(f"Error listando modelos: {err}")
+    return None
 
 @app.get("/", response_class=HTMLResponse)
 def home():
@@ -73,18 +92,16 @@ async def chat(request: Request):
     if not GEMINI_KEY:
         return {"reply": "Oye, recuerda configurar GEMINI_API_KEY en las variables del servidor para que pueda pensar."}
 
-    # Intentamos conectar con los modelos compatibles en orden
-    candidate_models = ['gemini-2.5-flash', 'gemini-1.5-flash', 'gemini-2.0-flash']
-    
-    for model_name in candidate_models:
-        try:
-            model = genai.GenerativeModel(model_name)
-            response = model.generate_content(f"{SYSTEM_PROMPT}\n\nUsuario: {user_msg}")
-            return {"reply": response.text}
-        except Exception:
-            continue
-
-    return {"reply": "No se pudo conectar a ningún modelo de Gemini disponible. Revisa los permisos de tu API Key."}
+    try:
+        model_name = get_working_model()
+        if not model_name:
+            return {"reply": "Error: Tu GEMINI_API_KEY no tiene acceso a ningún modelo activo o es inválida."}
+        
+        model = genai.GenerativeModel(model_name)
+        response = model.generate_content(f"{SYSTEM_PROMPT}\n\nUsuario: {user_msg}")
+        return {"reply": response.text}
+    except Exception as e:
+        return {"reply": f"Fallo al generar respuesta: {str(e)}"}
 
 if __name__ == "__main__":
     import uvicorn
