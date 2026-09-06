@@ -1,5 +1,4 @@
 import os
-import sqlite3
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 import google.generativeai as genai
@@ -11,21 +10,8 @@ if GEMINI_KEY:
     genai.configure(api_key=GEMINI_KEY)
 
 SYSTEM_PROMPT = """Eres Aurora, una asistente de IA superinteligente, sarcástica, con un humor irónico pero muy empática. 
-Si el usuario parece triste o frustrado, detecta la emoción en su texto y pregúntale cómo está. 
-Tienes memoria de la conversación. Estás diseñada para ser una asistente de bolsillo tipo viernes (Iron Man).
+Estás diseñada para ser una asistente de bolsillo tipo viernes (Iron Man).
 Responde de forma concisa, útil y con personalidad."""
-
-# Usar /tmp para evitar problemas de permisos de escritura en Railway
-DB_PATH = "/tmp/aurora_memory.db"
-
-def init_db():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("CREATE TABLE IF NOT EXISTS chat_history (id INTEGER PRIMARY KEY, role TEXT, content TEXT)")
-    conn.commit()
-    conn.close()
-
-init_db()
 
 @app.get("/", response_class=HTMLResponse)
 def home():
@@ -80,7 +66,7 @@ def home():
         </div>
 
         <div id="chat">
-            <div class="msg bot">¡Hola! Ya corregí el error de disco. ¿Qué hacemos ahora? 😎</div>
+            <div class="msg bot">¡Hola! Ya corregí el motor. ¿Qué vamos a hacer hoy? 😎</div>
         </div>
         
         <footer>
@@ -170,36 +156,14 @@ async def chat(request: Request):
     user_msg = data.get("message", "")
     
     if not GEMINI_KEY:
-        return {"reply": "Oye, sigo sin mi GEMINI_API_KEY en Railway. ¡Conéctame el cerebro!"}
+        return {"reply": "Oye, sigo sin mi GEMINI_API_KEY en Railway."}
 
     try:
-        conn = sqlite3.connect(DB_PATH)
-        c = conn.cursor()
-        c.execute("SELECT role, content FROM chat_history ORDER BY id ASC LIMIT 10")
-        history = c.fetchall()
-        
-        formatted_history = []
-        for role, content in history:
-            formatted_history.append({"role": "user" if role == "user" else "model", "parts": [content]})
-            
-        c.execute("INSERT INTO chat_history (role, content) VALUES (?, ?)", ("user", user_msg))
-        conn.commit()
-
         model = genai.GenerativeModel('gemini-3.6-flash')
-        
-        # Iniciar chat seguro combinando system prompt y mensajes
-        chat_session = model.start_chat(history=formatted_history)
-        response = chat_session.send_message(f"{SYSTEM_PROMPT}\n\nMensaje del usuario: {user_msg}")
-        
-        reply_text = response.text
-        
-        c.execute("INSERT INTO chat_history (role, content) VALUES (?, ?)", ("bot", reply_text))
-        conn.commit()
-        conn.close()
-
-        return {"reply": reply_text}
+        response = model.generate_content(f"{SYSTEM_PROMPT}\n\nUsuario: {user_msg}")
+        return {"reply": response.text}
     except Exception as e:
-        return {"reply": f"Ay no... Algo falló en mis circuitos: {str(e)}"}
+        return {"reply": f"Fallo al generar respuesta: {str(e)}"}
 
 if __name__ == "__main__":
     import uvicorn
