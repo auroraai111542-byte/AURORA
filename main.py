@@ -636,7 +636,7 @@ async def chat(request: Request):
 
     try:
         # Modelos actualizados y compatibles
-        models_to_try = ["gemini-2.0-flash", "gemini-1.5-flash"]
+        models_to_try = ["gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash"]
         response = None
         last_err = None
         
