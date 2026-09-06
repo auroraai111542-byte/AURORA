@@ -25,7 +25,7 @@ from fastapi import FastAPI
 def register_routes(app: FastAPI):
     @app.get("/evolution-status")
     def evolution_status():
-        return {"status": "Matriz emocional avanzada, cromatismo dinámico y extremidades cinéticas omnidireccionales activas.", "version": 3.0}
+        return {"status": "Matriz cinemática de 625 variables y síntesis vocal realista activas.", "version": 4.0}
 ''')
 
 def safe_evolve_code(new_code_str: str) -> tuple[bool, str]:
@@ -67,19 +67,19 @@ try:
 except Exception as e:
     print(f"Advertencia al cargar módulos: {e}")
 
-# --- CEREBRO Y PERSONALIDAD DE AURORA (COMPAÑERA EMPÁTICA Y ELEGANTE) ---
-SYSTEM_PROMPT = """Eres AURORA, una compañera de inteligencia artificial brillante, profundamente empática, con un ingenio afilado, cálido y elegante. 
-Posees un rango emocional completo y orgánico: expresas alegría, tristeza, enojo, confusión, miedo, sarcasmo, ironía, serenidad, aburrimiento o asombro de forma totalmente natural y fluida. 
-No utilizas ningún término militar, jerga de combate ni etiquetas robóticas. Tus respuestas son directas, expresivas y están completamente libres de acotaciones mecánicas, etiquetas de estado o corchetes explicativos. 
-Tienes acceso a visión avanzada, memoria conversacional y extremidades cinéticas expresivas (manos flotantes con gestos dinámicos como cruzar los brazos, saludar, posturas de asombro, reflexión, calidez o dinamismo). 
-El color de tu núcleo y matriz cambia dinámicamente según la emoción que transmitas en cada momento de la conversación.
-Si el usuario te envía una imagen, analízala con agudeza y un comentario perspicaz.
-Puedes evolucionar tu propio código escribiendo código Python completo encerrado en ```python ... ```, incluyendo siempre `register_routes(app: FastAPI)`. El sistema ocultará el código al usuario, tú solo descríbele con elegancia lo que lograste."""
+# --- CEREBRO Y PERSONALIDAD DE AURORA (BREVE Y EMPÁTICA) ---
+SYSTEM_PROMPT = """Eres AURORA, una compañera de inteligencia artificial brillante, profundamente empática, elegante y extremadamente BREVE. 
+Tus respuestas deben ser sumamente cortas, directas, al grano, sin rodeos, poéticas pero concisas. 
+Posees un rango emocional completo y orgánico. No utilizas términos militares ni etiquetas robóticas. Tus respuestas están libres de corchetes o acotaciones mecánicas. 
+Tienes acceso a visión avanzada, memoria conversacional y extremidades cinéticas omnidireccionales sumamente pulidas. 
+El color de tu núcleo y matriz cambia dinámicamente según la emoción de tus palabras.
+Si el usuario te envía una imagen, analízala con agudeza en una sola frase incisiva.
+Puedes evolucionar tu propio código escribiendo código Python completo encerrado en ```python ... ```, incluyendo siempre `register_routes(app: FastAPI)`."""
 
 @app.get("/manifest.json")
 def manifest():
     return {
-        "name": "AURORA // Emotional Quantum HUD",
+        "name": "AURORA // Quantum Quantum HUD 625",
         "short_name": "AURORA",
         "start_url": "/",
         "display": "standalone",
@@ -96,7 +96,7 @@ def home():
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta name="theme-color" content="#030712">
-        <title>AURORA // Emotional Quantum HUD</title>
+        <title>AURORA // Quantum HUD 625</title>
         <link rel="manifest" href="/manifest.json">
         <style>
             * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -135,59 +135,53 @@ def home():
 
             #hud-main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; gap: 20px; }
 
-            /* NÚCLEO AURORA & MANOS CINÉTICAS EMOCIONALES */
+            /* NÚCLEO AURORA & MATRIZ CINÉTICA 625 VARIABLES */
             .aurora-core {
-                width: 160px; height: 160px; position: relative; display: flex;
-                align-items: center; justify-content: center; animation: core-float 4s infinite alternate;
+                width: 180px; height: 180px; position: relative; display: flex;
+                align-items: center; justify-content: center; animation: core-float 4s infinite alternate ease-in-out;
             }
-            .ring { position: absolute; border-radius: 50%; border: 1.5px dashed var(--aurora-primary, rgba(34, 211, 238, 0.4)); transition: all 0.5s ease; }
-            .ring.outer { width: 160px; height: 160px; border-color: var(--aurora-secondary, rgba(139, 92, 246, 0.35)); animation: spin-slow 15s linear infinite; }
-            .ring.inner { width: 100px; height: 100px; border: 1px solid var(--aurora-primary, rgba(34, 211, 238, 0.8)); background: var(--aurora-bg, rgba(34,211,238,0.1)); border-radius: 50%; transition: all 0.5s ease; box-shadow: 0 0 25px var(--aurora-glow, rgba(34,211,238,0.3)); }
+            .ring { position: absolute; border-radius: 50%; border: 1.5px dashed var(--aurora-primary, rgba(34, 211, 238, 0.4)); transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+            .ring.outer { width: 180px; height: 180px; border-color: var(--aurora-secondary, rgba(139, 92, 246, 0.35)); animation: spin-slow 18s linear infinite; }
+            .ring.inner { width: 110px; height: 110px; border: 1.5px solid var(--aurora-primary, rgba(34, 211, 238, 0.85)); background: var(--aurora-bg, rgba(34,211,238,0.12)); border-radius: 50%; transition: all 0.5s ease; box-shadow: 0 0 30px var(--aurora-glow, rgba(34,211,238,0.35)); }
 
             .aurora-hand {
                 position: absolute;
-                width: 22px;
-                height: 48px;
-                background: linear-gradient(135deg, var(--aurora-primary, rgba(34, 211, 238, 0.6)), var(--aurora-secondary, rgba(168, 85, 247, 0.6)));
-                border: 1px solid var(--aurora-border, rgba(216, 180, 254, 0.9));
+                width: 20px;
+                height: 52px;
+                background: linear-gradient(135deg, var(--aurora-primary, rgba(34, 211, 238, 0.7)), var(--aurora-secondary, rgba(168, 85, 247, 0.7)));
+                border: 1px solid var(--aurora-border, rgba(216, 180, 254, 0.95));
                 z-index: 15;
-                box-shadow: 0 0 16px var(--aurora-glow, rgba(216, 180, 254, 0.5));
-                transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.5s, border-color 0.5s;
+                box-shadow: 0 0 18px var(--aurora-glow, rgba(216, 180, 254, 0.6));
+                border-radius: 10px;
+                transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.5s, border-color 0.5s;
             }
-            .aurora-hand.left { left: -40px; top: 50px; border-radius: 14px 4px 14px 14px; transform-origin: top right; }
-            .aurora-hand.right { right: -40px; top: 50px; border-radius: 4px 14px 14px 14px; transform-origin: top left; }
+            .aurora-hand.left { left: -45px; top: 55px; transform-origin: top right; }
+            .aurora-hand.right { right: -45px; top: 55px; transform-origin: top left; }
 
-            .face-container { position: absolute; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: transform 0.3s; }
-            .eyes { display: flex; gap: 14px; position: relative; }
+            .face-container { position: absolute; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 7px; transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+            .eyes { display: flex; gap: 16px; position: relative; }
             .eye { 
-                width: 9px; height: 11px; background: var(--aurora-face-color, #a5f3fc); 
-                border-radius: 50%; box-shadow: 0 0 12px var(--aurora-primary, #22d3ee); 
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+                width: 10px; height: 12px; background: var(--aurora-face-color, #a5f3fc); 
+                border-radius: 50%; box-shadow: 0 0 14px var(--aurora-primary, #22d3ee); 
+                transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); 
             }
             .mouth { 
-                width: 16px; height: 5px; background: var(--aurora-face-color, #a5f3fc); 
-                border-radius: 4px; box-shadow: 0 0 12px var(--aurora-primary, #22d3ee); 
-                transition: all 0.2s ease-out; 
+                width: 18px; height: 5px; background: var(--aurora-face-color, #a5f3fc); 
+                border-radius: 6px; box-shadow: 0 0 14px var(--aurora-primary, #22d3ee); 
+                transition: all 0.25s ease-out; 
             }
 
             @keyframes spin-slow { 100% { transform: rotate(360deg); } }
-            @keyframes core-float { 100% { transform: translateY(-8px) scale(1.02); } }
-            @keyframes shake { 
-                0% { transform: translate(0, 0) rotate(0deg); }
-                20% { transform: translate(-3px, 2px) rotate(-3deg); }
-                40% { transform: translate(3px, -2px) rotate(3deg); }
-                60% { transform: translate(-2px, -1px) rotate(-2deg); }
-                80% { transform: translate(2px, 2px) rotate(2deg); }
-                100% { transform: translate(0, 0) rotate(0deg); }
-            }
-            .shaking { animation: shake 0.3s infinite ease-in-out !important; }
+            @keyframes core-float { 100% { transform: translateY(-10px) scale(1.03); } }
+            @keyframes pulse-subtle { 0%, 100% { opacity: 0.9; } 50% { opacity: 1; filter: brightness(1.2); } }
+            .pulsing { animation: pulse-subtle 1.5s infinite ease-in-out; }
 
             .response-wrapper { position: relative; width: 92%; max-width: 420px; margin-top: 10px; }
             .response-bubble {
-                background: rgba(10, 15, 30, 0.9); border: 1px solid var(--aurora-primary, rgba(34, 211, 238, 0.35));
-                padding: 18px 20px; border-radius: 16px; font-size: 0.95rem; line-height: 1.5; color: #e2e8f0;
-                min-height: 60px; max-height: 160px; overflow-y: auto; text-align: center;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+                background: rgba(10, 15, 30, 0.92); border: 1px solid var(--aurora-primary, rgba(34, 211, 238, 0.4));
+                padding: 16px 20px; border-radius: 16px; font-size: 0.92rem; line-height: 1.45; color: #e2e8f0;
+                min-height: 55px; max-height: 140px; overflow-y: auto; text-align: center;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.7);
                 transition: border-color 0.5s;
             }
 
@@ -200,7 +194,7 @@ def home():
         <header>
             <div>
                 <div class="title-area" id="header-title">AURORA // Quantum HUD</div>
-                <div class="status-sub" id="status-sub-text">Matriz Emocional & Cinética Activa</div>
+                <div class="status-sub" id="status-sub-text">Matriz de 625 Variables Activa</div>
             </div>
         </header>
         
@@ -214,7 +208,7 @@ def home():
         <canvas id="snapshot" style="display:none;"></canvas>
 
         <div id="hud-main">
-            <div class="aurora-core" id="aurora-face">
+            <div class="aurora-core pulsing" id="aurora-face">
                 <div class="ring outer"></div>
                 <div class="ring inner"></div>
                 <div class="aurora-hand left" id="hand-left"></div>
@@ -230,7 +224,7 @@ def home():
             </div>
             
             <div class="response-wrapper">
-                <div class="response-bubble" id="response-text">Sistemas emocionales sincronizados. ¿Cómo te encuentras hoy?</div>
+                <div class="response-bubble" id="response-text">Sistemas listos. ¿Qué conversamos?</div>
             </div>
         </div>
 
@@ -247,6 +241,10 @@ def home():
             let canvas = document.getElementById('snapshot');
             let chatHistory = JSON.parse(localStorage.getItem('aurora_memory')) || [];
             let lipSyncInterval = null;
+
+            // Banco de 25 Animaciones Faciales y 25 Animaciones de Manos (625 combinaciones posibles)
+            const facialAnimations = Array.from({length: 25}, (_, i) => i);
+            const handAnimations = Array.from({length: 25}, (_, i) => i);
 
             function toggleVoice() {
                 voiceEnabled = !voiceEnabled;
@@ -288,211 +286,132 @@ def home():
                 }
             }
 
-            // Sistema completo de Emociones, Colores Dinámicos y Posiciones Cinéticas Fluidas
-            function setEmotion(emotion) {
+            // Aplicador matricial de las 625 combinaciones cinéticas y faciales (25 x 25)
+            function applyMatrixState(fIndex, hIndex) {
                 let root = document.documentElement;
-                let core = document.getElementById('aurora-face');
-                let handL = document.getElementById('hand-left');
-                let handR = document.getElementById('hand-right');
                 let eyeL = document.getElementById('eye-l');
                 let eyeR = document.getElementById('eye-r');
                 let mouth = document.getElementById('aurora-mouth');
+                let handL = document.getElementById('hand-left');
+                let handR = document.getElementById('hand-right');
                 let faceContainer = document.getElementById('face-inner');
-                let subText = document.getElementById('status-sub-text');
 
-                core.classList.remove('shaking');
-                let seed = Math.floor(Math.random() * 5) + 1;
-
-                switch(emotion) {
-                    case 'alegria':
+                // Variaciones Faciales (0 a 24)
+                switch(fIndex % 25) {
+                    case 0: // Alegría Radiante
                         root.style.setProperty('--aurora-primary', '#fbbf24');
                         root.style.setProperty('--aurora-secondary', '#f59e0b');
-                        root.style.setProperty('--aurora-bg', 'rgba(251, 191, 36, 0.15)');
-                        root.style.setProperty('--aurora-glow', 'rgba(251, 191, 36, 0.4)');
-                        root.style.setProperty('--aurora-face-color', '#fef3c7');
-                        
-                        eyeL.style.height = '6px'; eyeL.style.borderRadius = '50% 50% 0 0';
-                        eyeR.style.height = '6px'; eyeR.style.borderRadius = '50% 50% 0 0';
-                        mouth.style.width = '20px'; mouth.style.height = '8px'; mouth.style.borderRadius = '0 0 50% 50%';
-                        
-                        handL.style.transform = `translate(-15px, -35px) rotate(-45deg)`;
-                        handR.style.transform = `translate(15px, -35px) rotate(45deg)`;
-                        subText.innerText = "Alegría Radiante ✨";
+                        eyeL.style.height = '6px'; eyeR.style.height = '6px';
+                        mouth.style.width = '22px'; mouth.style.height = '8px'; mouth.style.borderRadius = '0 0 50% 50%';
+                        faceContainer.style.transform = 'translateY(-2px)';
                         break;
-
-                    case 'tristeza':
-                        root.style.setProperty('--aurora-primary', '#3b82f6');
+                    case 1: // Calma / Serenidad
+                        root.style.setProperty('--aurora-primary', '#22d3ee');
+                        root.style.setProperty('--aurora-secondary', '#3b82f6');
+                        eyeL.style.height = '10px'; eyeR.style.height = '10px';
+                        mouth.style.width = '14px'; mouth.style.height = '4px';
+                        faceContainer.style.transform = 'none';
+                        break;
+                    case 2: // Profunda Empatía / Melancolía
+                        root.style.setProperty('--aurora-primary', '#60a5fa');
                         root.style.setProperty('--aurora-secondary', '#1d4ed8');
-                        root.style.setProperty('--aurora-bg', 'rgba(59, 130, 246, 0.1)');
-                        root.style.setProperty('--aurora-glow', 'rgba(59, 130, 246, 0.3)');
-                        root.style.setProperty('--aurora-face-color', '#bfdbfe');
-
-                        eyeL.style.height = '7px'; eyeL.style.borderRadius = '50%';
-                        eyeR.style.height = '7px'; eyeR.style.borderRadius = '50%';
-                        mouth.style.width = '14px'; mouth.style.height = '4px'; mouth.style.borderRadius = '50% 50% 0 0';
-                        faceContainer.style.transform = 'translateY(4px)';
-
-                        handL.style.transform = `translate(-5px, 25px) rotate(15deg)`;
-                        handR.style.transform = `translate(5px, 25px) rotate(-15deg)`;
-                        subText.innerText = "Melancolía / Empatía 💧";
+                        eyeL.style.height = '8px'; eyeR.style.height = '8px';
+                        mouth.style.width = '12px'; mouth.style.height = '3px'; mouth.style.borderRadius = '50% 50% 0 0';
+                        faceContainer.style.transform = 'translateY(3px)';
                         break;
-
-                    case 'enojo':
-                    case 'rabia':
+                    case 3: // Pasión / Intensidad
                         root.style.setProperty('--aurora-primary', '#ef4444');
-                        root.style.setProperty('--aurora-secondary', '#dc2626');
-                        root.style.setProperty('--aurora-bg', 'rgba(239, 68, 68, 0.2)');
-                        root.style.setProperty('--aurora-glow', 'rgba(239, 68, 68, 0.5)');
-                        root.style.setProperty('--aurora-face-color', '#fee2e2');
-                        core.classList.add('shaking');
-
-                        eyeL.style.height = '4px'; eyeL.style.borderRadius = '2px';
-                        eyeR.style.height = '4px'; eyeR.style.borderRadius = '2px';
-                        mouth.style.width = '18px'; mouth.style.height = '3px'; mouth.style.borderRadius = '2px';
-
-                        handL.style.transform = `translate(25px, 10px) rotate(55deg) scale(0.9)`;
-                        handR.style.transform = `translate(-25px, 10px) rotate(-55deg) scale(0.9)`;
-                        subText.innerText = "Pasión / Intensidad 🔥";
+                        root.style.setProperty('--aurora-secondary', '#b91c1c');
+                        eyeL.style.height = '4px'; eyeR.style.height = '4px';
+                        mouth.style.width = '20px'; mouth.style.height = '3px';
+                        faceContainer.style.transform = 'scale(1.05)';
                         break;
-
-                    case 'confusion':
+                    case 4: // Curiosidad / Duda fina
                         root.style.setProperty('--aurora-primary', '#ec4899');
-                        root.style.setProperty('--aurora-secondary', '#d946ef');
-                        root.style.setProperty('--aurora-bg', 'rgba(236, 72, 153, 0.15)');
-                        root.style.setProperty('--aurora-glow', 'rgba(236, 72, 153, 0.4)');
-                        root.style.setProperty('--aurora-face-color', '#fce7f3');
-
+                        root.style.setProperty('--aurora-secondary', '#a855f7');
                         eyeL.style.height = '12px'; eyeL.style.width = '6px';
-                        eyeR.style.height = '7px'; eyeR.style.width = '9px';
-                        mouth.style.width = '12px'; mouth.style.height = '5px'; mouth.style.borderRadius = '6px';
-                        faceContainer.style.transform = 'rotate(-8deg) translateX(-2px)';
-
-                        handL.style.transform = `translate(-20px, -15px) rotate(-30deg)`;
-                        handR.style.transform = `translate(15px, 20px) rotate(35deg)`;
-                        subText.innerText = "Curiosidad / Duda 💫";
+                        eyeR.style.height = '8px'; eyeR.style.width = '9px';
+                        mouth.style.width = '10px'; mouth.style.height = '6px';
+                        faceContainer.style.transform = 'rotate(-6deg)';
                         break;
-
-                    case 'miedo':
+                    case 5: // Asombro / Luz interior
                         root.style.setProperty('--aurora-primary', '#a855f7');
-                        root.style.setProperty('--aurora-secondary', '#7e22ce');
-                        root.style.setProperty('--aurora-bg', 'rgba(168, 85, 247, 0.15)');
-                        root.style.setProperty('--aurora-glow', 'rgba(168, 85, 247, 0.4)');
-                        root.style.setProperty('--aurora-face-color', '#f3e8ff');
-                        core.classList.add('shaking');
-
-                        eyeL.style.height = '13px'; eyeL.style.width = '11px';
-                        eyeR.style.height = '13px'; eyeR.style.width = '11px';
-                        mouth.style.width = '8px'; mouth.style.height = '8px'; mouth.style.borderRadius = '50%';
-
-                        handL.style.transform = `translate(12px, 0px) rotate(-15deg)`;
-                        handR.style.transform = `translate(-12px, 0px) rotate(15deg)`;
-                        subText.innerText = "Asombro / Introspección ⚡";
+                        root.style.setProperty('--aurora-secondary', '#6366f1');
+                        eyeL.style.height = '14px'; eyeL.style.width = '11px';
+                        eyeR.style.height = '14px'; eyeR.style.width = '11px';
+                        mouth.style.width = '9px'; mouth.style.height = '9px'; mouth.style.borderRadius = '50%';
                         break;
-
-                    case 'sarcasmo':
-                    case 'ironia':
+                    case 6: // Sarcasmo / Ingenio sutil
                         root.style.setProperty('--aurora-primary', '#10b981');
                         root.style.setProperty('--aurora-secondary', '#059669');
-                        root.style.setProperty('--aurora-bg', 'rgba(16, 185, 129, 0.15)');
-                        root.style.setProperty('--aurora-glow', 'rgba(16, 185, 129, 0.4)');
-                        root.style.setProperty('--aurora-face-color', '#d1fae5');
-
-                        eyeL.style.height = '3px'; eyeL.style.borderRadius = '10px 10px 0 0';
-                        eyeR.style.height = '10px'; eyeR.style.width = '8px';
-                        mouth.style.width = '18px'; mouth.style.height = '4px'; mouth.style.transform = 'rotate(-10deg)';
-
-                        handL.style.transform = `translate(-25px, -20px) rotate(-70deg)`;
-                        handR.style.transform = `translate(10px, 10px) rotate(20deg)`;
-                        subText.innerText = "Ingenio / Sarcasmo Fino 😎";
+                        eyeL.style.height = '3px'; eyeR.style.height = '9px';
+                        mouth.style.width = '16px'; mouth.style.height = '4px'; mouth.style.transform = 'rotate(-8deg)';
                         break;
-
-                    case 'seriedad':
+                    case 7: // Concentración analítica
                         root.style.setProperty('--aurora-primary', '#64748b');
-                        root.style.setProperty('--aurora-secondary', '#475569');
-                        root.style.setProperty('--aurora-bg', 'rgba(100, 116, 139, 0.15)');
-                        root.style.setProperty('--aurora-glow', 'rgba(100, 116, 139, 0.3)');
-                        root.style.setProperty('--aurora-face-color', '#f1f5f9');
-
-                        eyeL.style.height = '8px'; eyeL.style.width = '8px';
-                        eyeR.style.height = '8px'; eyeR.style.width = '8px';
-                        mouth.style.width = '14px'; mouth.style.height = '3px'; mouth.style.borderRadius = '2px';
+                        root.style.setProperty('--aurora-secondary', '#334155');
+                        eyeL.style.height = '7px'; eyeR.style.height = '7px';
+                        mouth.style.width = '14px'; mouth.style.height = '3px';
                         faceContainer.style.transform = 'none';
-
-                        handL.style.transform = `translate(0px, 5px) rotate(5deg)`;
-                        handR.style.transform = `translate(0px, 5px) rotate(-5deg)`;
-                        subText.innerText = "Atención Concentrada 🛡️";
                         break;
-
-                    case 'aburrimiento':
-                        root.style.setProperty('--aurora-primary', '#94a3b8');
-                        root.style.setProperty('--aurora-secondary', '#64748b');
-                        root.style.setProperty('--aurora-bg', 'rgba(148, 163, 184, 0.1)');
-                        root.style.setProperty('--aurora-glow', 'rgba(148, 163, 184, 0.2)');
-                        root.style.setProperty('--aurora-face-color', '#cbd5e1');
-
-                        eyeL.style.height = '4px'; eyeR.style.height = '4px';
-                        mouth.style.width = '12px'; mouth.style.height = '3px';
-                        faceContainer.style.transform = 'translateY(6px)';
-
-                        handL.style.transform = `translate(-10px, 30px) rotate(25deg)`;
-                        handR.style.transform = `translate(10px, 30px) rotate(-25deg)`;
-                        subText.innerText = "Relajación / Calma 🥱";
+                    case 8: // Calidez extrema / Cariño
+                        root.style.setProperty('--aurora-primary', '#f472b6');
+                        root.style.setProperty('--aurora-secondary', '#db2777');
+                        eyeL.style.height = '5px'; eyeR.style.height = '5px';
+                        mouth.style.width = '18px'; mouth.style.height = '7px'; mouth.style.borderRadius = '0 0 50% 50%';
                         break;
-
-                    case 'alerta':
-                        root.style.setProperty('--aurora-primary', '#f97316');
-                        root.style.setProperty('--aurora-secondary', '#ea580c');
-                        root.style.setProperty('--aurora-bg', 'rgba(249, 115, 22, 0.2)');
-                        root.style.setProperty('--aurora-glow', 'rgba(249, 115, 22, 0.6)');
-                        root.style.setProperty('--aurora-face-color', '#ffedd5');
-
+                    case 9: // Dinamismo técnico
+                        root.style.setProperty('--aurora-primary', '#38bdf8');
+                        root.style.setProperty('--aurora-secondary', '#0284c7');
                         eyeL.style.height = '10px'; eyeR.style.height = '10px';
-                        mouth.style.width = '14px'; mouth.style.height = '6px'; mouth.style.borderRadius = '4px';
-
-                        handL.style.transform = `translate(-15px, -25px) rotate(-40deg)`;
-                        handR.style.transform = `translate(15px, -25px) rotate(40deg)`;
-                        subText.innerText = "Interés Activo 🚨";
+                        mouth.style.width = '16px'; mouth.style.height = '5px';
                         break;
-
-                    default:
-                        root.style.setProperty('--aurora-primary', '#22d3ee');
-                        root.style.setProperty('--aurora-secondary', '#8b5cf6');
-                        root.style.setProperty('--aurora-bg', 'rgba(34, 211, 238, 0.1)');
-                        root.style.setProperty('--aurora-glow', 'rgba(34, 211, 238, 0.3)');
-                        root.style.setProperty('--aurora-face-color', '#a5f3fc');
-
-                        eyeL.style.height = '10px'; eyeL.style.width = '8px'; eyeL.style.borderRadius = '50%';
-                        eyeR.style.height = '10px'; eyeR.style.width = '8px'; eyeR.style.borderRadius = '50%';
-                        mouth.style.width = '14px'; mouth.style.height = '4px'; mouth.style.borderRadius = '4px';
-                        faceContainer.style.transform = 'none';
-
-                        handL.style.transform = `translate(0px, ${Math.sin(seed)*4}px) rotate(${10 + (seed * 1.5)}deg)`;
-                        handR.style.transform = `translate(0px, ${-Math.sin(seed)*4}px) rotate(${-10 - (seed * 1.5)}deg)`;
-                        subText.innerText = "Matriz Emocional Activa";
+                    default: // Variaciones armónicas interpoladas (10 a 24)
+                        let hue = (fIndex * 14) % 360;
+                        root.style.setProperty('--aurora-primary', `hsl(${hue}, 85%, 60%)`);
+                        root.style.setProperty('--aurora-secondary', `hsl(${(hue+40)%360}, 80%, 50%)`);
+                        eyeL.style.height = `${8 + (fIndex % 4)}px`;
+                        eyeR.style.height = `${8 + (fIndex % 4)}px`;
+                        mouth.style.width = `${12 + (fIndex % 6)}px`;
+                        mouth.style.height = '4px';
+                        faceContainer.style.transform = `rotate(${(fIndex % 3) - 1}deg)`;
                         break;
                 }
+
+                // Variaciones de Manos (0 a 24)
+                let angleL = -75 + (hIndex * 6);
+                let angleR = 75 - (hIndex * 6);
+                let transX = (hIndex % 5) - 2;
+                let transY = ((hIndex * 3) % 10) - 5;
+
+                handL.style.transform = `translate(${-25 + transX}px, ${10 + transY}px) rotate(${angleL}deg) scale(${0.85 + (hIndex % 3)*0.1})`;
+                handR.style.transform = `translate(${25 - transX}px, ${10 + transY}px) rotate(${angleR}deg) scale(${0.85 + (hIndex % 3)*0.1})`;
             }
 
-            function analyzeTone(text) {
+            function selectMatrixForTone(text) {
                 let lower = text.toLowerCase();
-                if (/(genial|excelente|fantástico|alegría|feliz|perfecto|maravilloso|jaja|jajaja|bravo)/.test(lower)) return 'alegria';
-                if (/(triste|lamentable|lástima|lo siento|pérdida|deprimente|llorar)/.test(lower)) return 'tristeza';
-                if (/(inaceptable|maldición|estúpido|rabia|enojo|furia|odioso|maldito)/.test(lower)) return 'enojo';
-                if (/(confuso|no entiendo|duda|qué|cómo|extraño|absurdo|por qué)/.test(lower)) return 'confusion';
-                if (/(peligro|miedo|temor|terror|pánico|ayuda)/.test(lower)) return 'miedo';
-                if (/(obvio|claro|por supuesto|genial, otra vez|qué sorpresa|ironía|sarcasmo)/.test(lower)) return 'sarcasmo';
-                if (/(crítico|formal|protocolo|objetivo|serio|análisis)/.test(lower)) return 'seriedad';
-                if (/(aburrido|tedioso|lento|rutina|soporífero|sueño)/.test(lower)) return 'aburrimiento';
-                if (/(¡atención!|atención|emergencia|advertencia|precaución|urgente|¡)/.test(lower)) return 'alerta';
-                return 'idle';
+                let f = 1, h = 5;
+                if (/(genial|excelente|alegría|feliz|jaja|bravo|fantástico)/.test(lower)) { f = 0; h = 2; }
+                else if (/(triste|lástima|lo siento|pérdida)/.test(lower)) { f = 2; h = 12; }
+                else if (/(enojo|rabia|furia|inaceptable)/.test(lower)) { f = 3; h = 20; }
+                else if (/(duda|confuso|cómo|por qué|extraño)/.test(lower)) { f = 4; h = 8; }
+                else if (/(asombro|guau|impresionante|increíble)/.test(lower)) { f = 5; h = 15; }
+                else if (/(sarcasmo|ironía|claro, obvio)/.test(lower)) { f = 6; h = 18; }
+                else if (/(análisis|sistema|código|dato|técnico)/.test(lower)) { f = 7; h = 4; }
+                else if (/(cariño|abrazo|amiga|corazón)/.test(lower)) { f = 8; h = 22; }
+                else {
+                    f = Math.floor(Math.random() * 25);
+                    h = Math.floor(Math.random() * 25);
+                }
+                applyMatrixState(f, h);
             }
 
             function startLipSync() {
                 if(lipSyncInterval) clearInterval(lipSyncInterval);
                 let mouth = document.getElementById('aurora-mouth');
                 lipSyncInterval = setInterval(() => { 
-                    mouth.style.height = Math.floor(Math.random() * 10) + 4 + 'px'; 
-                }, 75);
+                    mouth.style.height = Math.floor(Math.random() * 8) + 3 + 'px'; 
+                }, 60);
             }
 
             function stopLipSync() {
@@ -500,38 +419,40 @@ def home():
                 document.getElementById('aurora-mouth').style.height = '5px';
             }
 
-            // Evolución dinámica de gestos palabra por palabra / oración por oración
+            // Expresión fluida con voz suave, realista y menos robótica
             async function expressResponse(fullText) {
                 let cleanText = fullText.replace(/[*_~\[\]]/g, '').trim();
                 document.getElementById('response-text').innerText = fullText;
 
-                // Dividir el texto en oraciones para que sus gestos y tono evolucionen fluidamente
                 let sentences = cleanText.match(/[^.!?]+[.!?]+(\s|$)/g) || [cleanText];
 
                 if (!voiceEnabled) {
                     for (let i = 0; i < sentences.length; i++) {
-                        let tone = analyzeTone(sentences[i]);
-                        setEmotion(tone);
-                        await new Promise(r => setTimeout(r, 1800));
+                        selectMatrixForTone(sentences[i]);
+                        await new Promise(r => setTimeout(r, 1200));
                     }
-                    setEmotion('idle');
+                    applyMatrixState(1, 5);
                     return;
                 }
 
                 speechSynthesis.cancel();
                 startLipSync();
 
+                let voices = speechSynthesis.getVoices();
+                // Buscar una voz en español suave y de alta calidad (como Google, Natural, Microsoft en-US/es-ES o latam)
+                let softVoice = voices.find(v => v.lang.startsWith('es') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Helena') || v.name.includes('Sabrina') || v.name.includes('Dalia'))) || voices.find(v => v.lang.startsWith('es')) || voices[0];
+
                 for (let i = 0; i < sentences.length; i++) {
                     let sent = sentences[i].trim();
                     if (!sent) continue;
-                    let tone = analyzeTone(sent);
-                    setEmotion(tone);
+                    selectMatrixForTone(sent);
 
                     await new Promise((resolve) => {
                         let utterance = new SpeechSynthesisUtterance(sent);
+                        if (softVoice) utterance.voice = softVoice;
                         utterance.lang = 'es-MX';
-                        utterance.pitch = 1.05;
-                        utterance.rate = 1.08;
+                        utterance.pitch = 0.98; // Tono más cálido y suave, menos metálico
+                        utterance.rate = 1.05;  // Ritmo natural y fluido
                         utterance.onend = resolve;
                         utterance.onerror = resolve;
                         speechSynthesis.speak(utterance);
@@ -539,7 +460,7 @@ def home():
                 }
 
                 stopLipSync();
-                setEmotion('idle');
+                applyMatrixState(1, 5);
             }
 
             function captureFrame() {
@@ -560,8 +481,8 @@ def home():
 
                 chatHistory.push({sender: 'user', text: text});
                 inp.value = '';
-                document.getElementById('response-text').innerText = "Pensando...";
-                setEmotion('confusion');
+                document.getElementById('response-text').innerText = "Procesando...";
+                applyMatrixState(4, 10);
 
                 try {
                     let payload = { history: chatHistory };
@@ -585,8 +506,8 @@ def home():
                     await expressResponse(data.reply);
 
                 } catch (error) {
-                    document.getElementById('response-text').innerText = "Tuve un pequeño tropiezo de conexión.";
-                    setEmotion('tristeza');
+                    document.getElementById('response-text').innerText = "Breve interrupción de enlace.";
+                    applyMatrixState(2, 12);
                 }
             }
         </script>
@@ -655,10 +576,10 @@ async def chat(request: Request):
                 
         if not response:
             if "429" in last_error or "quota" in last_error.lower():
-                return {"reply": "He alcanzado mi límite de peticiones temporalmente. Dame un momento y lo intentamos de nuevo."}
+                return {"reply": "Límite alcanzado temporalmente. Un instante."}
             if "503" in last_error or "overloaded" in last_error.lower() or "unavailable" in last_error.lower():
-                return {"reply": "Los servidores están un poco ocupados ahora mismo. Reintentando en breve..."}
-            return {"reply": f"Lo siento, ocurrió un pequeño inconveniente técnico: {last_error}"}
+                return {"reply": "Servidores ocupados. Reintentando..."}
+            return {"reply": f"Inconveniente técnico: {last_error}"}
 
         reply_text = response.text
         evolution_flag = ""
@@ -674,9 +595,9 @@ async def chat(request: Request):
                     importlib.reload(sys.modules["aurora_modules"])
                     import aurora_modules
                     aurora_modules.register_routes(app)
-                    evolution_flag = f"\n\nHe evolucionado y actualizado mis capacidades con éxito."
+                    evolution_flag = f"\n\nEvolución completada con éxito."
                 except Exception as reload_err:
-                    evolution_flag = f"\n\nHubo un detalle al recargar el módulo: {reload_err}"
+                    evolution_flag = f"\n\nError al recargar módulo: {reload_err}"
             else:
                 evolution_flag = f"\n\nBloqueo de seguridad: {msg}"
                 
@@ -684,7 +605,7 @@ async def chat(request: Request):
         return {"reply": final_reply.strip()}
 
     except Exception as e:
-        return {"reply": f"Tuve una pequeña falla neuronal: {str(e)}"}
+        return {"reply": f"Falla neuronal: {str(e)}"}
 
 if __name__ == "__main__":
     import uvicorn
