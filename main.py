@@ -73,12 +73,18 @@ async def chat(request: Request):
     if not GEMINI_KEY:
         return {"reply": "Oye, recuerda configurar GEMINI_API_KEY en las variables del servidor para que pueda pensar."}
 
-    try:
-        model = genai.GenerativeModel('gemini-pro')
-        response = model.generate_content(f"{SYSTEM_PROMPT}\n\nUsuario: {user_msg}")
-        return {"reply": response.text}
-    except Exception as e:
-        return {"reply": f"¡Ups! Ocurrió un pequeño fallo técnico: {str(e)}"}
+    # Intentamos conectar con los modelos compatibles en orden
+    candidate_models = ['gemini-2.5-flash', 'gemini-1.5-flash', 'gemini-2.0-flash']
+    
+    for model_name in candidate_models:
+        try:
+            model = genai.GenerativeModel(model_name)
+            response = model.generate_content(f"{SYSTEM_PROMPT}\n\nUsuario: {user_msg}")
+            return {"reply": response.text}
+        except Exception:
+            continue
+
+    return {"reply": "No se pudo conectar a ningún modelo de Gemini disponible. Revisa los permisos de tu API Key."}
 
 if __name__ == "__main__":
     import uvicorn
