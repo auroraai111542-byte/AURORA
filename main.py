@@ -442,13 +442,11 @@ async def chat(request: Request):
         return {"reply": "Error: GEMINI_API_KEY no configurada."}
 
     try:
-        # Modelos oficiales y estables actualizados compatibles con la API
         models_to_try = [
-            "gemini-2.0-flash",
-            "gemini-1.5-flash",
-            "gemini-1.5-pro",
-            "models/gemini-2.0-flash",
-            "models/gemini-1.5-flash"
+            "gemini-3.8-flash",
+            "gemini-3.7-flash",
+            "gemini-3.6-flash",
+            "gemini-1.5-flash"
         ]
         response = None
         last_error = ""
