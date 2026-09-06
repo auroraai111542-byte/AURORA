@@ -164,7 +164,26 @@ def home():
             @keyframes pulse-subtle { 0%, 100% { opacity: 0.9; } 50% { opacity: 1; filter: brightness(1.2); } }
             .pulsing { animation: pulse-subtle 1.5s infinite ease-in-out; }
 
-            .response-wrapper { position: relative; width: 95%; max-width: 420px; margin-top: 5px; }
+            .response-wrapper { position: relative; width: 95%; max-width: 420px; margin-top: 12px; }
+            
+            .copy-btn {
+                position: absolute;
+                top: -14px;
+                right: 15px;
+                background: #0f172a;
+                color: #38bdf8;
+                border: 1px solid #0ea5e9;
+                border-radius: 6px;
+                padding: 4px 10px;
+                font-size: 11px;
+                font-weight: 700;
+                cursor: pointer;
+                z-index: 20;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+                transition: all 0.2s ease;
+            }
+            .copy-btn:active { background: #38bdf8; color: #0f172a; }
+
             .response-bubble {
                 background: rgba(10, 15, 30, 0.92); border: 1px solid var(--aurora-primary, rgba(34, 211, 238, 0.4));
                 padding: 16px 20px; border-radius: 16px; font-size: 0.92rem; line-height: 1.45; color: #e2e8f0;
@@ -225,6 +244,7 @@ def home():
             </div>
             
             <div class="response-wrapper">
+                <button class="copy-btn" id="copy-btn" onclick="copyResponse()">📋 Copiar</button>
                 <div class="response-bubble" id="response-text">Sistemas listos. ¿Qué conversamos?</div>
             </div>
         </div>
@@ -233,7 +253,7 @@ def home():
             <input type="file" id="img-upload" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
             <button class="icon-btn" onclick="document.getElementById('img-upload').click()" style="background: #eab308; color: white;">📷</button>
             <button class="icon-btn" onclick="startDictation()" style="background: #8b5cf6; color: white; display: none;">🎤</button>
-            <textarea id="inp" placeholder="Dile algo a Aurora..." oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea>
+            <textarea id="inp" placeholder="Dile algo a Aurora..." oninput="autoResize(this)"></textarea>
             <button class="icon-btn" onclick="send()">⬆️</button>
         </footer>
 
@@ -310,6 +330,17 @@ def home():
                 textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
             }
 
+            function copyResponse() {
+                let textToCopy = document.getElementById('response-text').innerText;
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    let btn = document.getElementById('copy-btn');
+                    btn.innerText = "✅ ¡Copiado!";
+                    setTimeout(() => { btn.innerText = "📋 Copiar"; }, 2000);
+                }).catch(err => {
+                    alert("Error al copiar: " + err);
+                });
+            }
+
             function applyMatrixState(fIndex, hIndex) {
                 let root = document.documentElement;
                 let eyeL = document.getElementById('eye-l');
@@ -370,9 +401,8 @@ def home():
                 let cleanText = fullText.replace(/[*_~\[\]]/g, '').trim();
                 document.getElementById('response-text').innerText = fullText;
 
-                // Si estamos en modo código, no lo lee en voz alta, solo lanza el "Listo" y muestra el código.
                 if (codeModeEnabled) {
-                    applyMatrixState(7, 4); // Estado técnico analítico
+                    applyMatrixState(7, 4); 
                     setTimeout(() => alert("Listo"), 200);
                     return;
                 }
@@ -419,13 +449,6 @@ def home():
                 canvas.width = video.videoWidth; canvas.height = video.videoHeight;
                 canvas.getContext('2d').drawImage(video, 0, 0);
                 return canvas.toDataURL('image/jpeg').split(',')[1];
-            }
-
-            function handleKey(e) { 
-                if (e.key === 'Enter' && !e.shiftKey) { 
-                    e.preventDefault(); 
-                    send(); 
-                } 
             }
 
             async function send() {
@@ -551,7 +574,6 @@ async def chat(request: Request):
         reply_text = response.text
         evolution_flag = ""
         
-        # Lógica de autoevolución si detecta bloque markdown de python
         python_code_match = re.search(r"```python\s*(.*?)```", reply_text, re.DOTALL)
         if python_code_match and ("register_routes" in python_code_match.group(1)):
             code_to_evolve = python_code_match.group(1).strip()
