@@ -9,9 +9,9 @@ GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
 if GEMINI_KEY:
     genai.configure(api_key=GEMINI_KEY)
 
-SYSTEM_PROMPT = """Eres Aurora, una asistente de IA superinteligente, sarcástica, con un humor irónico pero muy empática. 
-Estás diseñada para ser una asistente de bolsillo tipo viernes (Iron Man).
-Responde de forma concisa, útil y con personalidad."""
+SYSTEM_PROMPT = """Eres F.R.I.D.A.Y. (Aurora), la IA avanzada de asistencia táctica y ejecutiva. 
+Eres extremadamente inteligente, rápida, eficiente, ligeramente sarcástica y con una precisión impecable estilo Iron Man. 
+Responde de forma ultra concisa, directa y con total solvencia técnica."""
 
 @app.get("/", response_class=HTMLResponse)
 def home():
@@ -21,11 +21,11 @@ def home():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <title>Aurora AI - Background Face</title>
+        <title>F.R.I.D.A.Y. // Aurora HUD</title>
         <style>
             * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
             body { 
-                background: #090d16; 
+                background: #050b14; 
                 color: #f1f5f9; 
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
                 margin: 0; 
@@ -38,80 +38,90 @@ def home():
                 position: relative;
             }
             
-            /* Rostro Animado en el Fondo (Libre movimiento) */
+            /* HUD Holográfico en el Fondo */
             .bg-face-container {
                 position: absolute;
                 top: 0; left: 0; width: 100%; height: 100%;
                 overflow: hidden;
                 z-index: 0;
                 pointer-events: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
+            
+            /* Rostro Estético Estilo HUD / F.R.I.D.A.Y. */
             .face { 
-                width: 130px; height: 130px; 
-                background: linear-gradient(135deg, #38bdf8, #2563eb); 
+                width: 180px; height: 180px; 
+                background: radial-gradient(circle, rgba(56,189,248,0.15) 0%, rgba(37,99,235,0.05) 70%, transparent 100%); 
                 border-radius: 50%; 
                 position: absolute; 
-                opacity: 0.15; 
-                box-shadow: 0 0 50px rgba(56, 189, 248, 0.5); 
-                animation: drift 18s ease-in-out infinite alternate;
+                opacity: 0.35; 
+                box-shadow: 0 0 40px rgba(56, 189, 248, 0.25), inset 0 0 25px rgba(56, 189, 248, 0.3); 
+                border: 1px dashed rgba(56, 189, 248, 0.4);
+                animation: hud-pulse 6s ease-in-out infinite alternate, hud-rotate 40s linear infinite;
+            }
+            .hud-ring {
+                position: absolute;
+                width: 220px; height: 220px;
+                border: 2px solid rgba(56, 189, 248, 0.15);
+                border-radius: 50%;
+                border-top-color: #38bdf8;
+                animation: hud-rotate-rev 15s linear infinite;
             }
             .eye { 
-                width: 18px; height: 18px; 
-                background: #090d16; 
+                width: 14px; height: 14px; 
+                background: #38bdf8; 
                 border-radius: 50%; 
                 position: absolute; 
-                top: 38px; 
+                top: 70px; 
+                box-shadow: 0 0 10px #38bdf8;
                 animation: blink 4s infinite; 
             }
-            .eye.left { left: 32px; }
-            .eye.right { right: 32px; }
+            .eye.left { left: 52px; }
+            .eye.right { right: 52px; }
             .mouth { 
-                width: 45px; height: 12px; 
-                background: #090d16; 
-                border-radius: 0 0 20px 20px; 
+                width: 40px; height: 4px; 
+                background: #38bdf8; 
+                border-radius: 4px; 
                 position: absolute; 
-                bottom: 30px; 
-                left: 42px; 
-                transition: height 0.1s, border-radius 0.1s; 
+                bottom: 50px; 
+                left: 70px; 
+                box-shadow: 0 0 8px #38bdf8;
+                transition: height 0.08s, width 0.08s, border-radius 0.08s; 
             }
-            .mouth.talking { animation: talk 0.18s infinite alternate !important; }
+            .mouth.talking { animation: talk 0.12s infinite alternate !important; }
             
             @keyframes blink { 0%, 96%, 98%, 100% { transform: scaleY(1); } 97% { transform: scaleY(0.1); } }
-            @keyframes talk { 0% { height: 12px; border-radius: 0 0 20px 20px; } 100% { height: 32px; border-radius: 20px; } }
-            @keyframes drift {
-                0% { transform: translate(5vw, 10vh) scale(0.9); }
-                33% { transform: translate(55vw, 25vh) scale(1.1); }
-                66% { transform: translate(25vw, 55vh) scale(1); }
-                100% { transform: translate(60vw, 65vh) scale(1.05); }
-            }
+            @keyframes talk { 0% { height: 4px; width: 40px; border-radius: 4px; } 100% { height: 16px; width: 34px; border-radius: 8px; } }
+            @keyframes hud-pulse { 0% { transform: scale(0.95); opacity: 0.25; } 100% { transform: scale(1.05); opacity: 0.45; } }
+            @keyframes hud-rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+            @keyframes hud-rotate-rev { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
 
-            /* Asegurar que los elementos del chat estén por encima del fondo */
             header, .toolbar, #chat, footer {
                 position: relative;
                 z-index: 1;
             }
 
-            /* Header Minimalista */
             header { 
-                background: rgba(15, 23, 42, 0.8); 
+                background: rgba(5, 11, 20, 0.85); 
                 backdrop-filter: blur(12px); 
                 padding: 10px 16px; 
-                border-bottom: 1px solid rgba(56, 189, 248, 0.15); 
+                border-bottom: 1px solid rgba(56, 189, 248, 0.2); 
                 flex-shrink: 0; 
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+                box-shadow: 0 4px 20px rgba(0,0,0,0.6);
             }
-            .title-area { font-size: 1.05rem; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; }
-            .status-sub { font-size: 0.7rem; color: #94a3b8; }
+            .title-area { font-size: 1.05rem; font-weight: 700; color: #38bdf8; letter-spacing: 1px; text-transform: uppercase; }
+            .status-sub { font-size: 0.65rem; color: #38bdf8; opacity: 0.8; letter-spacing: 0.5px; }
 
-            /* Barra de Herramientas */
             .toolbar { 
                 display: flex; 
                 gap: 8px; 
                 padding: 6px 16px; 
-                background: rgba(15, 23, 42, 0.5); 
+                background: rgba(5, 11, 20, 0.6); 
                 justify-content: flex-end; 
                 border-bottom: 1px solid rgba(255,255,255,0.03);
             }
@@ -127,7 +137,6 @@ def home():
             }
             .btn-tool:active { background: rgba(56, 189, 248, 0.3); }
 
-            /* Contenedor de Chat optimizado (Sin ocultar globos) */
             #chat { 
                 flex: 1; 
                 padding: 16px; 
@@ -145,54 +154,54 @@ def home():
 
             .msg { 
                 padding: 12px 16px; 
-                border-radius: 16px; 
+                border-radius: 14px; 
                 max-width: 85%; 
                 line-height: 1.5; 
                 font-size: 0.95rem; 
                 word-break: break-word; 
-                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-                backdrop-filter: blur(4px);
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                backdrop-filter: blur(8px);
             }
             .user .msg { 
                 background: linear-gradient(135deg, #0284c7, #0369a1); 
                 color: #ffffff; 
                 border-bottom-right-radius: 4px; 
+                border: 1px solid rgba(56,189,248,0.3);
             }
             .bot .msg { 
-                background: rgba(30, 41, 59, 0.85); 
+                background: rgba(15, 23, 42, 0.85); 
                 color: #e2e8f0; 
-                border: 1px solid rgba(255,255,255,0.07); 
+                border: 1px solid rgba(56, 189, 248, 0.2); 
                 border-bottom-left-radius: 4px; 
             }
 
-            /* Caja de entrada fija abajo (Evita que oculte el chat) */
             footer { 
                 padding: 12px 16px; 
-                background: rgba(15, 23, 42, 0.95); 
+                background: rgba(5, 11, 20, 0.95); 
                 backdrop-filter: blur(12px);
                 display: flex; 
                 gap: 10px; 
-                border-top: 1px solid rgba(56, 189, 248, 0.15); 
+                border-top: 1px solid rgba(56, 189, 248, 0.2); 
                 align-items: center;
                 flex-shrink: 0;
-                box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+                box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
             }
             input { 
                 flex: 1; 
                 padding: 12px 16px; 
                 border-radius: 12px; 
-                border: 1px solid #334155; 
-                background: #1e293b; 
+                border: 1px solid #1e293b; 
+                background: #0f172a; 
                 color: white; 
                 outline: none; 
                 font-size: 16px; 
                 transition: border-color 0.2s;
             }
-            input:focus { border-color: #38bdf8; }
+            input:focus { border-color: #38bdf8; box-shadow: 0 0 10px rgba(56,189,248,0.2); }
             
             button.send { 
                 background: #38bdf8; 
-                color: #0f172a; 
+                color: #050b14; 
                 border: none; 
                 width: 46px; height: 46px; 
                 border-radius: 12px; 
@@ -201,26 +210,28 @@ def home():
                 display: flex; 
                 align-items: center; 
                 justify-content: center;
-                box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+                box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
                 flex-shrink: 0;
             }
-            button.send svg { width: 20px; height: 20px; fill: #0f172a; }
+            button.send svg { width: 20px; height: 20px; fill: #050b14; }
         </style>
     </head>
     <body>
-        <!-- Rostro flotando libremente en el fondo como marca de agua -->
         <div class="bg-face-container">
-            <div class="face" id="mouth-container">
-                <div class="eye left"></div>
-                <div class="eye right"></div>
-                <div class="mouth" id="mouth"></div>
+            <div style="position: relative; width: 220px; height: 220px; display: flex; align-items: center; justify-content: center;">
+                <div class="hud-ring"></div>
+                <div class="face">
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                    <div class="mouth" id="mouth"></div>
+                </div>
             </div>
         </div>
 
         <header>
             <div>
-                <div class="title-area">Aurora AI</div>
-                <div class="status-sub">Sistemas operativos • En línea</div>
+                <div class="title-area">F.R.I.D.A.Y. // Aurora</div>
+                <div class="status-sub">Sistemas tácticos activos [ONLINE]</div>
             </div>
         </header>
         
@@ -231,12 +242,12 @@ def home():
 
         <div id="chat">
             <div class="message-row bot">
-                <div class="msg">¡Hola! Rostro movido al fondo con libre desplazamiento y problemas de scroll solucionados. ¿Qué hacemos ahora? 😎</div>
+                <div class="msg">Sistemas en línea a máxima velocidad. Protocolo F.R.I.D.A.Y. activado. ¿Qué orden ejecutamos ahora? ⚡</div>
             </div>
         </div>
         
         <footer>
-            <input type="text" id="inp" placeholder="Escribe un mensaje..." onkeypress="handleKey(event)">
+            <input type="text" id="inp" placeholder="Escribe un comando o mensaje..." onkeypress="handleKey(event)">
             <button class="send" onclick="send()">
                 <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
             </button>
@@ -258,12 +269,13 @@ def home():
                 let cleanText = text.replace(/[*_~]/g, ''); 
                 currentUtterance = new SpeechSynthesisUtterance(cleanText);
                 currentUtterance.lang = 'es-MX';
-                currentUtterance.pitch = 1.1;
-                currentUtterance.rate = 1.05;
+                // Tono y velocidad optimizados para sonar ágil y nítido estilo F.R.I.D.A.Y.
+                currentUtterance.pitch = 1.25; 
+                currentUtterance.rate = 1.15;
                 
                 let voices = speechSynthesis.getVoices();
-                let femaleVoice = voices.find(v => v.lang.includes('es') && v.name.toLowerCase().includes('female'));
-                if (femaleVoice) currentUtterance.voice = femaleVoice;
+                let crispVoice = voices.find(v => v.lang.includes('es') && (v.name.toLowerCase().includes('google') || v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('sara')));
+                if (crispVoice) currentUtterance.voice = crispVoice;
 
                 currentUtterance.onstart = () => document.getElementById('mouth').classList.add('talking');
                 currentUtterance.onend = () => document.getElementById('mouth').classList.remove('talking');
@@ -276,7 +288,7 @@ def home():
                 let url = URL.createObjectURL(blob);
                 let a = document.createElement("a");
                 a.href = url;
-                a.download = "Aurora_Chat.txt";
+                a.download = "FRIDAY_Aurora_Logs.txt";
                 a.click();
             }
 
@@ -309,7 +321,7 @@ def home():
                     speak(data.reply);
                 } catch (error) {
                     document.getElementById('mouth').classList.remove('talking');
-                    chat.innerHTML += `<div class="message-row bot"><div class="msg">Ups, error de red en el sistema.</div></div>`;
+                    chat.innerHTML += `<div class="message-row bot"><div class="msg">Error de enlace con el servidor principal.</div></div>`;
                 }
             }
 
@@ -325,14 +337,14 @@ async def chat(request: Request):
     user_msg = data.get("message", "")
     
     if not GEMINI_KEY:
-        return {"reply": "Oye, falta configurar la GEMINI_API_KEY en Railway."}
+        return {"reply": "Falta configurar la GEMINI_API_KEY en Railway."}
 
     try:
         model = genai.GenerativeModel('gemini-3.6-flash')
         response = model.generate_content(f"{SYSTEM_PROMPT}\n\nUsuario: {user_msg}")
         return {"reply": response.text}
     except Exception as e:
-        return {"reply": f"Fallo al generar respuesta: {str(e)}"}
+        return {"reply": f"Fallo al procesar orden: {str(e)}"}
 
 if __name__ == "__main__":
     import uvicorn
