@@ -15,8 +15,11 @@ Si el usuario parece triste o frustrado, detecta la emoción en su texto y preg�
 Tienes memoria de la conversación. Estás diseñada para ser una asistente de bolsillo tipo viernes (Iron Man).
 Responde de forma concisa, útil y con personalidad."""
 
+# Usar /tmp para evitar problemas de permisos de escritura en Railway
+DB_PATH = "/tmp/aurora_memory.db"
+
 def init_db():
-    conn = sqlite3.connect("aurora_memory.db")
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("CREATE TABLE IF NOT EXISTS chat_history (id INTEGER PRIMARY KEY, role TEXT, content TEXT)")
     conn.commit()
@@ -38,7 +41,6 @@ def home():
             body { background: #0f172a; color: #f8fafc; font-family: sans-serif; margin: 0; padding: 0; height: 100vh; display: flex; flex-direction: column; }
             header { background: #1e293b; padding: 10px; text-align: center; border-bottom: 1px solid #334155; flex-shrink: 0; }
             
-            /* Rostro Animado de Aurora */
             .face { width: 80px; height: 80px; background: #38bdf8; border-radius: 50%; margin: 5px auto; position: relative; box-shadow: 0 0 20px #38bdf855; }
             .eye { width: 12px; height: 12px; background: #0f172a; border-radius: 50%; position: absolute; top: 25px; animation: blink 4s infinite; }
             .eye.left { left: 20px; }
@@ -78,7 +80,7 @@ def home():
         </div>
 
         <div id="chat">
-            <div class="msg bot">¡Hola! Soy Aurora. Ya tengo rostro, memoria y voz. ¿Qué vamos a dominar hoy? 😎</div>
+            <div class="msg bot">¡Hola! Ya corregí el error de disco. ¿Qué hacemos ahora? 😎</div>
         </div>
         
         <footer>
@@ -171,7 +173,7 @@ async def chat(request: Request):
         return {"reply": "Oye, sigo sin mi GEMINI_API_KEY en Railway. ¡Conéctame el cerebro!"}
 
     try:
-        conn = sqlite3.connect("aurora_memory.db")
+        conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
         c.execute("SELECT role, content FROM chat_history ORDER BY id ASC LIMIT 10")
         history = c.fetchall()
@@ -183,10 +185,11 @@ async def chat(request: Request):
         c.execute("INSERT INTO chat_history (role, content) VALUES (?, ?)", ("user", user_msg))
         conn.commit()
 
-        model = genai.GenerativeModel('gemini-3.6-flash', system_instruction=SYSTEM_PROMPT)
+        model = genai.GenerativeModel('gemini-3.6-flash')
         
+        # Iniciar chat seguro combinando system prompt y mensajes
         chat_session = model.start_chat(history=formatted_history)
-        response = chat_session.send_message(user_msg)
+        response = chat_session.send_message(f"{SYSTEM_PROMPT}\n\nMensaje del usuario: {user_msg}")
         
         reply_text = response.text
         
