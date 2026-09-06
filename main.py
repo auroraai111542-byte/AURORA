@@ -88,11 +88,11 @@ def home():
 
             header, .toolbar, #hud-main, #chat-drawer, footer {
                 position: relative;
-                z-index: 1;
+                z-index: 5;
             }
 
             header { 
-                background: rgba(3, 7, 18, 0.85); 
+                background: rgba(3, 7, 18, 0.9); 
                 backdrop-filter: blur(14px); 
                 padding: 10px 16px; 
                 border-bottom: 1px solid rgba(6, 182, 212, 0.25); 
@@ -109,10 +109,11 @@ def home():
                 display: flex; 
                 gap: 6px; 
                 padding: 6px 12px; 
-                background: rgba(3, 7, 18, 0.6); 
+                background: rgba(3, 7, 18, 0.7); 
                 justify-content: flex-end; 
                 border-bottom: 1px solid rgba(255,255,255,0.03);
                 flex-wrap: wrap;
+                flex-shrink: 0;
             }
             .btn-tool { 
                 background: rgba(6, 182, 212, 0.1); 
@@ -136,17 +137,19 @@ def home():
                 justify-content: center;
                 padding: 20px;
                 text-align: center;
-                gap: 26px;
+                gap: 24px;
+                overflow-y: auto;
             }
 
             /* Núcleo Holográfico Avanzado de Aurora */
             .aurora-core {
-                width: 140px; height: 140px;
+                width: 130px; height: 130px;
                 position: relative;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 animation: core-float 4s ease-in-out infinite alternate;
+                flex-shrink: 0;
             }
 
             /* Anillos concéntricos giratorios */
@@ -157,12 +160,12 @@ def home():
                 box-shadow: 0 0 15px rgba(34, 211, 238, 0.15);
             }
             .ring.outer {
-                width: 140px; height: 140px;
+                width: 130px; height: 130px;
                 border-color: rgba(139, 92, 246, 0.35);
                 animation: spin-slow 15s linear infinite;
             }
             .ring.middle {
-                width: 116px; height: 116px;
+                width: 106px; height: 106px;
                 border-style: solid;
                 border-color: rgba(34, 211, 238, 0.6);
                 border-top-color: transparent;
@@ -170,19 +173,19 @@ def home():
                 animation: spin-reverse 8s linear infinite;
             }
             .ring.inner {
-                width: 90px; height: 90px;
+                width: 82px; height: 82px;
                 background: radial-gradient(circle, rgba(34,211,238,0.25) 0%, rgba(139,92,246,0.15) 70%, transparent 100%);
                 border: 1px solid rgba(34, 211, 238, 0.8);
-                box-shadow: 0 0 25px rgba(34, 211, 238, 0.5), inset 0 0 12px rgba(34, 211, 238, 0.3);
+                box-shadow: 0 0 22px rgba(34, 211, 238, 0.5), inset 0 0 10px rgba(34, 211, 238, 0.3);
                 border-radius: 50%;
             }
 
             /* Sensores Ópticos / Ojos realistas */
             .optical-sensors {
                 position: absolute;
-                width: 50px;
-                height: 14px;
-                top: 50px;
+                width: 44px;
+                height: 12px;
+                top: 45px;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -190,10 +193,10 @@ def home():
                 transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
             .sensor {
-                width: 10px; height: 10px;
+                width: 9px; height: 9px;
                 background: #a5f3fc;
                 border-radius: 50%;
-                box-shadow: 0 0 10px #22d3ee, 0 0 20px #22d3ee;
+                box-shadow: 0 0 10px #22d3ee, 0 0 18px #22d3ee;
                 animation: sensor-blink 5s infinite;
                 transition: all 0.25s ease;
             }
@@ -201,19 +204,19 @@ def home():
             /* Matriz de Audio / Boca realista */
             .audio-matrix {
                 position: absolute;
-                width: 44px;
+                width: 40px;
                 height: 6px;
-                bottom: 42px;
+                bottom: 38px;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 z-index: 2;
             }
             .matrix-bar {
-                width: 5px;
+                width: 4px;
                 height: 6px;
                 background: #22d3ee;
-                border-radius: 3px;
+                border-radius: 2px;
                 box-shadow: 0 0 8px #22d3ee;
                 transition: height 0.15s ease, background 0.2s;
             }
@@ -242,34 +245,34 @@ def home():
             @keyframes spin-reverse { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
             @keyframes core-float { 
                 0% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 15px rgba(34,211,238,0.3)); } 
-                100% { transform: translateY(-8px) scale(1.02); filter: drop-shadow(0 0 30px rgba(139,92,246,0.5)); } 
+                100% { transform: translateY(-6px) scale(1.02); filter: drop-shadow(0 0 25px rgba(139,92,246,0.5)); } 
             }
             @keyframes sensor-blink { 0%, 90%, 96%, 100% { transform: scaleY(1); } 93% { transform: scaleY(0.1); } }
             
             @keyframes think-wave {
                 0% { height: 4px; }
-                100% { height: 16px; background: #f472b6; }
+                100% { height: 14px; background: #f472b6; }
             }
             @keyframes talk-matrix {
                 0% { height: 6px; }
-                50% { height: 22px; }
-                100% { height: 12px; }
+                50% { height: 20px; }
+                100% { height: 10px; }
             }
 
             /* Burbuja de respuesta actual */
             .response-bubble {
-                background: rgba(10, 15, 30, 0.88);
+                background: rgba(10, 15, 30, 0.9);
                 border: 1px solid rgba(34, 211, 238, 0.35);
-                padding: 18px 22px;
+                padding: 16px 20px;
                 border-radius: 16px;
                 max-width: 92%;
-                width: 440px;
-                box-shadow: 0 10px 35px rgba(0,0,0,0.6), inset 0 0 15px rgba(34,211,238,0.08);
+                width: 420px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 0 12px rgba(34,211,238,0.08);
                 backdrop-filter: blur(12px);
-                font-size: 1rem;
-                line-height: 1.55;
+                font-size: 0.95rem;
+                line-height: 1.5;
                 color: #e2e8f0;
-                min-height: 90px;
+                min-height: 80px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -279,8 +282,8 @@ def home():
             /* Panel Deslizante de Historial de Chat */
             #chat-drawer {
                 position: absolute;
-                top: 90px; left: 0; width: 100%; height: calc(100% - 160px);
-                background: rgba(3, 7, 18, 0.96);
+                top: 90px; left: 0; width: 100%; height: calc(100% - 150px);
+                background: rgba(3, 7, 18, 0.97);
                 backdrop-filter: blur(18px);
                 z-index: 10;
                 display: flex;
@@ -288,7 +291,7 @@ def home():
                 padding: 16px;
                 gap: 12px;
                 overflow-y: auto;
-                transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s;
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
                 transform: translateY(100%);
                 opacity: 0;
                 pointer-events: none;
@@ -318,16 +321,18 @@ def home():
             .chat-item.user { background: #0284c7; color: white; align-self: flex-end; }
             .chat-item.bot { background: #0f172a; color: #cbd5e1; align-self: flex-start; border: 1px solid rgba(34,211,238,0.2); }
 
+            /* Footer Fijo Garantizado */
             footer { 
                 padding: 12px 16px; 
-                background: rgba(3, 7, 18, 0.95); 
-                backdrop-filter: blur(12px);
+                background: rgba(3, 7, 18, 0.98); 
+                backdrop-filter: blur(14px);
                 display: flex; 
                 gap: 10px; 
-                border-top: 1px solid rgba(34, 211, 238, 0.25); 
+                border-top: 1px solid rgba(34, 211, 238, 0.3); 
                 align-items: center;
                 flex-shrink: 0;
-                box-shadow: 0 -4px 25px rgba(0,0,0,0.7);
+                z-index: 20;
+                box-shadow: 0 -4px 25px rgba(0,0,0,0.8);
             }
             input { 
                 flex: 1; 
@@ -583,10 +588,14 @@ async def chat(request: Request):
         return {"reply": "Falta configurar la GEMINI_API_KEY en Railway."}
 
     try:
-        model = genai.GenerativeModel('gemini-3.6-flash')
+        # Modelo optimizado para máxima velocidad de respuesta
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        
+        # Limitar el historial a los últimos 10 mensajes para mantener alta velocidad y bajo consumo de tokens
+        recent_history = history[-10:] if len(history) > 10 else history
         
         gemini_history = []
-        for item in history[:-1]:
+        for item in recent_history[:-1]:
             role = "user" if item["sender"] == "user" else "model"
             gemini_history.append({"role": role, "parts": [item["text"]]})
         
