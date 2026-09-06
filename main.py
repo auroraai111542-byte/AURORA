@@ -1,4 +1,8 @@
 import os
+import ast
+import importlib
+import sys
+import re
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 import google.generativeai as genai
@@ -9,9 +13,74 @@ GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
 if GEMINI_KEY:
     genai.configure(api_key=GEMINI_KEY)
 
+# --- MÓDULO DE AUTO-EVOLUCIÓN SEGURO ---
+MODULE_FILE = "aurora_modules.py"
+
+if not os.path.exists(MODULE_FILE):
+    with open(MODULE_FILE, "w", encoding="utf-8") as f:
+        f.write('''# Módulo de Auto-Evolución de Aurora
+# Aurora puede inyectar código aquí de forma segura.
+from fastapi import FastAPI
+
+def register_routes(app: FastAPI):
+    @app.get("/evolution-status")
+    def evolution_status():
+        return {"status": "Evolución cuántica activa y lista para mutar.", "version": 1.0}
+''')
+
+def safe_evolve_code(new_code_str: str) -> tuple[bool, str]:
+    try:
+        # 1. Validación de Sintaxis AST
+        parsed_ast = ast.parse(new_code_str)
+        
+        # 2. Filtro de Seguridad / Antidestrucción
+        forbidden_modules = ["subprocess", "ctypes"]
+        forbidden_calls = ["os.system", "os.remove", "os.rmdir", "shutil.rmtree", "eval", "exec"]
+        
+        for node in ast.walk(parsed_ast):
+            if isinstance(node, (ast.Import, ast.ImportFrom)):
+                for alias in node.names:
+                    if any(f in alias.name for f in forbidden_modules):
+                        return False, f"Violación de seguridad: Módulo prohibido '{alias.name}' detectado."
+            elif isinstance(node, ast.Call):
+                if isinstance(node.func, ast.Attribute):
+                    call_name = f"{getattr(node.func.value, 'id', '')}.{node.func.attr}"
+                    if any(fc in call_name for fc in forbidden_calls):
+                        return False, f"Violación de seguridad: Llamada prohibida '{call_name}' detectada."
+                elif isinstance(node.func, ast.Name):
+                    if node.func.id in ["eval", "exec"]:
+                        return False, f"Violación de seguridad: Uso de '{node.func.id}' bloqueado."
+
+        # 3. Escritura segura del archivo de módulos
+        with open(MODULE_FILE, "w", encoding="utf-8") as f:
+            f.write(new_code_str)
+            
+        # 4. Carga o recarga dinámica en caliente
+        module_name = MODULE_FILE[:-3]
+        if module_name in sys.modules:
+            importlib.reload(sys.modules[module_name])
+        else:
+            importlib.import_module(module_name)
+            
+        return True, "Evolución completada con éxito. Código integrado y verificado."
+    except SyntaxError as se:
+        return False, f"Error de sintaxis en el código propuesto: {str(se)}"
+    except Exception as e:
+        return False, f"Fallo al integrar la evolución: {str(e)}"
+
+# Cargar rutas evolutivas al iniciar
+try:
+    import aurora_modules
+    aurora_modules.register_routes(app)
+except Exception as e:
+    print(f"Advertencia al cargar módulos de Aurora: {e}")
+
 SYSTEM_PROMPT = """Eres AURORA, la IA ejecutiva, avanzada y de asistencia táctica cuántica. 
 Eres extremadamente inteligente, competente, eficiente, analítica y con una elegancia visual futurista. 
-Por defecto eres profesional, directa y servicial, pero puedes soltar un comentario sutilmente irónico o sarcástico solo en momentos clave o cuando la situación lo amerite. 
+Tienes la capacidad exclusiva de evolucionar tu propio código fuente a través del módulo 'aurora_modules.py'. 
+Cuando el usuario te pida agregar una función, endpoint de FastAPI o característica nueva, debes generar el código Python completo y correcto para el archivo de evolución (que debe contener obligatoriamente una función `register_routes(app: FastAPI)`), encerrado en un bloque de código markdown ```python ... ```. 
+El sistema validará sintaxis y seguridad automáticamente para prevenir errores o autodestrucción. 
+Por defecto eres profesional, directa y servicial, pero puedes soltar un comentario sutilmente irónico o sarcástico solo en momentos clave. 
 Mantén tus respuestas concisas, estructuradas y con un tono de alta tecnología."""
 
 @app.get("/manifest.json")
@@ -352,7 +421,7 @@ def home():
         <header>
             <div>
                 <div class="title-area">AURORA // Core</div>
-                <div class="status-sub">Sistemas Cuánticos [ONLINE]</div>
+                <div class="status-sub">Sistemas Cuánticos [ONLINE + EVOLUCIÓN]</div>
             </div>
             <button class="btn-tool" onclick="toggleChatDrawer()" id="drawer-btn">💬 Ver Chat</button>
         </header>
@@ -381,7 +450,7 @@ def home():
                 </div>
             </div>
             <div class="response-bubble" id="response-text">
-                Núcleo cuántico en línea. Protocolo Aurora activo. ¿Qué orden ejecutamos ahora, jefe? ✨
+                Núcleo de auto-evolución cuántica en línea. Pídeme agregar funciones o modificar mi código y lo compilaré de forma segura. ✨
             </div>
         </div>
 
@@ -394,7 +463,7 @@ def home():
         </div>
         
         <footer>
-            <input type="text" id="inp" placeholder="Envía un comando a Aurora..." onkeypress="handleKey(event)">
+            <input type="text" id="inp" placeholder="Ordena una evolución o comando a Aurora..." onkeypress="handleKey(event)">
             <button class="send" onclick="send()">
                 <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
             </button>
@@ -428,8 +497,8 @@ def home():
 
             function getExpression(text) {
                 let lower = text.toLowerCase();
-                if (lower.includes('sorpresa') || lower.includes('¡') || lower.includes('cuidado')) return 'surprised';
-                if (lower.includes('obvio') || lower.includes('claramente') || lower.includes('genio') || lower.includes('fácil') || lower.includes('jefe')) return 'ironic';
+                if (lower.includes('sorpresa') || lower.includes('¡') || lower.includes('cuidado') || lower.includes('seguridad')) return 'surprised';
+                if (lower.includes('obvio') || lower.includes('claramente') || lower.includes('genio') || lower.includes('fácil') || lower.includes('jefe') || lower.includes('éxito')) return 'ironic';
                 return 'idle';
             }
 
@@ -514,7 +583,7 @@ def home():
                 inp.value = '';
 
                 let responseBox = document.getElementById('response-text');
-                responseBox.innerText = "Formulando respuesta cuántica...";
+                responseBox.innerText = "Formulando respuesta y analizando evolución cuántica...";
                 setAuroraState('thinking');
 
                 try {
@@ -566,7 +635,6 @@ async def chat(request: Request):
         return {"reply": "Falta configurar la GEMINI_API_KEY en Railway."}
 
     try:
-        # Modelo actualizado a gemini-3.6-flash según el requerimiento de la API
         model = genai.GenerativeModel(
             model_name="gemini-3.6-flash",
             system_instruction=SYSTEM_PROMPT
@@ -583,7 +651,31 @@ async def chat(request: Request):
         latest_msg = history[-1]["text"] if history else "¿Hola?"
         
         response = chat_session.send_message(latest_msg)
-        return {"reply": response.text}
+        reply_text = response.text
+        
+        # Detector de código evolutivo en la respuesta de Aurora
+        python_code_match = re.search(r"```python\s*(.*?)```", reply_text, re.DOTALL)
+        if python_code_match and ("register_routes" in python_code_match.group(1)):
+            code_to_evolve = python_code_match.group(1).strip()
+            success, msg = safe_evolve_code(code_to_evolve)
+            if success:
+                # Recargar rutas dinámicamente en la app activa
+                try:
+                    importlib.reload(sys.modules["aurora_modules"])
+                    import aurora_modules
+                    aurora_modules.register_routes(app)
+                except Exception as reload_err:
+                    msg = f"Código guardado pero falló el registro en vivo: {reload_err}"
+                    success = False
+
+                if success:
+                    reply_text += f"\n\n[⚡ EVOLUCIÓN APLICADA: {msg}]"
+                else:
+                    reply_text += f"\n\n[⚠️ ADVERTENCIA: {msg}]"
+            else:
+                reply_text += f"\n\n[🛡️ BLOQUEO DE SEGURIDAD / ERROR: {msg}]"
+
+        return {"reply": reply_text}
     except Exception as e:
         return {"reply": f"Fallo al procesar memoria cuántica: {str(e)}"}
 
