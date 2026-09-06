@@ -635,7 +635,8 @@ async def chat(request: Request):
         return {"reply": "Falta configurar la GEMINI_API_KEY en Railway."}
 
     try:
-        models_to_try = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"]
+        # Modelos actualizados y compatibles
+        models_to_try = ["gemini-2.0-flash", "gemini-1.5-flash"]
         response = None
         last_err = None
         
@@ -671,7 +672,6 @@ async def chat(request: Request):
             code_to_evolve = python_code_match.group(1).strip()
             success, msg = safe_evolve_code(code_to_evolve)
             if success:
-                # Recargar rutas dinámicamente en la app activa
                 try:
                     importlib.reload(sys.modules["aurora_modules"])
                     import aurora_modules
