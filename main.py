@@ -39,7 +39,7 @@ def home():
                 position: relative;
             }
             
-            /* Luces de Fondo Dinámicas (Iluminación ambiental en movimiento) */
+            /* Luces de Fondo Dinámicas */
             .bg-lights {
                 position: absolute;
                 top: 0; left: 0; width: 100%; height: 100%;
@@ -134,7 +134,6 @@ def home():
             .message-row.user { justify-content: flex-end; }
             .message-row.bot { justify-content: flex-start; }
 
-            /* Contenedor del bot para alinear la cara holográfica arriba del globo */
             .bot-container {
                 display: flex;
                 flex-direction: column;
@@ -143,46 +142,97 @@ def home():
                 gap: 5px;
             }
 
-            /* Mini Cara holográfica sobre el globo de diálogo del bot */
+            /* Mini Cara Avanzada con Gestos Dinámicos */
             .mini-face {
-                width: 38px; height: 38px;
-                background: radial-gradient(circle, rgba(56,189,248,0.25) 0%, rgba(37,99,235,0.1) 70%, transparent 100%);
+                width: 42px; height: 42px;
+                background: radial-gradient(circle, rgba(56,189,248,0.3) 0%, rgba(37,99,235,0.12) 70%, transparent 100%);
                 border-radius: 50%;
                 position: relative;
-                border: 1px solid rgba(56, 189, 248, 0.5);
-                box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+                border: 1px solid rgba(56, 189, 248, 0.6);
+                box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 margin-left: 4px;
+                animation: face-breathe 3s ease-in-out infinite alternate;
             }
-            .mini-face .eye {
+            
+            /* Cejas dinámicas */
+            .eyebrow {
+                width: 7px; height: 2px;
+                background: #38bdf8;
+                position: absolute;
+                top: 10px;
+                border-radius: 1px;
+                box-shadow: 0 0 4px #38bdf8;
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .eyebrow.left { left: 10px; }
+            .eyebrow.right { right: 10px; }
+
+            /* Ojos avanzados con parpadeo y enfoque */
+            .eye {
                 width: 6px; height: 6px;
                 background: #38bdf8;
                 border-radius: 50%;
                 position: absolute;
-                top: 12px;
-                box-shadow: 0 0 6px #38bdf8;
-                animation: blink 4s infinite;
+                top: 15px;
+                box-shadow: 0 0 8px #38bdf8;
+                animation: blink 4.5s infinite;
+                transition: transform 0.2s, height 0.2s;
             }
-            .mini-face .eye.left { left: 10px; }
-            .mini-face .eye.right { right: 10px; }
-            .mini-face .mouth {
+            .eye.left { left: 11px; }
+            .eye.right { right: 11px; }
+
+            /* Boca dinámica con expresiones variadas */
+            .mouth {
                 width: 14px; height: 3px;
                 background: #38bdf8;
                 border-radius: 2px;
                 position: absolute;
                 bottom: 10px;
-                left: 12px;
-                box-shadow: 0 0 5px #38bdf8;
-                transition: height 0.08s, width 0.08s;
-            }
-            .mini-face.talking .mouth {
-                animation: talk-mini 0.12s infinite alternate !important;
+                left: 14px;
+                box-shadow: 0 0 6px #38bdf8;
+                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
-            @keyframes blink { 0%, 96%, 98%, 100% { transform: scaleY(1); } 97% { transform: scaleY(0.1); } }
-            @keyframes talk-mini { 0% { height: 3px; width: 14px; } 100% { height: 10px; width: 12px; } }
+            /* --- GESTOS Y ESTADOS AVANZADOS --- */
+            
+            /* Hablando (Sincronización fluida) */
+            .mini-face.talking .mouth {
+                animation: talk-advanced 0.14s infinite alternate !important;
+            }
+            .mini-face.talking .eye {
+                transform: scale(1.1);
+            }
+
+            /* Analizando / Concentrada (Ojos entrecerrados, cejas juntas) */
+            .mini-face.thinking .eyebrow.left { transform: rotate(15deg) translateY(1px); }
+            .mini-face.thinking .eyebrow.right { transform: rotate(-15deg) translateY(1px); }
+            .mini-face.thinking .eye { transform: scaleY(0.5); }
+            .mini-face.thinking .mouth { width: 10px; border-radius: 1px; }
+
+            /* Irónica / Sarcástica (Una ceja alzada, sonrisa lateral) */
+            .mini-face.ironic .eyebrow.left { transform: rotate(-25deg) translateY(-3px); }
+            .mini-face.ironic .eyebrow.right { transform: rotate(5deg) translateY(1px); }
+            .mini-face.ironic .mouth { width: 16px; border-radius: 0 0 10px 2px; transform: rotate(-4deg); }
+
+            /* Sorprendida / Alerta (Ojos abiertos, boca redonda) */
+            .mini-face.surprised .eyebrow.left { transform: translateY(-4px); }
+            .mini-face.surprised .eyebrow.right { transform: translateY(-4px); }
+            .mini-face.surprised .eye { transform: scale(1.4); }
+            .mini-face.surprised .mouth { width: 8px; height: 8px; border-radius: 50%; bottom: 9px; left: 17px; }
+
+            @keyframes blink { 0%, 92%, 96%, 100% { transform: scaleY(1); } 94% { transform: scaleY(0.1); } }
+            @keyframes talk-advanced { 
+                0% { height: 3px; width: 14px; border-radius: 2px; } 
+                50% { height: 9px; width: 10px; border-radius: 5px; }
+                100% { height: 12px; width: 12px; border-radius: 50%; } 
+            }
+            @keyframes face-breathe {
+                0% { transform: scale(0.98); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
+                100% { transform: scale(1.02); box-shadow: 0 0 18px rgba(56, 189, 248, 0.5); }
+            }
 
             .msg { 
                 padding: 12px 16px; 
@@ -250,7 +300,6 @@ def home():
         </style>
     </head>
     <body>
-        <!-- Luces de fondo dinámicas -->
         <div class="bg-lights">
             <div class="light-orb one"></div>
             <div class="light-orb two"></div>
@@ -272,12 +321,14 @@ def home():
         <div id="chat">
             <div class="message-row bot">
                 <div class="bot-container">
-                    <div class="mini-face" id="face-init">
+                    <div class="mini-face ironic" id="face-init">
+                        <div class="eyebrow left"></div>
+                        <div class="eyebrow right"></div>
                         <div class="eye left"></div>
                         <div class="eye right"></div>
                         <div class="mouth"></div>
                     </div>
-                    <div class="msg">Sistemas en línea. Protocolo F.R.I.D.A.Y. activado. ¿Qué orden ejecutamos ahora? ⚡</div>
+                    <div class="msg">Sistemas en línea con gestos avanzados. Protocolo F.R.I.D.A.Y. activado. ¿Qué orden ejecutamos ahora? ⚡</div>
                 </div>
             </div>
         </div>
@@ -299,13 +350,30 @@ def home():
                 if (!voiceEnabled && speechSynthesis.speaking) speechSynthesis.cancel();
             }
 
+            function setFaceExpression(faceElem, text) {
+                faceElem.className = 'mini-face';
+                let lower = text.toLowerCase();
+                // Detectar expresiones según el contenido de la respuesta (ironía, sorpresa, análisis)
+                if (lower.includes('sorpresa') || lower.includes('¡') || lower.includes('cuidado') || lower.includes('atención')) {
+                    faceElem.classList.add('surprised');
+                } else if (lower.includes('obvio') || lower.includes('claramente') || lower.includes('genio') || lower.includes('por fin') || lower.includes('fácil') || lower.includes('sugerencia') || lower.includes('jefe')) {
+                    faceElem.classList.add('ironic');
+                } else if (lower.includes('analizando') || lower.includes('calculando') || lower.includes('sistema') || lower.includes('código')) {
+                    faceElem.classList.add('thinking');
+                } else {
+                    // Estado neutro o rotación aleatoria de expresión inteligente
+                    let exprs = ['', 'ironic', 'thinking'];
+                    let randomExpr = exprs[Math.floor(Math.random() * exprs.length)];
+                    if (randomExpr) faceElem.classList.add(randomExpr);
+                }
+            }
+
             function speak(text, faceElem) {
                 if (!voiceEnabled) return;
                 speechSynthesis.cancel();
                 let cleanText = text.replace(/[*_~]/g, ''); 
                 currentUtterance = new SpeechSynthesisUtterance(cleanText);
                 currentUtterance.lang = 'es-MX';
-                // Voz menos robótica: tono equilibrado y velocidad natural y fluida
                 currentUtterance.pitch = 1.05; 
                 currentUtterance.rate = 1.02;
                 
@@ -314,8 +382,13 @@ def home():
                 if (preferredVoice) currentUtterance.voice = preferredVoice;
 
                 if (faceElem) {
-                    currentUtterance.onstart = () => faceElem.classList.add('talking');
-                    currentUtterance.onend = () => faceElem.classList.remove('talking');
+                    currentUtterance.onstart = () => {
+                        faceElem.classList.add('talking');
+                    };
+                    currentUtterance.onend = () => {
+                        faceElem.classList.remove('talking');
+                        setFaceExpression(faceElem, text);
+                    };
                 }
                 speechSynthesis.speak(currentUtterance);
             }
@@ -344,7 +417,7 @@ def home():
                 inp.value = '';
                 chat.scrollTop = chat.scrollHeight;
 
-                // Crear elemento burbuja bot con su propia mini cara arriba
+                // Crear contenedor bot con mini cara avanzada parpadeando/pensando
                 let botRow = document.createElement('div');
                 botRow.className = 'message-row bot';
                 
@@ -352,12 +425,18 @@ def home():
                 botContainer.className = 'bot-container';
                 
                 let miniFace = document.createElement('div');
-                miniFace.className = 'mini-face talking';
-                miniFace.innerHTML = '<div class="eye left"></div><div class="eye right"></div><div class="mouth"></div>';
+                miniFace.className = 'mini-face thinking talking';
+                miniFace.innerHTML = `
+                    <div class="eyebrow left"></div>
+                    <div class="eyebrow right"></div>
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                    <div class="mouth"></div>
+                `;
                 
                 let msgDiv = document.createElement('div');
                 msgDiv.className = 'msg';
-                msgDiv.innerText = 'Analizando solicitud...';
+                msgDiv.innerText = 'Procesando parámetros...';
 
                 botContainer.appendChild(miniFace);
                 botContainer.appendChild(msgDiv);
@@ -375,9 +454,12 @@ def home():
                     
                     msgDiv.innerText = data.reply;
                     chat.scrollTop = chat.scrollHeight;
+                    
+                    miniFace.classList.remove('thinking');
+                    setFaceExpression(miniFace, data.reply);
                     speak(data.reply, miniFace);
                 } catch (error) {
-                    miniFace.classList.remove('talking');
+                    miniFace.classList.remove('talking', 'thinking');
                     msgDiv.innerText = 'Error de enlace con el servidor principal.';
                     chat.scrollTop = chat.scrollHeight;
                 }
