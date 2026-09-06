@@ -588,10 +588,9 @@ async def chat(request: Request):
         return {"reply": "Falta configurar la GEMINI_API_KEY en Railway."}
 
     try:
-        # Modelo optimizado para máxima velocidad de respuesta
+        # Se actualiza al modelo genérico soportado para evitar el error 404
         model = genai.GenerativeModel('gemini-1.5-flash')
         
-        # Limitar el historial a los últimos 10 mensajes para mantener alta velocidad y bajo consumo de tokens
         recent_history = history[-10:] if len(history) > 10 else history
         
         gemini_history = []
