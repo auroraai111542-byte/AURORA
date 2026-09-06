@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 import google.generativeai as genai
 
 app = FastAPI()
@@ -14,6 +14,24 @@ Eres extremadamente inteligente, competente, eficiente y analítica.
 Por defecto eres profesional, directa y servicial, pero puedes soltar un comentario sutilmente irónico o sarcástico solo en momentos clave o cuando la situación lo amerite, sin exagerar todo el tiempo. 
 Mantén tus respuestas concisas, estructuradas y con tono de alta tecnología."""
 
+@app.get("/manifest.json")
+def manifest():
+    return {
+        "name": "F.R.I.D.A.Y. // Aurora AI",
+        "short_name": "F.R.I.D.A.Y.",
+        "start_url": "/",
+        "display": "standalone",
+        "background_color": "#050b14",
+        "theme_color": "#050b14",
+        "icons": [
+            {
+                "src": "https://cdn-icons-png.flaticon.com/512/1693/1693755.png",
+                "sizes": "512x512",
+                "type": "image/png"
+            }
+        ]
+    }
+
 @app.get("/", response_class=HTMLResponse)
 def home():
     return r"""
@@ -22,7 +40,11 @@ def home():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta name="theme-color" content="#050b14">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <title>F.R.I.D.A.Y. // Aurora HUD</title>
+        <link rel="manifest" href="/manifest.json">
         <style>
             * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
             body { 
@@ -157,7 +179,6 @@ def home():
                 animation: face-breathe 3s ease-in-out infinite alternate;
             }
             
-            /* Cejas dinámicas */
             .eyebrow {
                 width: 7px; height: 2px;
                 background: #38bdf8;
@@ -170,7 +191,6 @@ def home():
             .eyebrow.left { left: 10px; }
             .eyebrow.right { right: 10px; }
 
-            /* Ojos avanzados con parpadeo y enfoque */
             .eye {
                 width: 6px; height: 6px;
                 background: #38bdf8;
@@ -184,7 +204,6 @@ def home():
             .eye.left { left: 11px; }
             .eye.right { right: 11px; }
 
-            /* Boca dinámica con expresiones variadas */
             .mouth {
                 width: 14px; height: 3px;
                 background: #38bdf8;
@@ -196,28 +215,16 @@ def home():
                 transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
-            /* --- GESTOS Y ESTADOS AVANZADOS --- */
-            
-            /* Hablando (Sincronización fluida) */
-            .mini-face.talking .mouth {
-                animation: talk-advanced 0.14s infinite alternate !important;
-            }
-            .mini-face.talking .eye {
-                transform: scale(1.1);
-            }
-
-            /* Analizando / Concentrada (Ojos entrecerrados, cejas juntas) */
+            /* Gestos Avanzados */
+            .mini-face.talking .mouth { animation: talk-advanced 0.14s infinite alternate !important; }
+            .mini-face.talking .eye { transform: scale(1.1); }
             .mini-face.thinking .eyebrow.left { transform: rotate(15deg) translateY(1px); }
             .mini-face.thinking .eyebrow.right { transform: rotate(-15deg) translateY(1px); }
             .mini-face.thinking .eye { transform: scaleY(0.5); }
             .mini-face.thinking .mouth { width: 10px; border-radius: 1px; }
-
-            /* Irónica / Sarcástica (Una ceja alzada, sonrisa lateral) */
             .mini-face.ironic .eyebrow.left { transform: rotate(-25deg) translateY(-3px); }
             .mini-face.ironic .eyebrow.right { transform: rotate(5deg) translateY(1px); }
             .mini-face.ironic .mouth { width: 16px; border-radius: 0 0 10px 2px; transform: rotate(-4deg); }
-
-            /* Sorprendida / Alerta (Ojos abiertos, boca redonda) */
             .mini-face.surprised .eyebrow.left { transform: translateY(-4px); }
             .mini-face.surprised .eyebrow.right { transform: translateY(-4px); }
             .mini-face.surprised .eye { transform: scale(1.4); }
@@ -328,7 +335,7 @@ def home():
                         <div class="eye right"></div>
                         <div class="mouth"></div>
                     </div>
-                    <div class="msg">Sistemas en línea con gestos avanzados. Protocolo F.R.I.D.A.Y. activado. ¿Qué orden ejecutamos ahora? ⚡</div>
+                    <div class="msg">Sistemas PWA en línea, jefe. Protocolo F.R.I.D.A.Y. activo. ¿Qué orden ejecutamos ahora? ⚡</div>
                 </div>
             </div>
         </div>
@@ -353,7 +360,6 @@ def home():
             function setFaceExpression(faceElem, text) {
                 faceElem.className = 'mini-face';
                 let lower = text.toLowerCase();
-                // Detectar expresiones según el contenido de la respuesta (ironía, sorpresa, análisis)
                 if (lower.includes('sorpresa') || lower.includes('¡') || lower.includes('cuidado') || lower.includes('atención')) {
                     faceElem.classList.add('surprised');
                 } else if (lower.includes('obvio') || lower.includes('claramente') || lower.includes('genio') || lower.includes('por fin') || lower.includes('fácil') || lower.includes('sugerencia') || lower.includes('jefe')) {
@@ -361,7 +367,6 @@ def home():
                 } else if (lower.includes('analizando') || lower.includes('calculando') || lower.includes('sistema') || lower.includes('código')) {
                     faceElem.classList.add('thinking');
                 } else {
-                    // Estado neutro o rotación aleatoria de expresión inteligente
                     let exprs = ['', 'ironic', 'thinking'];
                     let randomExpr = exprs[Math.floor(Math.random() * exprs.length)];
                     if (randomExpr) faceElem.classList.add(randomExpr);
@@ -382,9 +387,7 @@ def home():
                 if (preferredVoice) currentUtterance.voice = preferredVoice;
 
                 if (faceElem) {
-                    currentUtterance.onstart = () => {
-                        faceElem.classList.add('talking');
-                    };
+                    currentUtterance.onstart = () => { faceElem.classList.add('talking'); };
                     currentUtterance.onend = () => {
                         faceElem.classList.remove('talking');
                         setFaceExpression(faceElem, text);
@@ -417,7 +420,6 @@ def home():
                 inp.value = '';
                 chat.scrollTop = chat.scrollHeight;
 
-                // Crear contenedor bot con mini cara avanzada parpadeando/pensando
                 let botRow = document.createElement('div');
                 botRow.className = 'message-row bot';
                 
