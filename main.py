@@ -61,7 +61,6 @@ def home():
                 position: relative;
             }
             
-            /* Aurora Background Quantum Orbs */
             .bg-lights {
                 position: absolute;
                 top: 0; left: 0; width: 100%; height: 100%;
@@ -128,7 +127,6 @@ def home():
             }
             .btn-tool:active { background: rgba(6, 182, 212, 0.3); }
 
-            /* HUD Principal Central (Aurora Core) */
             #hud-main {
                 flex: 1;
                 display: flex;
@@ -141,7 +139,6 @@ def home():
                 overflow-y: auto;
             }
 
-            /* Núcleo Holográfico Avanzado de Aurora */
             .aurora-core {
                 width: 130px; height: 130px;
                 position: relative;
@@ -152,7 +149,6 @@ def home():
                 flex-shrink: 0;
             }
 
-            /* Anillos concéntricos giratorios */
             .ring {
                 position: absolute;
                 border-radius: 50%;
@@ -180,7 +176,6 @@ def home():
                 border-radius: 50%;
             }
 
-            /* Sensores Ópticos / Ojos realistas */
             .optical-sensors {
                 position: absolute;
                 width: 44px;
@@ -201,7 +196,6 @@ def home():
                 transition: all 0.25s ease;
             }
 
-            /* Matriz de Audio / Boca realista */
             .audio-matrix {
                 position: absolute;
                 width: 40px;
@@ -221,21 +215,16 @@ def home():
                 transition: height 0.15s ease, background 0.2s;
             }
 
-            /* ESTADOS DE AURORA */
             .aurora-core.idle .matrix-bar { height: 4px; }
-
-            /* Estado Pensando / Formulando Respuesta */
             .aurora-core.thinking .ring.middle { border-color: #8b5cf6; animation-duration: 2s; }
             .aurora-core.thinking .ring.outer { animation-duration: 4s; border-color: rgba(236, 72, 153, 0.6); }
             .aurora-core.thinking .sensor { transform: scaleY(0.3); background: #f472b6; box-shadow: 0 0 12px #ec4899; }
             .aurora-core.thinking .matrix-bar { animation: think-wave 0.6s infinite alternate ease-in-out; background: #8b5cf6; }
 
-            /* Estado Hablando / Contestando */
             .aurora-core.talking .ring.middle { border-color: #22d3ee; box-shadow: 0 0 25px rgba(34,211,238,0.8); }
             .aurora-core.talking .sensor { transform: scale(1.25); background: #ffffff; box-shadow: 0 0 18px #ffffff; }
             .aurora-core.talking .matrix-bar { animation: talk-matrix 0.12s infinite alternate ease-in-out; background: #67e8f9; }
 
-            /* Expresiones Emocionales */
             .aurora-core.ironic .sensor { transform: scaleY(0.7) translateY(-2px); }
             .aurora-core.ironic .ring.outer { border-color: rgba(251, 191, 36, 0.6); }
             .aurora-core.surprised .sensor { transform: scale(1.5); background: #38bdf8; }
@@ -248,18 +237,9 @@ def home():
                 100% { transform: translateY(-6px) scale(1.02); filter: drop-shadow(0 0 25px rgba(139,92,246,0.5)); } 
             }
             @keyframes sensor-blink { 0%, 90%, 96%, 100% { transform: scaleY(1); } 93% { transform: scaleY(0.1); } }
-            
-            @keyframes think-wave {
-                0% { height: 4px; }
-                100% { height: 14px; background: #f472b6; }
-            }
-            @keyframes talk-matrix {
-                0% { height: 6px; }
-                50% { height: 20px; }
-                100% { height: 10px; }
-            }
+            @keyframes think-wave { 0% { height: 4px; } 100% { height: 14px; background: #f472b6; } }
+            @keyframes talk-matrix { 0% { height: 6px; } 50% { height: 20px; } 100% { height: 10px; } }
 
-            /* Burbuja de respuesta actual */
             .response-bubble {
                 background: rgba(10, 15, 30, 0.9);
                 border: 1px solid rgba(34, 211, 238, 0.35);
@@ -279,7 +259,6 @@ def home():
                 text-align: center;
             }
 
-            /* Panel Deslizante de Historial de Chat */
             #chat-drawer {
                 position: absolute;
                 top: 90px; left: 0; width: 100%; height: calc(100% - 150px);
@@ -321,7 +300,6 @@ def home():
             .chat-item.user { background: #0284c7; color: white; align-self: flex-end; }
             .chat-item.bot { background: #0f172a; color: #cbd5e1; align-self: flex-start; border: 1px solid rgba(34,211,238,0.2); }
 
-            /* Footer Fijo Garantizado */
             footer { 
                 padding: 12px 16px; 
                 background: rgba(3, 7, 18, 0.98); 
@@ -588,8 +566,11 @@ async def chat(request: Request):
         return {"reply": "Falta configurar la GEMINI_API_KEY en Railway."}
 
     try:
-        # Se actualiza al modelo genérico soportado para evitar el error 404
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        # Se pasa el system_instruction de manera nativa y se usa el modelo correcto
+        model = genai.GenerativeModel(
+            model_name="gemini-1.5-flash",
+            system_instruction=SYSTEM_PROMPT
+        )
         
         recent_history = history[-10:] if len(history) > 10 else history
         
@@ -600,9 +581,8 @@ async def chat(request: Request):
         
         chat_session = model.start_chat(history=gemini_history)
         latest_msg = history[-1]["text"] if history else "¿Hola?"
-        prompt_with_system = f"{SYSTEM_PROMPT}\n\nPregunta actual del usuario: {latest_msg}"
         
-        response = chat_session.send_message(prompt_with_system)
+        response = chat_session.send_message(latest_msg)
         return {"reply": response.text}
     except Exception as e:
         return {"reply": f"Fallo al procesar memoria cuántica: {str(e)}"}
