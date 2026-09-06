@@ -15,7 +15,7 @@ Responde de forma concisa, útil y con personalidad."""
 
 @app.get("/", response_class=HTMLResponse)
 def home():
-    return """
+    return r"""
     <!DOCTYPE html>
     <html lang="es">
     <head>
@@ -66,7 +66,7 @@ def home():
         </div>
 
         <div id="chat">
-            <div class="msg bot">¡Hola! Ya corregí el motor. ¿Qué vamos a hacer hoy? 😎</div>
+            <div class="msg bot">¡Hola! Motor reparado con éxito. ¿Qué hacemos? 😎</div>
         </div>
         
         <footer>
@@ -88,7 +88,7 @@ def home():
                 if (!voiceEnabled) return;
                 speechSynthesis.cancel();
                 
-                let cleanText = text.replace(/[*_~]/g, '').replace(/[\u{1F600}-\u{1F6FF}]/gu, ''); 
+                let cleanText = text.replace(/[*_~]/g, ''); 
                 
                 currentUtterance = new SpeechSynthesisUtterance(cleanText);
                 currentUtterance.lang = 'es-MX';
