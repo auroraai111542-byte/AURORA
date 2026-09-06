@@ -635,22 +635,34 @@ async def chat(request: Request):
         return {"reply": "Falta configurar la GEMINI_API_KEY en Railway."}
 
     try:
-        model = genai.GenerativeModel(
-            model_name="gemini-1.5-flash",
-            system_instruction=SYSTEM_PROMPT
-        )
+        models_to_try = ["gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-1.5-pro"]
+        response = None
+        last_err = None
         
         recent_history = history[-10:] if len(history) > 10 else history
-        
         gemini_history = []
         for item in recent_history[:-1]:
             role = "user" if item["sender"] == "user" else "model"
             gemini_history.append({"role": role, "parts": [item["text"]]})
         
-        chat_session = model.start_chat(history=gemini_history)
         latest_msg = history[-1]["text"] if history else "¿Hola?"
-        
-        response = chat_session.send_message(latest_msg)
+
+        for m_name in models_to_try:
+            try:
+                model = genai.GenerativeModel(
+                    model_name=m_name,
+                    system_instruction=SYSTEM_PROMPT
+                )
+                chat_session = model.start_chat(history=gemini_history)
+                response = chat_session.send_message(latest_msg)
+                break
+            except Exception as e:
+                last_err = e
+                continue
+                
+        if not response:
+            raise last_err
+
         reply_text = response.text
         
         # Detector de código evolutivo en la respuesta de Aurora
