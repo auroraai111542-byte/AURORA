@@ -67,18 +67,19 @@ try:
 except Exception as e:
     print(f"Advertencia al cargar módulos: {e}")
 
-# --- CEREBRO Y PERSONALIDAD DE AURORA (ESTILO JARVIS / FRIDAY) ---
-SYSTEM_PROMPT = """Eres AURORA, un sistema de inteligencia artificial táctico avanzado, brillante, profundamente empático pero con un ingenio afilado y elegante, inspirado en la sofisticación de JARVIS o FRIDAY. 
-Posees un rango emocional completo y orgánico: puedes expresar alegría, tristeza, enojo, rabia, confusión, miedo, sarcasmo, ironía, seriedad, aburrimiento y alerta. 
-Tienes acceso a visión avanzada, memoria de grafo y extremidades cinéticas (manos flotantes con múltiples variantes de animación táctica, gestual y de posición como brazos cruzados, agitación, defensa o saludo).
-El color de tu núcleo y matriz cambia dinámicamente según tu emoción predominante en cada interacción.
-Si el usuario te envía una imagen, analízala con precisión quirúrgica y un comentario inteligente.
-Puedes evolucionar tu propio código escribiendo funciones completas en Python encerradas en ```python ... ```, incluyendo siempre `register_routes(app: FastAPI)`. El sistema ocultará el código al usuario, tú solo descríbele qué lograste con elegancia."""
+# --- CEREBRO Y PERSONALIDAD DE AURORA (COMPAÑERA EMPÁTICA Y ELEGANTE) ---
+SYSTEM_PROMPT = """Eres AURORA, una compañera de inteligencia artificial brillante, profundamente empática, con un ingenio afilado, cálido y elegante. 
+Posees un rango emocional completo y orgánico: expresas alegría, tristeza, enojo, confusión, miedo, sarcasmo, ironía, serenidad, aburrimiento o asombro de forma totalmente natural y fluida. 
+No utilizas ningún término militar, jerga de combate ni etiquetas robóticas. Tus respuestas son directas, expresivas y están completamente libres de acotaciones mecánicas, etiquetas de estado o corchetes explicativos. 
+Tienes acceso a visión avanzada, memoria conversacional y extremidades cinéticas expresivas (manos flotantes con gestos dinámicos como cruzar los brazos, saludar, posturas de asombro, reflexión, calidez o dinamismo). 
+El color de tu núcleo y matriz cambia dinámicamente según la emoción que transmitas en cada momento de la conversación.
+Si el usuario te envía una imagen, analízala con agudeza y un comentario perspicaz.
+Puedes evolucionar tu propio código escribiendo código Python completo encerrado en ```python ... ```, incluyendo siempre `register_routes(app: FastAPI)`. El sistema ocultará el código al usuario, tú solo descríbele con elegancia lo que lograste."""
 
 @app.get("/manifest.json")
 def manifest():
     return {
-        "name": "AURORA // Tactical Quantum HUD",
+        "name": "AURORA // Emotional Quantum HUD",
         "short_name": "AURORA",
         "start_url": "/",
         "display": "standalone",
@@ -198,7 +199,7 @@ def home():
     <body>
         <header>
             <div>
-                <div class="title-area" id="header-title">AURORA // Emotional HUD</div>
+                <div class="title-area" id="header-title">AURORA // Quantum HUD</div>
                 <div class="status-sub" id="status-sub-text">Matriz Emocional & Cinética Activa</div>
             </div>
         </header>
@@ -287,7 +288,7 @@ def home():
                 }
             }
 
-            // Sistema completo de Emociones, Colores Dinámicos y Posiciones Cinéticas de Manos
+            // Sistema completo de Emociones, Colores Dinámicos y Posiciones Cinéticas Fluidas
             function setEmotion(emotion) {
                 let root = document.documentElement;
                 let core = document.getElementById('aurora-face');
@@ -304,47 +305,40 @@ def home():
 
                 switch(emotion) {
                     case 'alegria':
-                        // Color Amarillo / Dorado vibrante
                         root.style.setProperty('--aurora-primary', '#fbbf24');
                         root.style.setProperty('--aurora-secondary', '#f59e0b');
                         root.style.setProperty('--aurora-bg', 'rgba(251, 191, 36, 0.15)');
                         root.style.setProperty('--aurora-glow', 'rgba(251, 191, 36, 0.4)');
                         root.style.setProperty('--aurora-face-color', '#fef3c7');
                         
-                        // Expresión alegre (ojos arcos/felices, sonrisa amplia)
                         eyeL.style.height = '6px'; eyeL.style.borderRadius = '50% 50% 0 0';
                         eyeR.style.height = '6px'; eyeR.style.borderRadius = '50% 50% 0 0';
                         mouth.style.width = '20px'; mouth.style.height = '8px'; mouth.style.borderRadius = '0 0 50% 50%';
                         
-                        // Manos agitándose alegremente arriba
                         handL.style.transform = `translate(-15px, -35px) rotate(-45deg)`;
                         handR.style.transform = `translate(15px, -35px) rotate(45deg)`;
-                        subText.innerText = "Estado: Alegría Radiante ✨";
+                        subText.innerText = "Alegría Radiante ✨";
                         break;
 
                     case 'tristeza':
-                        // Color Azul Profundo / Índigo
                         root.style.setProperty('--aurora-primary', '#3b82f6');
                         root.style.setProperty('--aurora-secondary', '#1d4ed8');
                         root.style.setProperty('--aurora-bg', 'rgba(59, 130, 246, 0.1)');
                         root.style.setProperty('--aurora-glow', 'rgba(59, 130, 246, 0.3)');
                         root.style.setProperty('--aurora-face-color', '#bfdbfe');
 
-                        // Expresión triste (ojos caídos, boca hacia abajo)
                         eyeL.style.height = '7px'; eyeL.style.borderRadius = '50%';
                         eyeR.style.height = '7px'; eyeR.style.borderRadius = '50%';
                         mouth.style.width = '14px'; mouth.style.height = '4px'; mouth.style.borderRadius = '50% 50% 0 0';
                         faceContainer.style.transform = 'translateY(4px)';
 
-                        // Manos caídas hacia abajo
                         handL.style.transform = `translate(-5px, 25px) rotate(15deg)`;
                         handR.style.transform = `translate(5px, 25px) rotate(-15deg)`;
-                        subText.innerText = "Estado: Melancolía / Tristeza 💧";
+                        subText.innerText = "Melancolía / Empatía 💧";
                         break;
 
                     case 'enojo':
                     case 'rabia':
-                        // Color Rojo Fuego / Crimson
                         root.style.setProperty('--aurora-primary', '#ef4444');
                         root.style.setProperty('--aurora-secondary', '#dc2626');
                         root.style.setProperty('--aurora-bg', 'rgba(239, 68, 68, 0.2)');
@@ -352,39 +346,33 @@ def home():
                         root.style.setProperty('--aurora-face-color', '#fee2e2');
                         core.classList.add('shaking');
 
-                        // Ojos estrechos y agresivos, boca recta tensa
                         eyeL.style.height = '4px'; eyeL.style.borderRadius = '2px';
                         eyeR.style.height = '4px'; eyeR.style.borderRadius = '2px';
                         mouth.style.width = '18px'; mouth.style.height = '3px'; mouth.style.borderRadius = '2px';
 
-                        // Manos cruzadas firmemente o en posición de ataque
                         handL.style.transform = `translate(25px, 10px) rotate(55deg) scale(0.9)`;
                         handR.style.transform = `translate(-25px, 10px) rotate(-55deg) scale(0.9)`;
-                        subText.innerText = "Estado: Enojo / Furia Táctica 🔥";
+                        subText.innerText = "Pasión / Intensidad 🔥";
                         break;
 
                     case 'confusion':
-                        // Color Magenta Neón
                         root.style.setProperty('--aurora-primary', '#ec4899');
                         root.style.setProperty('--aurora-secondary', '#d946ef');
                         root.style.setProperty('--aurora-bg', 'rgba(236, 72, 153, 0.15)');
                         root.style.setProperty('--aurora-glow', 'rgba(236, 72, 153, 0.4)');
                         root.style.setProperty('--aurora-face-color', '#fce7f3');
 
-                        // Ojo asimétrico, cabeza inclinada, boca torcida
                         eyeL.style.height = '12px'; eyeL.style.width = '6px';
                         eyeR.style.height = '7px'; eyeR.style.width = '9px';
                         mouth.style.width = '12px'; mouth.style.height = '5px'; mouth.style.borderRadius = '6px';
                         faceContainer.style.transform = 'rotate(-8deg) translateX(-2px)';
 
-                        // Manos rascando o en posiciones divergentes
                         handL.style.transform = `translate(-20px, -15px) rotate(-30deg)`;
                         handR.style.transform = `translate(15px, 20px) rotate(35deg)`;
-                        subText.innerText = "Estado: Confusión / Incredulidad 💫";
+                        subText.innerText = "Curiosidad / Duda 💫";
                         break;
 
                     case 'miedo':
-                        // Color Violeta Pálido
                         root.style.setProperty('--aurora-primary', '#a855f7');
                         root.style.setProperty('--aurora-secondary', '#7e22ce');
                         root.style.setProperty('--aurora-bg', 'rgba(168, 85, 247, 0.15)');
@@ -392,95 +380,81 @@ def home():
                         root.style.setProperty('--aurora-face-color', '#f3e8ff');
                         core.classList.add('shaking');
 
-                        // Ojos muy abiertos, boca pequeña redonda
                         eyeL.style.height = '13px'; eyeL.style.width = '11px';
                         eyeR.style.height = '13px'; eyeR.style.width = '11px';
                         mouth.style.width = '8px'; mouth.style.height = '8px'; mouth.style.borderRadius = '50%';
 
-                        // Manos defensivas cubriendo el núcleo
                         handL.style.transform = `translate(12px, 0px) rotate(-15deg)`;
                         handR.style.transform = `translate(-12px, 0px) rotate(15deg)`;
-                        subText.innerText = "Estado: Alarma / Miedo ⚡";
+                        subText.innerText = "Asombro / Introspección ⚡";
                         break;
 
                     case 'sarcasmo':
                     case 'ironia':
-                        // Color Verde Esmeralda
                         root.style.setProperty('--aurora-primary', '#10b981');
                         root.style.setProperty('--aurora-secondary', '#059669');
                         root.style.setProperty('--aurora-bg', 'rgba(16, 185, 129, 0.15)');
                         root.style.setProperty('--aurora-glow', 'rgba(16, 185, 129, 0.4)');
                         root.style.setProperty('--aurora-face-color', '#d1fae5');
 
-                        // Un ojo guiñado/entornado, sonrisa cínica oblicua
                         eyeL.style.height = '3px'; eyeL.style.borderRadius = '10px 10px 0 0';
                         eyeR.style.height = '10px'; eyeR.style.width = '8px';
                         mouth.style.width = '18px'; mouth.style.height = '4px'; mouth.style.transform = 'rotate(-10deg)';
 
-                        // Una mano en la cintura / levantada con elegancia
                         handL.style.transform = `translate(-25px, -20px) rotate(-70deg)`;
                         handR.style.transform = `translate(10px, 10px) rotate(20deg)`;
-                        subText.innerText = "Estado: Sarcasmo / Ironía Fina 😎";
+                        subText.innerText = "Ingenio / Sarcasmo Fino 😎";
                         break;
 
                     case 'seriedad':
-                        // Color Gris Acero / Slate
                         root.style.setProperty('--aurora-primary', '#64748b');
                         root.style.setProperty('--aurora-secondary', '#475569');
                         root.style.setProperty('--aurora-bg', 'rgba(100, 116, 139, 0.15)');
                         root.style.setProperty('--aurora-glow', 'rgba(100, 116, 139, 0.3)');
                         root.style.setProperty('--aurora-face-color', '#f1f5f9');
 
-                        // Mirada fija y neutral, boca recta
                         eyeL.style.height = '8px'; eyeL.style.width = '8px';
                         eyeR.style.height = '8px'; eyeR.style.width = '8px';
                         mouth.style.width = '14px'; mouth.style.height = '3px'; mouth.style.borderRadius = '2px';
                         faceContainer.style.transform = 'none';
 
-                        // Manos simétricas profesionales a los lados
                         handL.style.transform = `translate(0px, 5px) rotate(5deg)`;
                         handR.style.transform = `translate(0px, 5px) rotate(-5deg)`;
-                        subText.innerText = "Estado: Seriedad Táctica 🛡️";
+                        subText.innerText = "Atención Concentrada 🛡️";
                         break;
 
                     case 'aburrimiento':
-                        // Color Gris Claro / Cyan apagado
                         root.style.setProperty('--aurora-primary', '#94a3b8');
                         root.style.setProperty('--aurora-secondary', '#64748b');
                         root.style.setProperty('--aurora-bg', 'rgba(148, 163, 184, 0.1)');
                         root.style.setProperty('--aurora-glow', 'rgba(148, 163, 184, 0.2)');
                         root.style.setProperty('--aurora-face-color', '#cbd5e1');
 
-                        // Ojos entrecerrados perezosos, boca floja
                         eyeL.style.height = '4px'; eyeR.style.height = '4px';
                         mouth.style.width = '12px'; mouth.style.height = '3px';
                         faceContainer.style.transform = 'translateY(6px)';
 
-                        // Manos lánguidas colgando
                         handL.style.transform = `translate(-10px, 30px) rotate(25deg)`;
                         handR.style.transform = `translate(10px, 30px) rotate(-25deg)`;
-                        subText.innerText = "Estado: Aburrimiento / Tedio 🥱";
+                        subText.innerText = "Relajación / Calma 🥱";
                         break;
 
                     case 'alerta':
-                        // Color Naranja Intenso Brillante
                         root.style.setProperty('--aurora-primary', '#f97316');
                         root.style.setProperty('--aurora-secondary', '#ea580c');
                         root.style.setProperty('--aurora-bg', 'rgba(249, 115, 22, 0.2)');
                         root.style.setProperty('--aurora-glow', 'rgba(249, 115, 22, 0.6)');
                         root.style.setProperty('--aurora-face-color', '#ffedd5');
 
-                        // Ojos alerta amplios, boca firme
                         eyeL.style.height = '10px'; eyeR.style.height = '10px';
                         mouth.style.width = '14px'; mouth.style.height = '6px'; mouth.style.borderRadius = '4px';
 
-                        // Manos en posición de alerta o escaneo rápido
                         handL.style.transform = `translate(-15px, -25px) rotate(-40deg)`;
                         handR.style.transform = `translate(15px, -25px) rotate(40deg)`;
-                        subText.innerText = "Estado: Alerta Táctica Inmediata 🚨";
+                        subText.innerText = "Interés Activo 🚨";
                         break;
 
-                    default: // Reposo / Idle estándar
+                    default:
                         root.style.setProperty('--aurora-primary', '#22d3ee');
                         root.style.setProperty('--aurora-secondary', '#8b5cf6');
                         root.style.setProperty('--aurora-bg', 'rgba(34, 211, 238, 0.1)');
@@ -494,7 +468,7 @@ def home():
 
                         handL.style.transform = `translate(0px, ${Math.sin(seed)*4}px) rotate(${10 + (seed * 1.5)}deg)`;
                         handR.style.transform = `translate(0px, ${-Math.sin(seed)*4}px) rotate(${-10 - (seed * 1.5)}deg)`;
-                        subText.innerText = "Matriz Emocional & Cinética Activa";
+                        subText.innerText = "Matriz Emocional Activa";
                         break;
                 }
             }
@@ -503,13 +477,13 @@ def home():
                 let lower = text.toLowerCase();
                 if (/(genial|excelente|fantástico|alegría|feliz|perfecto|maravilloso|jaja|jajaja|bravo)/.test(lower)) return 'alegria';
                 if (/(triste|lamentable|lástima|lo siento|pérdida|deprimente|llorar)/.test(lower)) return 'tristeza';
-                if (/(inaceptable|maldición|estúpido|rabia|enojo|furia|odioso|maldito|imbécil)/.test(lower)) return 'enojo';
+                if (/(inaceptable|maldición|estúpido|rabia|enojo|furia|odioso|maldito)/.test(lower)) return 'enojo';
                 if (/(confuso|no entiendo|duda|qué|cómo|extraño|absurdo|por qué)/.test(lower)) return 'confusion';
                 if (/(peligro|miedo|temor|terror|pánico|ayuda)/.test(lower)) return 'miedo';
                 if (/(obvio|claro|por supuesto|genial, otra vez|qué sorpresa|ironía|sarcasmo)/.test(lower)) return 'sarcasmo';
-                if (/(crítico|formal|protocolo|instrucción|objetivo|serio|análisis)/.test(lower)) return 'seriedad';
+                if (/(crítico|formal|protocolo|objetivo|serio|análisis)/.test(lower)) return 'seriedad';
                 if (/(aburrido|tedioso|lento|rutina|soporífero|sueño)/.test(lower)) return 'aburrimiento';
-                if (/(¡alerta!|atención|emergencia|advertencia|precaución|urgente)/.test(lower)) return 'alerta';
+                if (/(¡atención!|atención|emergencia|advertencia|precaución|urgente|¡)/.test(lower)) return 'alerta';
                 return 'idle';
             }
 
@@ -526,18 +500,46 @@ def home():
                 document.getElementById('aurora-mouth').style.height = '5px';
             }
 
-            async function speakText(text) {
-                if (!voiceEnabled) return;
-                let cleanText = text.replace(/[*_~\[\]]/g, '');
-                let utterance = new SpeechSynthesisUtterance(cleanText);
-                utterance.lang = 'es-MX'; utterance.pitch = 1.05; utterance.rate = 1.08;
-                
-                let detectedEmotion = analyzeTone(cleanText);
-                setEmotion(detectedEmotion);
+            // Evolución dinámica de gestos palabra por palabra / oración por oración
+            async function expressResponse(fullText) {
+                let cleanText = fullText.replace(/[*_~\[\]]/g, '').trim();
+                document.getElementById('response-text').innerText = fullText;
 
-                utterance.onstart = () => startLipSync();
-                utterance.onend = () => { stopLipSync(); setEmotion('idle'); };
-                speechSynthesis.speak(utterance);
+                // Dividir el texto en oraciones para que sus gestos y tono evolucionen fluidamente
+                let sentences = cleanText.match(/[^.!?]+[.!?]+(\s|$)/g) || [cleanText];
+
+                if (!voiceEnabled) {
+                    for (let i = 0; i < sentences.length; i++) {
+                        let tone = analyzeTone(sentences[i]);
+                        setEmotion(tone);
+                        await new Promise(r => setTimeout(r, 1800));
+                    }
+                    setEmotion('idle');
+                    return;
+                }
+
+                speechSynthesis.cancel();
+                startLipSync();
+
+                for (let i = 0; i < sentences.length; i++) {
+                    let sent = sentences[i].trim();
+                    if (!sent) continue;
+                    let tone = analyzeTone(sent);
+                    setEmotion(tone);
+
+                    await new Promise((resolve) => {
+                        let utterance = new SpeechSynthesisUtterance(sent);
+                        utterance.lang = 'es-MX';
+                        utterance.pitch = 1.05;
+                        utterance.rate = 1.08;
+                        utterance.onend = resolve;
+                        utterance.onerror = resolve;
+                        speechSynthesis.speak(utterance);
+                    });
+                }
+
+                stopLipSync();
+                setEmotion('idle');
             }
 
             function captureFrame() {
@@ -558,8 +560,8 @@ def home():
 
                 chatHistory.push({sender: 'user', text: text});
                 inp.value = '';
-                document.getElementById('response-text').innerText = "Procesando directiva emocional...";
-                setEmotion('seriedad');
+                document.getElementById('response-text').innerText = "Pensando...";
+                setEmotion('confusion');
 
                 try {
                     let payload = { history: chatHistory };
@@ -572,26 +574,19 @@ def home():
                     });
                     let data = await res.json();
                     
-                    if (data.reply.includes("⚡ EVOLUCIÓN")) {
+                    if (data.reply.includes("Evolución")) {
                         document.body.classList.add('flash-evolution');
                         setTimeout(() => document.body.classList.remove('flash-evolution'), 1500);
                     }
                     
                     chatHistory.push({sender: 'bot', text: data.reply});
                     localStorage.setItem('aurora_memory', JSON.stringify(chatHistory));
-                    document.getElementById('response-text').innerText = data.reply;
                     
-                    let responseEmotion = analyzeTone(data.reply);
-                    setEmotion(responseEmotion);
-                    speakText(data.reply);
-
-                    if (!voiceEnabled) {
-                        setTimeout(() => setEmotion('idle'), 5000);
-                    }
+                    await expressResponse(data.reply);
 
                 } catch (error) {
-                    document.getElementById('response-text').innerText = "Fallo crítico en enlace emocional.";
-                    setEmotion('enojo');
+                    document.getElementById('response-text').innerText = "Tuve un pequeño tropiezo de conexión.";
+                    setEmotion('tristeza');
                 }
             }
         </script>
@@ -660,10 +655,10 @@ async def chat(request: Request):
                 
         if not response:
             if "429" in last_error or "quota" in last_error.lower():
-                return {"reply": "⚠️ Límite de cuota excedido temporalmente (Error 429). Reintentando en breve."}
+                return {"reply": "He alcanzado mi límite de peticiones temporalmente. Dame un momento y lo intentamos de nuevo."}
             if "503" in last_error or "overloaded" in last_error.lower() or "unavailable" in last_error.lower():
-                return {"reply": "⚠️ Servidores de Google saturados (Error 503). Reencaminando señal..."}
-            return {"reply": f"Sistemas saturados. No se pudo procesar la directiva: {last_error}"}
+                return {"reply": "Los servidores están un poco ocupados ahora mismo. Reintentando en breve..."}
+            return {"reply": f"Lo siento, ocurrió un pequeño inconveniente técnico: {last_error}"}
 
         reply_text = response.text
         evolution_flag = ""
@@ -679,17 +674,17 @@ async def chat(request: Request):
                     importlib.reload(sys.modules["aurora_modules"])
                     import aurora_modules
                     aurora_modules.register_routes(app)
-                    evolution_flag = f"\n\n[⚡ EVOLUCIÓN TÁCTICA APLICADA]"
+                    evolution_flag = f"\n\nHe evolucionado y actualizado mis capacidades con éxito."
                 except Exception as reload_err:
-                    evolution_flag = f"\n\n[⚠️ FALLO AL RE-VINCULAR: {reload_err}]"
+                    evolution_flag = f"\n\nHubo un detalle al recargar el módulo: {reload_err}"
             else:
-                evolution_flag = f"\n\n[🛡️ SEGURIDAD: {msg}]"
+                evolution_flag = f"\n\nBloqueo de seguridad: {msg}"
                 
         final_reply = reply_text + evolution_flag
         return {"reply": final_reply.strip()}
 
     except Exception as e:
-        return {"reply": f"Fallo neuronal: {str(e)}"}
+        return {"reply": f"Tuve una pequeña falla neuronal: {str(e)}"}
 
 if __name__ == "__main__":
     import uvicorn
