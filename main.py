@@ -236,6 +236,14 @@ def home():
                 if (!voiceEnabled && speechSynthesis.speaking) speechSynthesis.cancel();
             }
 
+            function clearMemory() {
+                if (confirm("¿Borrar memoria local?")) {
+                    localStorage.removeItem('aurora_memory');
+                    chatHistory = [];
+                    document.getElementById('response-text').innerText = "Memoria reseteada.";
+                }
+            }
+
             async function toggleVision() {
                 visionEnabled = !visionEnabled;
                 let btn = document.getElementById('vision-toggle');
@@ -298,7 +306,7 @@ def home():
                 if (!visionEnabled || !video.videoWidth) return null;
                 canvas.width = video.videoWidth; canvas.height = video.videoHeight;
                 canvas.getContext('2d').drawImage(video, 0, 0);
-                return canvas.toDataURL('image/jpeg').split(',')[1]; // Solo el base64
+                return canvas.toDataURL('image/jpeg').split(',')[1];
             }
 
             function handleKey(e) { if (e.key === 'Enter') send(); }
@@ -313,7 +321,7 @@ def home():
                 chatHistory.push({sender: 'user', text: text});
                 inp.value = '';
                 document.getElementById('response-text').innerText = "Procesando matriz neuronal...";
-                setAuroraState('thinking'); // Micro-expresión de desviar la mirada
+                setAuroraState('thinking');
 
                 try {
                     let payload = { history: chatHistory };
@@ -332,6 +340,7 @@ def home():
                     }
                     
                     chatHistory.push({sender: 'bot', text: data.reply});
+                    localStorage.setItem('aurora_memory', JSON.stringify(chatHistory));
                     document.getElementById('response-text').innerText = data.reply;
                     speakText(data.reply);
 
@@ -360,19 +369,26 @@ async def chat(request: Request):
         return {"reply": "Error: GEMINI_API_KEY no detectada."}
 
     try:
-        # Se recomiendan modelos compatibles con visión para leer la cámara
-        models_to_try = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.0-flash"]
+        models_to_try = ["gemini-1.5-flash", "gemini-1.5-pro"]
         response = None
         
         recent_history = history[-10:] if len(history) > 10 else history
+        
+        # Sanitizar historial para asegurar roles alternados estrictos (evita el error de la API)
         gemini_history = []
+        last_role = None
         for item in recent_history[:-1]:
             role = "user" if item["sender"] == "user" else "model"
+            if role == last_role:
+                continue
             gemini_history.append({"role": role, "parts": [item["text"]]})
+            last_role = role
+            
+        if gemini_history and gemini_history[0]["role"] != "user":
+            gemini_history.pop(0)
         
         latest_msg = history[-1]["text"] if history else "¿Hola?"
         
-        # Si hay imagen, estructuramos el payload multimodal
         message_parts = [latest_msg]
         if image_b64:
             message_parts.append({
@@ -396,7 +412,6 @@ async def chat(request: Request):
         reply_text = response.text
         evolution_flag = ""
         
-        # Extracción y ejecución de código (Auto-Evolución)
         python_code_match = re.search(r"```python\s*(.*?)```", reply_text, re.DOTALL)
         if python_code_match and ("register_routes" in python_code_match.group(1)):
             code_to_evolve = python_code_match.group(1).strip()
