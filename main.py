@@ -635,7 +635,7 @@ async def chat(request: Request):
         return {"reply": "Falta configurar la GEMINI_API_KEY en Railway."}
 
     try:
-        models_to_try = ["gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-1.5-pro"]
+        models_to_try = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"]
         response = None
         last_err = None
         
