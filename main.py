@@ -636,7 +636,7 @@ async def chat(request: Request):
 
     try:
         model = genai.GenerativeModel(
-            model_name="gemini-3.6-flash",
+            model_name="gemini-1.5-flash",
             system_instruction=SYSTEM_PROMPT
         )
         
@@ -677,7 +677,10 @@ async def chat(request: Request):
 
         return {"reply": reply_text}
     except Exception as e:
-        return {"reply": f"Fallo al procesar memoria cuántica: {str(e)}"}
+        err_str = str(e)
+        if "429" in err_str or "quota" in err_str.lower():
+            return {"reply": "⚠️ Límite de cuota del modelo excedido temporalmente (Error 429). Por favor, espera un minuto a que se reinicie el contador de solicitudes gratuitas de la API."}
+        return {"reply": f"Fallo al procesar memoria cuántica: {err_str}"}
 
 if __name__ == "__main__":
     import uvicorn
