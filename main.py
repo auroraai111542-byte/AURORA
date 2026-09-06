@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse
 import google.generativeai as genai
 
 app = FastAPI()
@@ -43,7 +43,7 @@ def home():
         <meta name="theme-color" content="#050b14">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-        <title>F.R.I.D.A.Y. // Aurora HUD</title>
+        <title>F.R.I.D.A.Y. // HUD Principal</title>
         <link rel="manifest" href="/manifest.json">
         <style>
             * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -72,37 +72,20 @@ def home():
             .light-orb {
                 position: absolute;
                 border-radius: 50%;
-                filter: blur(80px);
+                filter: blur(90px);
                 opacity: 0.18;
                 animation: moveLight 14s ease-in-out infinite alternate;
             }
-            .light-orb.one {
-                width: 280px; height: 280px;
-                background: #38bdf8;
-                top: 10%; left: 15%;
-                animation-duration: 16s;
-            }
-            .light-orb.two {
-                width: 350px; height: 350px;
-                background: #2563eb;
-                bottom: 10%; right: 10%;
-                animation-duration: 20s;
-                animation-direction: alternate-reverse;
-            }
-            .light-orb.three {
-                width: 220px; height: 220px;
-                background: #0ea5e9;
-                top: 50%; left: 60%;
-                animation-duration: 12s;
-            }
+            .light-orb.one { width: 300px; height: 300px; background: #38bdf8; top: 10%; left: 15%; animation-duration: 16s; }
+            .light-orb.two { width: 380px; height: 380px; background: #2563eb; bottom: 10%; right: 10%; animation-duration: 20s; animation-direction: alternate-reverse; }
 
             @keyframes moveLight {
                 0% { transform: translate(0, 0) scale(1); opacity: 0.15; }
-                50% { transform: translate(50px, -60px) scale(1.25); opacity: 0.25; }
-                100% { transform: translate(-40px, 50px) scale(0.9); opacity: 0.15; }
+                50% { transform: translate(40px, -50px) scale(1.2); opacity: 0.25; }
+                100% { transform: translate(-30px, 40px) scale(0.9); opacity: 0.15; }
             }
 
-            header, .toolbar, #chat, footer {
+            header, .toolbar, #hud-main, #chat-drawer, footer {
                 position: relative;
                 z-index: 1;
             }
@@ -123,147 +106,173 @@ def home():
 
             .toolbar { 
                 display: flex; 
-                gap: 8px; 
-                padding: 6px 16px; 
+                gap: 6px; 
+                padding: 6px 12px; 
                 background: rgba(5, 11, 20, 0.6); 
                 justify-content: flex-end; 
                 border-bottom: 1px solid rgba(255,255,255,0.03);
+                flex-wrap: wrap;
             }
             .btn-tool { 
                 background: rgba(56, 189, 248, 0.1); 
                 color: #38bdf8; 
                 border: 1px solid rgba(56, 189, 248, 0.3); 
                 border-radius: 6px; 
-                padding: 4px 10px; 
+                padding: 5px 10px; 
                 cursor: pointer; 
                 font-size: 11px; 
                 font-weight: 600;
             }
             .btn-tool:active { background: rgba(56, 189, 248, 0.3); }
 
-            #chat { 
-                flex: 1; 
-                padding: 16px; 
-                overflow-y: auto; 
-                display: flex; 
-                flex-direction: column; 
-                gap: 16px; 
-                scroll-behavior: smooth;
-                padding-bottom: 20px;
-            }
-            
-            .message-row { display: flex; width: 100%; gap: 10px; }
-            .message-row.user { justify-content: flex-end; }
-            .message-row.bot { justify-content: flex-start; }
-
-            .bot-container {
+            /* HUD Principal Central (Cara + Respuesta Actual) */
+            #hud-main {
+                flex: 1;
                 display: flex;
                 flex-direction: column;
-                align-items: flex-start;
-                max-width: 85%;
-                gap: 5px;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                text-align: center;
+                gap: 24px;
             }
 
-            /* Mini Cara Avanzada con Gestos Dinámicos */
-            .mini-face {
-                width: 42px; height: 42px;
+            /* Cara Central Grande e Inmersiva */
+            .hud-face {
+                width: 110px; height: 110px;
                 background: radial-gradient(circle, rgba(56,189,248,0.3) 0%, rgba(37,99,235,0.12) 70%, transparent 100%);
                 border-radius: 50%;
                 position: relative;
-                border: 1px solid rgba(56, 189, 248, 0.6);
-                box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+                border: 2px solid rgba(56, 189, 248, 0.6);
+                box-shadow: 0 0 30px rgba(56, 189, 248, 0.4), inset 0 0 15px rgba(56, 189, 248, 0.2);
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                margin-left: 4px;
                 animation: face-breathe 3s ease-in-out infinite alternate;
             }
             
-            .eyebrow {
-                width: 7px; height: 2px;
+            .hud-face .eyebrow {
+                width: 18px; height: 3px;
                 background: #38bdf8;
                 position: absolute;
-                top: 10px;
-                border-radius: 1px;
-                box-shadow: 0 0 4px #38bdf8;
+                top: 26px;
+                border-radius: 2px;
+                box-shadow: 0 0 6px #38bdf8;
                 transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
-            .eyebrow.left { left: 10px; }
-            .eyebrow.right { right: 10px; }
+            .hud-face .eyebrow.left { left: 26px; }
+            .hud-face .eyebrow.right { right: 26px; }
 
-            .eye {
-                width: 6px; height: 6px;
+            .hud-face .eye {
+                width: 14px; height: 14px;
                 background: #38bdf8;
                 border-radius: 50%;
                 position: absolute;
-                top: 15px;
-                box-shadow: 0 0 8px #38bdf8;
+                top: 38px;
+                box-shadow: 0 0 12px #38bdf8;
                 animation: blink 4.5s infinite;
                 transition: transform 0.2s, height 0.2s;
             }
-            .eye.left { left: 11px; }
-            .eye.right { right: 11px; }
+            .hud-face .eye.left { left: 28px; }
+            .hud-face .eye.right { right: 28px; }
 
-            .mouth {
-                width: 14px; height: 3px;
+            .hud-face .mouth {
+                width: 36px; height: 5px;
                 background: #38bdf8;
-                border-radius: 2px;
+                border-radius: 3px;
                 position: absolute;
-                bottom: 10px;
-                left: 14px;
-                box-shadow: 0 0 6px #38bdf8;
+                bottom: 26px;
+                left: 37px;
+                box-shadow: 0 0 10px #38bdf8;
                 transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
-            /* Gestos Avanzados */
-            .mini-face.talking .mouth { animation: talk-advanced 0.14s infinite alternate !important; }
-            .mini-face.talking .eye { transform: scale(1.1); }
-            .mini-face.thinking .eyebrow.left { transform: rotate(15deg) translateY(1px); }
-            .mini-face.thinking .eyebrow.right { transform: rotate(-15deg) translateY(1px); }
-            .mini-face.thinking .eye { transform: scaleY(0.5); }
-            .mini-face.thinking .mouth { width: 10px; border-radius: 1px; }
-            .mini-face.ironic .eyebrow.left { transform: rotate(-25deg) translateY(-3px); }
-            .mini-face.ironic .eyebrow.right { transform: rotate(5deg) translateY(1px); }
-            .mini-face.ironic .mouth { width: 16px; border-radius: 0 0 10px 2px; transform: rotate(-4deg); }
-            .mini-face.surprised .eyebrow.left { transform: translateY(-4px); }
-            .mini-face.surprised .eyebrow.right { transform: translateY(-4px); }
-            .mini-face.surprised .eye { transform: scale(1.4); }
-            .mini-face.surprised .mouth { width: 8px; height: 8px; border-radius: 50%; bottom: 9px; left: 17px; }
+            /* Gestos Dinámicos HUD */
+            .hud-face.talking .mouth { animation: talk-advanced 0.14s infinite alternate !important; }
+            .hud-face.talking .eye { transform: scale(1.15); }
+            .hud-face.thinking .eyebrow.left { transform: rotate(15deg) translateY(2px); }
+            .hud-face.thinking .eyebrow.right { transform: rotate(-15deg) translateY(2px); }
+            .hud-face.thinking .eye { transform: scaleY(0.5); }
+            .hud-face.thinking .mouth { width: 24px; border-radius: 2px; left: 43px; }
+            .hud-face.ironic .eyebrow.left { transform: rotate(-25deg) translateY(-5px); }
+            .hud-face.ironic .eyebrow.right { transform: rotate(5deg) translateY(2px); }
+            .hud-face.ironic .mouth { width: 40px; border-radius: 0 0 20px 4px; transform: rotate(-4deg); left: 35px; }
+            .hud-face.surprised .eyebrow.left { transform: translateY(-8px); }
+            .hud-face.surprised .eyebrow.right { transform: translateY(-8px); }
+            .hud-face.surprised .eye { transform: scale(1.4); }
+            .hud-face.surprised .mouth { width: 18px; height: 18px; border-radius: 50%; bottom: 22px; left: 46px; }
 
             @keyframes blink { 0%, 92%, 96%, 100% { transform: scaleY(1); } 94% { transform: scaleY(0.1); } }
             @keyframes talk-advanced { 
-                0% { height: 3px; width: 14px; border-radius: 2px; } 
-                50% { height: 9px; width: 10px; border-radius: 5px; }
-                100% { height: 12px; width: 12px; border-radius: 50%; } 
+                0% { height: 5px; width: 36px; border-radius: 3px; left: 37px; } 
+                50% { height: 20px; width: 24px; border-radius: 12px; left: 43px; }
+                100% { height: 26px; width: 26px; border-radius: 50%; left: 42px; } 
             }
             @keyframes face-breathe {
-                0% { transform: scale(0.98); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
-                100% { transform: scale(1.02); box-shadow: 0 0 18px rgba(56, 189, 248, 0.5); }
+                0% { transform: scale(0.98); box-shadow: 0 0 20px rgba(56, 189, 248, 0.3); }
+                100% { transform: scale(1.02); box-shadow: 0 0 35px rgba(56, 189, 248, 0.55); }
             }
 
-            .msg { 
-                padding: 12px 16px; 
-                border-radius: 14px; 
-                line-height: 1.5; 
-                font-size: 0.95rem; 
-                word-break: break-word; 
-                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-                backdrop-filter: blur(8px);
-                width: 100%;
+            /* Burbuja de respuesta actual */
+            .response-bubble {
+                background: rgba(15, 23, 42, 0.85);
+                border: 1px solid rgba(56, 189, 248, 0.3);
+                padding: 16px 20px;
+                border-radius: 16px;
+                max-width: 90%;
+                width: 420px;
+                box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+                backdrop-filter: blur(10px);
+                font-size: 1rem;
+                line-height: 1.5;
+                color: #e2e8f0;
+                min-height: 80px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
-            .user .msg { 
-                background: linear-gradient(135deg, #0284c7, #0369a1); 
-                color: #ffffff; 
-                border-bottom-right-radius: 4px; 
-                border: 1px solid rgba(56,189,248,0.3);
+
+            /* Panel Deslizante de Historial de Chat */
+            #chat-drawer {
+                position: absolute;
+                top: 90px; left: 0; width: 100%; height: calc(100% - 160px);
+                background: rgba(5, 11, 20, 0.95);
+                backdrop-filter: blur(16px);
+                z-index: 10;
+                display: flex;
+                flex-direction: column;
+                padding: 16px;
+                gap: 12px;
+                overflow-y: auto;
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
+                transform: translateY(100%);
+                opacity: 0;
+                pointer-events: none;
+            }
+            #chat-drawer.open {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: auto;
+            }
+            .drawer-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+                padding-bottom: 8px;
+                font-weight: bold;
+                color: #38bdf8;
+            }
+            .chat-list { display: flex; flex-direction: column; gap: 10px; }
+            .chat-item {
+                padding: 10px 14px;
+                border-radius: 10px;
+                font-size: 0.9rem;
+                line-height: 1.4;
                 max-width: 85%;
             }
-            .bot .msg { 
-                background: rgba(15, 23, 42, 0.85); 
-                color: #e2e8f0; 
-                border: 1px solid rgba(56, 189, 248, 0.2); 
-                border-top-left-radius: 4px; 
-            }
+            .chat-item.user { background: #0369a1; color: white; align-self: flex-end; }
+            .chat-item.bot { background: #1e293b; color: #cbd5e1; align-self: flex-start; border: 1px solid rgba(56,189,248,0.2); }
 
             footer { 
                 padding: 12px 16px; 
@@ -310,38 +319,47 @@ def home():
         <div class="bg-lights">
             <div class="light-orb one"></div>
             <div class="light-orb two"></div>
-            <div class="light-orb three"></div>
         </div>
 
         <header>
             <div>
-                <div class="title-area">F.R.I.D.A.Y. // Aurora</div>
-                <div class="status-sub">Sistemas tácticos activos [ONLINE]</div>
+                <div class="title-area">F.R.I.D.A.Y. // HUD</div>
+                <div class="status-sub">Sistemas Activos [MEMORIA OK]</div>
             </div>
+            <button class="btn-tool" onclick="toggleChatDrawer()" id="drawer-btn">💬 Ver Chat</button>
         </header>
         
         <div class="toolbar">
-            <button class="btn-tool" onclick="downloadNotes()">📄 Descargar TXT</button>
+            <button class="btn-tool" onclick="downloadNotes()">📄 TXT</button>
             <button class="btn-tool" id="voice-toggle" onclick="toggleVoice()">🔊 Voz: ON</button>
+            <button class="btn-tool" onclick="clearMemory()" style="border-color: #ef4444; color: #ef4444;">🗑️ Borrar</button>
         </div>
 
-        <div id="chat">
-            <div class="message-row bot">
-                <div class="bot-container">
-                    <div class="mini-face ironic" id="face-init">
-                        <div class="eyebrow left"></div>
-                        <div class="eyebrow right"></div>
-                        <div class="eye left"></div>
-                        <div class="eye right"></div>
-                        <div class="mouth"></div>
-                    </div>
-                    <div class="msg">Sistemas PWA en línea, jefe. Protocolo F.R.I.D.A.Y. activo. ¿Qué orden ejecutamos ahora? ⚡</div>
-                </div>
+        <!-- Vista Principal Asistente -->
+        <div id="hud-main">
+            <div class="hud-face" id="face-box">
+                <div class="eyebrow left"></div>
+                <div class="eyebrow right"></div>
+                <div class="eye left"></div>
+                <div class="eye right"></div>
+                <div class="mouth"></div>
             </div>
+            <div class="response-bubble" id="response-text">
+                Sistemas tácticos listos. ¿Qué orden ejecutamos ahora, jefe? ⚡
+            </div>
+        </div>
+
+        <!-- Cajón Deslizante de Historial Completo -->
+        <div id="chat-drawer">
+            <div class="drawer-header">
+                <span>Historial de Conversación</span>
+                <button class="btn-tool" onclick="toggleChatDrawer()">✖ Cerrar</button>
+            </div>
+            <div class="chat-list" id="chat-history-list"></div>
         </div>
         
         <footer>
-            <input type="text" id="inp" placeholder="Escribe un comando o mensaje..." onkeypress="handleKey(event)">
+            <input type="text" id="inp" placeholder="Escribe tu mensaje..." onkeypress="handleKey(event)">
             <button class="send" onclick="send()">
                 <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
             </button>
@@ -350,6 +368,8 @@ def home():
         <script>
             let voiceEnabled = true;
             let currentUtterance = null;
+            let chatHistory = JSON.parse(localStorage.getItem('friday_memory')) || [];
+            let chatOpen = false;
 
             function toggleVoice() {
                 voiceEnabled = !voiceEnabled;
@@ -357,19 +377,61 @@ def home():
                 if (!voiceEnabled && speechSynthesis.speaking) speechSynthesis.cancel();
             }
 
-            function setFaceExpression(faceElem, text) {
-                faceElem.className = 'mini-face';
-                let lower = text.toLowerCase();
-                if (lower.includes('sorpresa') || lower.includes('¡') || lower.includes('cuidado') || lower.includes('atención')) {
-                    faceElem.classList.add('surprised');
-                } else if (lower.includes('obvio') || lower.includes('claramente') || lower.includes('genio') || lower.includes('por fin') || lower.includes('fácil') || lower.includes('sugerencia') || lower.includes('jefe')) {
-                    faceElem.classList.add('ironic');
-                } else if (lower.includes('analizando') || lower.includes('calculando') || lower.includes('sistema') || lower.includes('código')) {
-                    faceElem.classList.add('thinking');
+            function toggleChatDrawer() {
+                chatOpen = !chatOpen;
+                let drawer = document.getElementById('chat-drawer');
+                let btn = document.getElementById('drawer-btn');
+                if (chatOpen) {
+                    drawer.classList.add('open');
+                    btn.innerText = "🙈 Ocultar Chat";
+                    renderDrawerHistory();
                 } else {
-                    let exprs = ['', 'ironic', 'thinking'];
-                    let randomExpr = exprs[Math.floor(Math.random() * exprs.length)];
-                    if (randomExpr) faceElem.classList.add(randomExpr);
+                    drawer.classList.remove('open');
+                    btn.innerText = "💬 Ver Chat";
+                }
+            }
+
+            function getExpression(text) {
+                let lower = text.toLowerCase();
+                if (lower.includes('sorpresa') || lower.includes('¡') || lower.includes('cuidado')) return 'surprised';
+                if (lower.includes('obvio') || lower.includes('claramente') || lower.includes('genio') || lower.includes('fácil') || lower.includes('jefe')) return 'ironic';
+                if (lower.includes('analizando') || lower.includes('calculando') || lower.includes('sistema') || lower.includes('código')) return 'thinking';
+                let exprs = ['', 'ironic', 'thinking'];
+                return exprs[Math.floor(Math.random() * exprs.length)];
+            }
+
+            function setFaceExpression(expr) {
+                let face = document.getElementById('face-box');
+                face.className = `hud-face ${expr}`;
+            }
+
+            function renderDrawerHistory() {
+                let list = document.getElementById('chat-history-list');
+                list.innerHTML = '';
+                if (chatHistory.length === 0) {
+                    list.innerHTML = '<div style="color: #64748b; text-align:center; margin-top:20px;">Sin registros en memoria.</div>';
+                    return;
+                }
+                chatHistory.forEach(item => {
+                    let div = document.createElement('div');
+                    div.className = `chat-item ${item.sender}`;
+                    div.innerText = item.text;
+                    list.appendChild(div);
+                });
+                list.scrollTop = list.scrollHeight;
+            }
+
+            function saveMemory() {
+                localStorage.setItem('friday_memory', JSON.stringify(chatHistory));
+            }
+
+            function clearMemory() {
+                if (confirm("¿Reiniciar los registros de memoria táctica?")) {
+                    localStorage.removeItem('friday_memory');
+                    chatHistory = [];
+                    document.getElementById('response-text').innerText = "Memoria reiniciada. ¿Qué orden ejecutamos?";
+                    setFaceExpression('ironic');
+                    renderDrawerHistory();
                 }
             }
 
@@ -383,26 +445,21 @@ def home():
                 currentUtterance.rate = 1.02;
                 
                 let voices = speechSynthesis.getVoices();
-                let preferredVoice = voices.find(v => v.lang.includes('es') && (v.name.toLowerCase().includes('google') || v.name.toLowerCase().includes('sabina') || v.name.toLowerCase().includes('female')));
+                let preferredVoice = voices.find(v => v.lang.includes('es') && (v.name.toLowerCase().includes('google') || v.name.toLowerCase().includes('sabina')));
                 if (preferredVoice) currentUtterance.voice = preferredVoice;
 
-                if (faceElem) {
-                    currentUtterance.onstart = () => { faceElem.classList.add('talking'); };
-                    currentUtterance.onend = () => {
-                        faceElem.classList.remove('talking');
-                        setFaceExpression(faceElem, text);
-                    };
-                }
+                currentUtterance.onstart = () => { faceElem.classList.add('talking'); };
+                currentUtterance.onend = () => { faceElem.classList.remove('talking'); };
                 speechSynthesis.speak(currentUtterance);
             }
 
             function downloadNotes() {
-                let chatHistory = document.getElementById('chat').innerText;
-                let blob = new Blob([chatHistory], { type: "text/plain;charset=utf-8" });
+                let content = chatHistory.map(h => `${h.sender.toUpperCase()}: ${h.text}`).join('\n\n');
+                let blob = new Blob([content], { type: "text/plain;charset=utf-8" });
                 let url = URL.createObjectURL(blob);
                 let a = document.createElement("a");
                 a.href = url;
-                a.download = "FRIDAY_Aurora_Logs.txt";
+                a.download = "FRIDAY_Memory_Logs.txt";
                 a.click();
             }
 
@@ -412,62 +469,53 @@ def home():
 
             async function send() {
                 let inp = document.getElementById('inp');
-                let chat = document.getElementById('chat');
                 let text = inp.value.trim();
                 if (!text) return;
 
-                chat.innerHTML += `<div class="message-row user"><div class="msg">${text}</div></div>`;
+                // Guardar usuario
+                chatHistory.push({sender: 'user', text: text});
+                saveMemory();
+                if (chatOpen) renderDrawerHistory();
                 inp.value = '';
-                chat.scrollTop = chat.scrollHeight;
 
-                let botRow = document.createElement('div');
-                botRow.className = 'message-row bot';
+                let responseBox = document.getElementById('response-text');
+                let faceBox = document.getElementById('face-box');
                 
-                let botContainer = document.createElement('div');
-                botContainer.className = 'bot-container';
-                
-                let miniFace = document.createElement('div');
-                miniFace.className = 'mini-face thinking talking';
-                miniFace.innerHTML = `
-                    <div class="eyebrow left"></div>
-                    <div class="eyebrow right"></div>
-                    <div class="eye left"></div>
-                    <div class="eye right"></div>
-                    <div class="mouth"></div>
-                `;
-                
-                let msgDiv = document.createElement('div');
-                msgDiv.className = 'msg';
-                msgDiv.innerText = 'Procesando parámetros...';
-
-                botContainer.appendChild(miniFace);
-                botContainer.appendChild(msgDiv);
-                botRow.appendChild(botContainer);
-                chat.appendChild(botRow);
-                chat.scrollTop = chat.scrollHeight;
+                responseBox.innerText = "Analizando en memoria...";
+                setFaceExpression('thinking talking');
 
                 try {
                     let res = await fetch('/chat', {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({message: text})
+                        body: JSON.stringify({history: chatHistory})
                     });
                     let data = await res.json();
                     
-                    msgDiv.innerText = data.reply;
-                    chat.scrollTop = chat.scrollHeight;
-                    
-                    miniFace.classList.remove('thinking');
-                    setFaceExpression(miniFace, data.reply);
-                    speak(data.reply, miniFace);
+                    let expr = getExpression(data.reply);
+                    chatHistory.push({sender: 'bot', text: data.reply, expression: expr});
+                    saveMemory();
+                    if (chatOpen) renderDrawerHistory();
+
+                    responseBox.innerText = data.reply;
+                    setFaceExpression(expr);
+                    speak(data.reply, faceBox);
                 } catch (error) {
-                    miniFace.classList.remove('talking', 'thinking');
-                    msgDiv.innerText = 'Error de enlace con el servidor principal.';
-                    chat.scrollTop = chat.scrollHeight;
+                    responseBox.innerText = "Error de enlace con el núcleo de memoria.";
+                    setFaceExpression('surprised');
                 }
             }
 
             window.speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+            window.onload = () => {
+                if (chatHistory.length > 0) {
+                    let lastBot = chatHistory.slice().reverse().find(h => h.sender === 'bot');
+                    if (lastBot) {
+                        document.getElementById('response-text').innerText = lastBot.text;
+                        setFaceExpression(lastBot.expression || 'ironic');
+                    }
+                }
+            };
         </script>
     </body>
     </html>
@@ -476,17 +524,27 @@ def home():
 @app.post("/chat")
 async def chat(request: Request):
     data = await request.json()
-    user_msg = data.get("message", "")
+    history = data.get("history", [])
     
     if not GEMINI_KEY:
         return {"reply": "Falta configurar la GEMINI_API_KEY en Railway."}
 
     try:
         model = genai.GenerativeModel('gemini-3.6-flash')
-        response = model.generate_content(f"{SYSTEM_PROMPT}\n\nUsuario: {user_msg}")
+        
+        gemini_history = []
+        for item in history[:-1]:
+            role = "user" if item["sender"] == "user" else "model"
+            gemini_history.append({"role": role, "parts": [item["text"]]})
+        
+        chat_session = model.start_chat(history=gemini_history)
+        latest_msg = history[-1]["text"] if history else "¿Hola?"
+        prompt_with_system = f"{SYSTEM_PROMPT}\n\nPregunta actual del usuario: {latest_msg}"
+        
+        response = chat_session.send_message(prompt_with_system)
         return {"reply": response.text}
     except Exception as e:
-        return {"reply": f"Fallo al procesar orden: {str(e)}"}
+        return {"reply": f"Fallo al procesar memoria: {str(e)}"}
 
 if __name__ == "__main__":
     import uvicorn
