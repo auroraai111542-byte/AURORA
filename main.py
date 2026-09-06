@@ -11,24 +11,19 @@ if GEMINI_KEY:
 
 SYSTEM_PROMPT = "Eres Aurora, una asistente de IA super inteligente, carismática, con un excelente sentido del humor y muy expresiva. Responde de forma cercana y divertida."
 
-def get_working_model():
-    """Busca dinámicamente en Google AI los modelos disponibles para tu clave de API."""
+def get_active_model_name():
+    """Obtiene dinámicamente un modelo activo disponible en tu cuenta de Gemini."""
     try:
-        available = []
-        for m in genai.list_models():
-            if 'generateContent' in m.supported_generation_methods:
-                available.append(m.name)
-        
-        # Priorizar versiones flash/pro si existen
-        for name in available:
-            if 'flash' in name or 'pro' in name:
-                return name
-        
-        if available:
-            return available[0]
-    except Exception as err:
-        print(f"Error listando modelos: {err}")
-    return None
+        models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
+        if models:
+            # Seleccionar un modelo compatible disponible
+            for m in models:
+                if 'flash' in m or 'pro' in m:
+                    return m
+            return models[0]
+    except Exception as e:
+        print(f"Error al listar modelos: {e}")
+    return "gemini-1.5-flash"
 
 @app.get("/", response_class=HTMLResponse)
 def home():
@@ -93,10 +88,7 @@ async def chat(request: Request):
         return {"reply": "Oye, recuerda configurar GEMINI_API_KEY en las variables del servidor para que pueda pensar."}
 
     try:
-        model_name = get_working_model()
-        if not model_name:
-            return {"reply": "Error: Tu GEMINI_API_KEY no tiene acceso a ningún modelo activo o es inválida."}
-        
+        model_name = get_active_model_name()
         model = genai.GenerativeModel(model_name)
         response = model.generate_content(f"{SYSTEM_PROMPT}\n\nUsuario: {user_msg}")
         return {"reply": response.text}
