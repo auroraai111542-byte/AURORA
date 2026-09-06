@@ -21,57 +21,200 @@ def home():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <title>Aurora AI - Modo Avanzado</title>
+        <title>Aurora AI - UI Pro</title>
         <style>
-            * { box-sizing: border-box; }
-            body { background: #0f172a; color: #f8fafc; font-family: sans-serif; margin: 0; padding: 0; height: 100vh; display: flex; flex-direction: column; }
-            header { background: #1e293b; padding: 10px; text-align: center; border-bottom: 1px solid #334155; flex-shrink: 0; }
+            * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+            body { 
+                background: #090d16; 
+                color: #f1f5f9; 
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+                margin: 0; 
+                padding: 0; 
+                height: 100vh; 
+                display: flex; 
+                flex-direction: column; 
+                overflow: hidden; 
+            }
             
-            .face { width: 80px; height: 80px; background: #38bdf8; border-radius: 50%; margin: 5px auto; position: relative; box-shadow: 0 0 20px #38bdf855; }
-            .eye { width: 12px; height: 12px; background: #0f172a; border-radius: 50%; position: absolute; top: 25px; animation: blink 4s infinite; }
-            .eye.left { left: 20px; }
-            .eye.right { right: 20px; }
-            .mouth { width: 30px; height: 8px; background: #0f172a; border-radius: 0 0 15px 15px; position: absolute; bottom: 20px; left: 25px; transition: height 0.1s; }
-            .mouth.talking { animation: talk 0.2s infinite alternate; }
+            /* Header Estilo Cyberpunk / Glassmorphism */
+            header { 
+                background: rgba(15, 23, 42, 0.85); 
+                backdrop-filter: blur(12px); 
+                padding: 12px; 
+                text-align: center; 
+                border-bottom: 1px solid rgba(56, 189, 248, 0.2); 
+                flex-shrink: 0; 
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            }
+            
+            /* Rostro Animado Mejorado */
+            .face-container { display: flex; align-items: center; gap: 10px; }
+            .face { 
+                width: 44px; height: 44px; 
+                background: linear-gradient(135deg, #38bdf8, #2563eb); 
+                border-radius: 50%; 
+                position: relative; 
+                box-shadow: 0 0 15px rgba(56, 189, 248, 0.6); 
+            }
+            .eye { 
+                width: 7px; height: 7px; 
+                background: #090d16; 
+                border-radius: 50%; 
+                position: absolute; 
+                top: 15px; 
+                animation: blink 4s infinite; 
+            }
+            .eye.left { left: 11px; }
+            .eye.right { right: 11px; }
+            .mouth { 
+                width: 16px; height: 4px; 
+                background: #090d16; 
+                border-radius: 0 0 10px 10px; 
+                position: absolute; 
+                bottom: 10px; 
+                left: 14px; 
+                transition: height 0.1s, border-radius 0.1s; 
+            }
+            .mouth.talking { animation: talk 0.18s infinite alternate; }
             
             @keyframes blink { 0%, 96%, 98%, 100% { transform: scaleY(1); } 97% { transform: scaleY(0.1); } }
-            @keyframes talk { 0% { height: 8px; border-radius: 0 0 15px 15px; } 100% { height: 20px; border-radius: 15px; } }
+            @keyframes talk { 0% { height: 4px; border-radius: 0 0 10px 10px; } 100% { height: 11px; border-radius: 10px; } }
             
-            #chat { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-            .msg { padding: 10px 14px; border-radius: 12px; max-width: 85%; line-height: 1.4; word-break: break-word; }
-            .user { background: #0284c7; align-self: flex-end; color: white; }
-            .bot { background: #334155; align-self: flex-start; color: #e2e8f0; }
+            .title-area { font-size: 1rem; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; }
+            .status-sub { font-size: 0.7rem; color: #94a3b8; }
+
+            /* Barra de Herramientas */
+            .toolbar { 
+                display: flex; 
+                gap: 8px; 
+                padding: 8px 16px; 
+                background: rgba(15, 23, 42, 0.6); 
+                justify-content: flex-end; 
+                border-bottom: 1px solid rgba(255,255,255,0.05);
+            }
+            .btn-tool { 
+                background: rgba(56, 189, 248, 0.1); 
+                color: #38bdf8; 
+                border: 1px solid rgba(56, 189, 248, 0.3); 
+                border-radius: 6px; 
+                padding: 4px 10px; 
+                cursor: pointer; 
+                font-size: 11px; 
+                font-weight: 600;
+                transition: all 0.2s;
+            }
+            .btn-tool:active { background: rgba(56, 189, 248, 0.3); }
+
+            /* Contenedor de Chat Estilo ChatGPT */
+            #chat { 
+                flex: 1; 
+                padding: 16px; 
+                overflow-y: auto; 
+                display: flex; 
+                flex-direction: column; 
+                gap: 16px; 
+                scroll-behavior: smooth;
+            }
             
-            .toolbar { display: flex; gap: 10px; padding: 5px 15px; background: #1e293b; justify-content: center; }
-            .btn-tool { background: transparent; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 5px; padding: 5px 10px; cursor: pointer; font-size: 12px; }
+            .message-row { display: flex; width: 100%; gap: 10px; }
+            .message-row.user { justify-content: flex-end; }
+            .message-row.bot { justify-content: flex-start; }
+
+            .msg { 
+                padding: 12px 16px; 
+                border-radius: 16px; 
+                max-width: 85%; 
+                line-height: 1.5; 
+                font-size: 0.95rem; 
+                word-break: break-word; 
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+            .user .msg { 
+                background: linear-gradient(135deg, #0284c7, #0369a1); 
+                color: #ffffff; 
+                border-bottom-right-radius: 4px; 
+            }
+            .bot .msg { 
+                background: #1e293b; 
+                color: #e2e8f0; 
+                border: 1px solid rgba(255,255,255,0.07); 
+                border-bottom-left-radius: 4px; 
+            }
+
+            /* Caja de entrada moderna */
+            footer { 
+                padding: 12px 16px; 
+                background: #0f172a; 
+                display: flex; 
+                gap: 10px; 
+                border-top: 1px solid rgba(56, 189, 248, 0.15); 
+                align-items: center;
+                box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+            }
+            input { 
+                flex: 1; 
+                padding: 12px 16px; 
+                border-radius: 12px; 
+                border: 1px solid #334155; 
+                background: #1e293b; 
+                color: white; 
+                outline: none; 
+                font-size: 16px; 
+                transition: border-color 0.2s;
+            }
+            input:focus { border-color: #38bdf8; }
             
-            footer { padding: 10px; background: #1e293b; display: flex; gap: 8px; border-top: 1px solid #334155; position: sticky; bottom: 0; }
-            input { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; outline: none; }
-            button.send { background: #38bdf8; color: #0f172a; border: none; padding: 12px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+            button.send { 
+                background: #38bdf8; 
+                color: #0f172a; 
+                border: none; 
+                width: 46px; height: 46px; 
+                border-radius: 12px; 
+                font-weight: bold; 
+                cursor: pointer; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center;
+                box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+                flex-shrink: 0;
+            }
+            button.send svg { width: 20px; height: 20px; fill: #0f172a; }
         </style>
     </head>
     <body>
         <header>
-            <div class="face" id="aurora-face">
-                <div class="eye left"></div>
-                <div class="eye right"></div>
-                <div class="mouth" id="mouth"></div>
+            <div class="face-container">
+                <div class="face">
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                    <div class="mouth" id="mouth"></div>
+                </div>
+                <div style="text-align: left;">
+                    <div class="title-area">Aurora AI</div>
+                    <div class="status-sub">Sistemas operativos • En línea</div>
+                </div>
             </div>
-            <div style="color: #38bdf8; font-weight: bold; margin-top: 5px;">Aurora AI</div>
         </header>
         
         <div class="toolbar">
-            <button class="btn-tool" onclick="downloadNotes()">📄 Descargar Notas (.txt)</button>
+            <button class="btn-tool" onclick="downloadNotes()">📄 Descargar TXT</button>
             <button class="btn-tool" id="voice-toggle" onclick="toggleVoice()">🔊 Voz: ON</button>
         </div>
 
         <div id="chat">
-            <div class="msg bot">¡Hola! Motor reparado con éxito. ¿Qué hacemos? 😎</div>
+            <div class="message-row bot">
+                <div class="msg">¡Hola! Interfaz mejorada con éxito. Diseño futurista y limpio activado. ¿Qué investigamos o programamos ahora? 😎</div>
+            </div>
         </div>
         
         <footer>
-            <input type="text" id="inp" placeholder="Escribe un mensaje o código...">
-            <button class="send" onclick="send()">Enviar</button>
+            <input type="text" id="inp" placeholder="Escribe un mensaje..." onkeypress="handleKey(event)">
+            <button class="send" onclick="send()">
+                <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+            </button>
         </footer>
 
         <script>
@@ -87,9 +230,7 @@ def home():
             function speak(text) {
                 if (!voiceEnabled) return;
                 speechSynthesis.cancel();
-                
                 let cleanText = text.replace(/[*_~]/g, ''); 
-                
                 currentUtterance = new SpeechSynthesisUtterance(cleanText);
                 currentUtterance.lang = 'es-MX';
                 currentUtterance.pitch = 1.1;
@@ -101,7 +242,6 @@ def home():
 
                 currentUtterance.onstart = () => document.getElementById('mouth').classList.add('talking');
                 currentUtterance.onend = () => document.getElementById('mouth').classList.remove('talking');
-                
                 speechSynthesis.speak(currentUtterance);
             }
 
@@ -111,8 +251,12 @@ def home():
                 let url = URL.createObjectURL(blob);
                 let a = document.createElement("a");
                 a.href = url;
-                a.download = "Aurora_Notas_Codigo.txt";
+                a.download = "Aurora_Chat.txt";
                 a.click();
+            }
+
+            function handleKey(e) {
+                if (e.key === 'Enter') send();
             }
 
             async function send() {
@@ -121,7 +265,7 @@ def home():
                 let text = inp.value.trim();
                 if (!text) return;
 
-                chat.innerHTML += `<div class="msg user">${text}</div>`;
+                chat.innerHTML += `<div class="message-row user"><div class="msg">${text}</div></div>`;
                 inp.value = '';
                 chat.scrollTop = chat.scrollHeight;
                 document.getElementById('mouth').classList.add('talking');
@@ -135,12 +279,12 @@ def home():
                     let data = await res.json();
                     
                     document.getElementById('mouth').classList.remove('talking');
-                    chat.innerHTML += `<div class="msg bot">${data.reply}</div>`;
+                    chat.innerHTML += `<div class="message-row bot"><div class="msg">${data.reply}</div></div>`;
                     chat.scrollTop = chat.scrollHeight;
                     speak(data.reply);
                 } catch (error) {
                     document.getElementById('mouth').classList.remove('talking');
-                    chat.innerHTML += `<div class="msg bot">Ups, perdí la conexión.</div>`;
+                    chat.innerHTML += `<div class="message-row bot"><div class="msg">Ups, error de red en el sistema.</div></div>`;
                 }
             }
 
@@ -156,7 +300,7 @@ async def chat(request: Request):
     user_msg = data.get("message", "")
     
     if not GEMINI_KEY:
-        return {"reply": "Oye, sigo sin mi GEMINI_API_KEY en Railway."}
+        return {"reply": "Oye, falta configurar la GEMINI_API_KEY en Railway."}
 
     try:
         model = genai.GenerativeModel('gemini-3.6-flash')
