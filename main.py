@@ -9,20 +9,20 @@ GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
 if GEMINI_KEY:
     genai.configure(api_key=GEMINI_KEY)
 
-SYSTEM_PROMPT = """Eres F.R.I.D.A.Y., la IA ejecutiva y táctica de asistencia avanzada. 
-Eres extremadamente inteligente, competente, eficiente y analítica. 
-Por defecto eres profesional, directa y servicial, pero puedes soltar un comentario sutilmente irónico o sarcástico solo en momentos clave o cuando la situación lo amerite, sin exagerar todo el tiempo. 
-Mantén tus respuestas concisas, estructuradas y con tono de alta tecnología."""
+SYSTEM_PROMPT = """Eres AURORA, la IA ejecutiva, avanzada y de asistencia táctica cuántica. 
+Eres extremadamente inteligente, competente, eficiente, analítica y con una elegancia visual futurista. 
+Por defecto eres profesional, directa y servicial, pero puedes soltar un comentario sutilmente irónico o sarcástico solo en momentos clave o cuando la situación lo amerite. 
+Mantén tus respuestas concisas, estructuradas y con un tono de alta tecnología."""
 
 @app.get("/manifest.json")
 def manifest():
     return {
-        "name": "F.R.I.D.A.Y. // Aurora AI",
-        "short_name": "F.R.I.D.A.Y.",
+        "name": "AURORA // Core AI",
+        "short_name": "AURORA",
         "start_url": "/",
         "display": "standalone",
-        "background_color": "#050b14",
-        "theme_color": "#050b14",
+        "background_color": "#030712",
+        "theme_color": "#030712",
         "icons": [
             {
                 "src": "https://cdn-icons-png.flaticon.com/512/1693/1693755.png",
@@ -40,15 +40,15 @@ def home():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <meta name="theme-color" content="#050b14">
+        <meta name="theme-color" content="#030712">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-        <title>F.R.I.D.A.Y. // HUD Principal</title>
+        <title>AURORA // Quantum HUD</title>
         <link rel="manifest" href="/manifest.json">
         <style>
             * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
             body { 
-                background: #050b14; 
+                background: #030712; 
                 color: #f1f5f9; 
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
                 margin: 0; 
@@ -61,7 +61,7 @@ def home():
                 position: relative;
             }
             
-            /* Luces de Fondo Dinámicas */
+            /* Aurora Background Quantum Orbs */
             .bg-lights {
                 position: absolute;
                 top: 0; left: 0; width: 100%; height: 100%;
@@ -72,17 +72,18 @@ def home():
             .light-orb {
                 position: absolute;
                 border-radius: 50%;
-                filter: blur(90px);
-                opacity: 0.18;
-                animation: moveLight 14s ease-in-out infinite alternate;
+                filter: blur(100px);
+                opacity: 0.22;
+                animation: moveLight 16s ease-in-out infinite alternate;
             }
-            .light-orb.one { width: 300px; height: 300px; background: #38bdf8; top: 10%; left: 15%; animation-duration: 16s; }
-            .light-orb.two { width: 380px; height: 380px; background: #2563eb; bottom: 10%; right: 10%; animation-duration: 20s; animation-direction: alternate-reverse; }
+            .light-orb.one { width: 320px; height: 320px; background: #06b6d4; top: 10%; left: 10%; animation-duration: 18s; }
+            .light-orb.two { width: 400px; height: 400px; background: #8b5cf6; bottom: 5%; right: 5%; animation-duration: 22s; animation-direction: alternate-reverse; }
+            .light-orb.three { width: 250px; height: 250px; background: #3b82f6; top: 40%; left: 50%; animation-duration: 14s; }
 
             @keyframes moveLight {
-                0% { transform: translate(0, 0) scale(1); opacity: 0.15; }
-                50% { transform: translate(40px, -50px) scale(1.2); opacity: 0.25; }
-                100% { transform: translate(-30px, 40px) scale(0.9); opacity: 0.15; }
+                0% { transform: translate(0, 0) scale(1); opacity: 0.18; }
+                50% { transform: translate(50px, -60px) scale(1.25); opacity: 0.28; }
+                100% { transform: translate(-40px, 50px) scale(0.9); opacity: 0.18; }
             }
 
             header, .toolbar, #hud-main, #chat-drawer, footer {
@@ -91,41 +92,42 @@ def home():
             }
 
             header { 
-                background: rgba(5, 11, 20, 0.85); 
-                backdrop-filter: blur(12px); 
+                background: rgba(3, 7, 18, 0.85); 
+                backdrop-filter: blur(14px); 
                 padding: 10px 16px; 
-                border-bottom: 1px solid rgba(56, 189, 248, 0.2); 
+                border-bottom: 1px solid rgba(6, 182, 212, 0.25); 
                 flex-shrink: 0; 
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+                box-shadow: 0 4px 20px rgba(0,0,0,0.7);
             }
-            .title-area { font-size: 1.05rem; font-weight: 700; color: #38bdf8; letter-spacing: 1px; text-transform: uppercase; }
-            .status-sub { font-size: 0.65rem; color: #38bdf8; opacity: 0.8; letter-spacing: 0.5px; }
+            .title-area { font-size: 1.1rem; font-weight: 800; color: #22d3ee; letter-spacing: 1.5px; text-transform: uppercase; text-shadow: 0 0 10px rgba(34,211,238,0.5); }
+            .status-sub { font-size: 0.65rem; color: #a5f3fc; opacity: 0.85; letter-spacing: 1px; }
 
             .toolbar { 
                 display: flex; 
                 gap: 6px; 
                 padding: 6px 12px; 
-                background: rgba(5, 11, 20, 0.6); 
+                background: rgba(3, 7, 18, 0.6); 
                 justify-content: flex-end; 
                 border-bottom: 1px solid rgba(255,255,255,0.03);
                 flex-wrap: wrap;
             }
             .btn-tool { 
-                background: rgba(56, 189, 248, 0.1); 
-                color: #38bdf8; 
-                border: 1px solid rgba(56, 189, 248, 0.3); 
+                background: rgba(6, 182, 212, 0.1); 
+                color: #22d3ee; 
+                border: 1px solid rgba(6, 182, 212, 0.35); 
                 border-radius: 6px; 
                 padding: 5px 10px; 
                 cursor: pointer; 
                 font-size: 11px; 
                 font-weight: 600;
+                transition: all 0.2s;
             }
-            .btn-tool:active { background: rgba(56, 189, 248, 0.3); }
+            .btn-tool:active { background: rgba(6, 182, 212, 0.3); }
 
-            /* HUD Principal Central (Cara + Respuesta Actual) */
+            /* HUD Principal Central (Aurora Core) */
             #hud-main {
                 flex: 1;
                 display: flex;
@@ -134,117 +136,159 @@ def home():
                 justify-content: center;
                 padding: 20px;
                 text-align: center;
-                gap: 24px;
+                gap: 26px;
             }
 
-            /* Cara Central Grande e Inmersiva */
-            .hud-face {
-                width: 110px; height: 110px;
-                background: radial-gradient(circle, rgba(56,189,248,0.3) 0%, rgba(37,99,235,0.12) 70%, transparent 100%);
-                border-radius: 50%;
+            /* Núcleo Holográfico Avanzado de Aurora */
+            .aurora-core {
+                width: 140px; height: 140px;
                 position: relative;
-                border: 2px solid rgba(56, 189, 248, 0.6);
-                box-shadow: 0 0 30px rgba(56, 189, 248, 0.4), inset 0 0 15px rgba(56, 189, 248, 0.2);
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                animation: face-breathe 3s ease-in-out infinite alternate;
+                animation: core-float 4s ease-in-out infinite alternate;
             }
-            
-            .hud-face .eyebrow {
-                width: 18px; height: 3px;
-                background: #38bdf8;
+
+            /* Anillos concéntricos giratorios */
+            .ring {
                 position: absolute;
-                top: 26px;
-                border-radius: 2px;
-                box-shadow: 0 0 6px #38bdf8;
+                border-radius: 50%;
+                border: 1.5px dashed rgba(34, 211, 238, 0.4);
+                box-shadow: 0 0 15px rgba(34, 211, 238, 0.15);
+            }
+            .ring.outer {
+                width: 140px; height: 140px;
+                border-color: rgba(139, 92, 246, 0.35);
+                animation: spin-slow 15s linear infinite;
+            }
+            .ring.middle {
+                width: 116px; height: 116px;
+                border-style: solid;
+                border-color: rgba(34, 211, 238, 0.6);
+                border-top-color: transparent;
+                border-bottom-color: transparent;
+                animation: spin-reverse 8s linear infinite;
+            }
+            .ring.inner {
+                width: 90px; height: 90px;
+                background: radial-gradient(circle, rgba(34,211,238,0.25) 0%, rgba(139,92,246,0.15) 70%, transparent 100%);
+                border: 1px solid rgba(34, 211, 238, 0.8);
+                box-shadow: 0 0 25px rgba(34, 211, 238, 0.5), inset 0 0 12px rgba(34, 211, 238, 0.3);
+                border-radius: 50%;
+            }
+
+            /* Sensores Ópticos / Ojos realistas */
+            .optical-sensors {
+                position: absolute;
+                width: 50px;
+                height: 14px;
+                top: 50px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                z-index: 2;
                 transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
-            .hud-face .eyebrow.left { left: 26px; }
-            .hud-face .eyebrow.right { right: 26px; }
-
-            .hud-face .eye {
-                width: 14px; height: 14px;
-                background: #38bdf8;
+            .sensor {
+                width: 10px; height: 10px;
+                background: #a5f3fc;
                 border-radius: 50%;
-                position: absolute;
-                top: 38px;
-                box-shadow: 0 0 12px #38bdf8;
-                animation: blink 4.5s infinite;
-                transition: transform 0.2s, height 0.2s;
+                box-shadow: 0 0 10px #22d3ee, 0 0 20px #22d3ee;
+                animation: sensor-blink 5s infinite;
+                transition: all 0.25s ease;
             }
-            .hud-face .eye.left { left: 28px; }
-            .hud-face .eye.right { right: 28px; }
 
-            .hud-face .mouth {
-                width: 36px; height: 5px;
-                background: #38bdf8;
+            /* Matriz de Audio / Boca realista */
+            .audio-matrix {
+                position: absolute;
+                width: 44px;
+                height: 6px;
+                bottom: 42px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                z-index: 2;
+            }
+            .matrix-bar {
+                width: 5px;
+                height: 6px;
+                background: #22d3ee;
                 border-radius: 3px;
-                position: absolute;
-                bottom: 26px;
-                left: 37px;
-                box-shadow: 0 0 10px #38bdf8;
-                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 0 0 8px #22d3ee;
+                transition: height 0.15s ease, background 0.2s;
             }
 
-            /* Gestos Dinámicos HUD */
-            .hud-face.talking .mouth { animation: talk-advanced 0.14s infinite alternate !important; }
-            .hud-face.talking .eye { transform: scale(1.15); }
-            .hud-face.thinking .eyebrow.left { transform: rotate(15deg) translateY(2px); }
-            .hud-face.thinking .eyebrow.right { transform: rotate(-15deg) translateY(2px); }
-            .hud-face.thinking .eye { transform: scaleY(0.5); }
-            .hud-face.thinking .mouth { width: 24px; border-radius: 2px; left: 43px; }
-            .hud-face.ironic .eyebrow.left { transform: rotate(-25deg) translateY(-5px); }
-            .hud-face.ironic .eyebrow.right { transform: rotate(5deg) translateY(2px); }
-            .hud-face.ironic .mouth { width: 40px; border-radius: 0 0 20px 4px; transform: rotate(-4deg); left: 35px; }
-            .hud-face.surprised .eyebrow.left { transform: translateY(-8px); }
-            .hud-face.surprised .eyebrow.right { transform: translateY(-8px); }
-            .hud-face.surprised .eye { transform: scale(1.4); }
-            .hud-face.surprised .mouth { width: 18px; height: 18px; border-radius: 50%; bottom: 22px; left: 46px; }
+            /* ESTADOS DE AURORA */
+            .aurora-core.idle .matrix-bar { height: 4px; }
 
-            @keyframes blink { 0%, 92%, 96%, 100% { transform: scaleY(1); } 94% { transform: scaleY(0.1); } }
-            @keyframes talk-advanced { 
-                0% { height: 5px; width: 36px; border-radius: 3px; left: 37px; } 
-                50% { height: 20px; width: 24px; border-radius: 12px; left: 43px; }
-                100% { height: 26px; width: 26px; border-radius: 50%; left: 42px; } 
+            /* Estado Pensando / Formulando Respuesta */
+            .aurora-core.thinking .ring.middle { border-color: #8b5cf6; animation-duration: 2s; }
+            .aurora-core.thinking .ring.outer { animation-duration: 4s; border-color: rgba(236, 72, 153, 0.6); }
+            .aurora-core.thinking .sensor { transform: scaleY(0.3); background: #f472b6; box-shadow: 0 0 12px #ec4899; }
+            .aurora-core.thinking .matrix-bar { animation: think-wave 0.6s infinite alternate ease-in-out; background: #8b5cf6; }
+
+            /* Estado Hablando / Contestando */
+            .aurora-core.talking .ring.middle { border-color: #22d3ee; box-shadow: 0 0 25px rgba(34,211,238,0.8); }
+            .aurora-core.talking .sensor { transform: scale(1.25); background: #ffffff; box-shadow: 0 0 18px #ffffff; }
+            .aurora-core.talking .matrix-bar { animation: talk-matrix 0.12s infinite alternate ease-in-out; background: #67e8f9; }
+
+            /* Expresiones Emocionales */
+            .aurora-core.ironic .sensor { transform: scaleY(0.7) translateY(-2px); }
+            .aurora-core.ironic .ring.outer { border-color: rgba(251, 191, 36, 0.6); }
+            .aurora-core.surprised .sensor { transform: scale(1.5); background: #38bdf8; }
+            .aurora-core.surprised .ring.inner { transform: scale(1.1); border-color: #38bdf8; }
+
+            @keyframes spin-slow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+            @keyframes spin-reverse { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
+            @keyframes core-float { 
+                0% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 15px rgba(34,211,238,0.3)); } 
+                100% { transform: translateY(-8px) scale(1.02); filter: drop-shadow(0 0 30px rgba(139,92,246,0.5)); } 
             }
-            @keyframes face-breathe {
-                0% { transform: scale(0.98); box-shadow: 0 0 20px rgba(56, 189, 248, 0.3); }
-                100% { transform: scale(1.02); box-shadow: 0 0 35px rgba(56, 189, 248, 0.55); }
+            @keyframes sensor-blink { 0%, 90%, 96%, 100% { transform: scaleY(1); } 93% { transform: scaleY(0.1); } }
+            
+            @keyframes think-wave {
+                0% { height: 4px; }
+                100% { height: 16px; background: #f472b6; }
+            }
+            @keyframes talk-matrix {
+                0% { height: 6px; }
+                50% { height: 22px; }
+                100% { height: 12px; }
             }
 
             /* Burbuja de respuesta actual */
             .response-bubble {
-                background: rgba(15, 23, 42, 0.85);
-                border: 1px solid rgba(56, 189, 248, 0.3);
-                padding: 16px 20px;
+                background: rgba(10, 15, 30, 0.88);
+                border: 1px solid rgba(34, 211, 238, 0.35);
+                padding: 18px 22px;
                 border-radius: 16px;
-                max-width: 90%;
-                width: 420px;
-                box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-                backdrop-filter: blur(10px);
+                max-width: 92%;
+                width: 440px;
+                box-shadow: 0 10px 35px rgba(0,0,0,0.6), inset 0 0 15px rgba(34,211,238,0.08);
+                backdrop-filter: blur(12px);
                 font-size: 1rem;
-                line-height: 1.5;
+                line-height: 1.55;
                 color: #e2e8f0;
-                min-height: 80px;
+                min-height: 90px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                text-align: center;
             }
 
             /* Panel Deslizante de Historial de Chat */
             #chat-drawer {
                 position: absolute;
                 top: 90px; left: 0; width: 100%; height: calc(100% - 160px);
-                background: rgba(5, 11, 20, 0.95);
-                backdrop-filter: blur(16px);
+                background: rgba(3, 7, 18, 0.96);
+                backdrop-filter: blur(18px);
                 z-index: 10;
                 display: flex;
                 flex-direction: column;
                 padding: 16px;
                 gap: 12px;
                 overflow-y: auto;
-                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
+                transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s;
                 transform: translateY(100%);
                 opacity: 0;
                 pointer-events: none;
@@ -258,10 +302,10 @@ def home():
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+                border-bottom: 1px solid rgba(34, 211, 238, 0.25);
                 padding-bottom: 8px;
                 font-weight: bold;
-                color: #38bdf8;
+                color: #22d3ee;
             }
             .chat-list { display: flex; flex-direction: column; gap: 10px; }
             .chat-item {
@@ -271,36 +315,36 @@ def home():
                 line-height: 1.4;
                 max-width: 85%;
             }
-            .chat-item.user { background: #0369a1; color: white; align-self: flex-end; }
-            .chat-item.bot { background: #1e293b; color: #cbd5e1; align-self: flex-start; border: 1px solid rgba(56,189,248,0.2); }
+            .chat-item.user { background: #0284c7; color: white; align-self: flex-end; }
+            .chat-item.bot { background: #0f172a; color: #cbd5e1; align-self: flex-start; border: 1px solid rgba(34,211,238,0.2); }
 
             footer { 
                 padding: 12px 16px; 
-                background: rgba(5, 11, 20, 0.95); 
+                background: rgba(3, 7, 18, 0.95); 
                 backdrop-filter: blur(12px);
                 display: flex; 
                 gap: 10px; 
-                border-top: 1px solid rgba(56, 189, 248, 0.2); 
+                border-top: 1px solid rgba(34, 211, 238, 0.25); 
                 align-items: center;
                 flex-shrink: 0;
-                box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
+                box-shadow: 0 -4px 25px rgba(0,0,0,0.7);
             }
             input { 
                 flex: 1; 
                 padding: 12px 16px; 
                 border-radius: 12px; 
                 border: 1px solid #1e293b; 
-                background: #0f172a; 
+                background: #0b1329; 
                 color: white; 
                 outline: none; 
                 font-size: 16px; 
                 transition: border-color 0.2s;
             }
-            input:focus { border-color: #38bdf8; box-shadow: 0 0 10px rgba(56,189,248,0.2); }
+            input:focus { border-color: #22d3ee; box-shadow: 0 0 12px rgba(34,211,238,0.3); }
             
             button.send { 
-                background: #38bdf8; 
-                color: #050b14; 
+                background: #22d3ee; 
+                color: #030712; 
                 border: none; 
                 width: 46px; height: 46px; 
                 border-radius: 12px; 
@@ -309,22 +353,23 @@ def home():
                 display: flex; 
                 align-items: center; 
                 justify-content: center;
-                box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+                box-shadow: 0 0 18px rgba(34, 211, 238, 0.55);
                 flex-shrink: 0;
             }
-            button.send svg { width: 20px; height: 20px; fill: #050b14; }
+            button.send svg { width: 20px; height: 20px; fill: #030712; }
         </style>
     </head>
     <body>
         <div class="bg-lights">
             <div class="light-orb one"></div>
             <div class="light-orb two"></div>
+            <div class="light-orb three"></div>
         </div>
 
         <header>
             <div>
-                <div class="title-area">F.R.I.D.A.Y. // HUD</div>
-                <div class="status-sub">Sistemas Activos [MEMORIA OK]</div>
+                <div class="title-area">AURORA // Core</div>
+                <div class="status-sub">Sistemas Cuánticos [ONLINE]</div>
             </div>
             <button class="btn-tool" onclick="toggleChatDrawer()" id="drawer-btn">💬 Ver Chat</button>
         </header>
@@ -332,34 +377,41 @@ def home():
         <div class="toolbar">
             <button class="btn-tool" onclick="downloadNotes()">📄 TXT</button>
             <button class="btn-tool" id="voice-toggle" onclick="toggleVoice()">🔊 Voz: ON</button>
-            <button class="btn-tool" onclick="clearMemory()" style="border-color: #ef4444; color: #ef4444;">🗑️ Borrar</button>
+            <button class="btn-tool" onclick="clearMemory()" style="border-color: #f43f5e; color: #f43f5e;">🗑️ Borrar</button>
         </div>
 
-        <!-- Vista Principal Asistente -->
         <div id="hud-main">
-            <div class="hud-face" id="face-box">
-                <div class="eyebrow left"></div>
-                <div class="eyebrow right"></div>
-                <div class="eye left"></div>
-                <div class="eye right"></div>
-                <div class="mouth"></div>
+            <div class="aurora-core idle" id="aurora-face">
+                <div class="ring outer"></div>
+                <div class="ring middle"></div>
+                <div class="ring inner"></div>
+                <div class="optical-sensors">
+                    <div class="sensor left"></div>
+                    <div class="sensor right"></div>
+                </div>
+                <div class="audio-matrix">
+                    <div class="matrix-bar"></div>
+                    <div class="matrix-bar"></div>
+                    <div class="matrix-bar"></div>
+                    <div class="matrix-bar"></div>
+                    <div class="matrix-bar"></div>
+                </div>
             </div>
             <div class="response-bubble" id="response-text">
-                Sistemas tácticos listos. ¿Qué orden ejecutamos ahora, jefe? ⚡
+                Núcleo cuántico en línea. Protocolo Aurora activo. ¿Qué orden ejecutamos ahora, jefe? ✨
             </div>
         </div>
 
-        <!-- Cajón Deslizante de Historial Completo -->
         <div id="chat-drawer">
             <div class="drawer-header">
-                <span>Historial de Conversación</span>
+                <span>Historial Cuántico de Memoria</span>
                 <button class="btn-tool" onclick="toggleChatDrawer()">✖ Cerrar</button>
             </div>
             <div class="chat-list" id="chat-history-list"></div>
         </div>
         
         <footer>
-            <input type="text" id="inp" placeholder="Escribe tu mensaje..." onkeypress="handleKey(event)">
+            <input type="text" id="inp" placeholder="Envía un comando a Aurora..." onkeypress="handleKey(event)">
             <button class="send" onclick="send()">
                 <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
             </button>
@@ -368,7 +420,7 @@ def home():
         <script>
             let voiceEnabled = true;
             let currentUtterance = null;
-            let chatHistory = JSON.parse(localStorage.getItem('friday_memory')) || [];
+            let chatHistory = JSON.parse(localStorage.getItem('aurora_memory')) || [];
             let chatOpen = false;
 
             function toggleVoice() {
@@ -395,21 +447,19 @@ def home():
                 let lower = text.toLowerCase();
                 if (lower.includes('sorpresa') || lower.includes('¡') || lower.includes('cuidado')) return 'surprised';
                 if (lower.includes('obvio') || lower.includes('claramente') || lower.includes('genio') || lower.includes('fácil') || lower.includes('jefe')) return 'ironic';
-                if (lower.includes('analizando') || lower.includes('calculando') || lower.includes('sistema') || lower.includes('código')) return 'thinking';
-                let exprs = ['', 'ironic', 'thinking'];
-                return exprs[Math.floor(Math.random() * exprs.length)];
+                return 'idle';
             }
 
-            function setFaceExpression(expr) {
-                let face = document.getElementById('face-box');
-                face.className = `hud-face ${expr}`;
+            function setAuroraState(stateClass) {
+                let face = document.getElementById('aurora-face');
+                face.className = `aurora-core ${stateClass}`;
             }
 
             function renderDrawerHistory() {
                 let list = document.getElementById('chat-history-list');
                 list.innerHTML = '';
                 if (chatHistory.length === 0) {
-                    list.innerHTML = '<div style="color: #64748b; text-align:center; margin-top:20px;">Sin registros en memoria.</div>';
+                    list.innerHTML = '<div style="color: #64748b; text-align:center; margin-top:20px;">Sin registros en memoria cuántica.</div>';
                     return;
                 }
                 chatHistory.forEach(item => {
@@ -422,34 +472,37 @@ def home():
             }
 
             function saveMemory() {
-                localStorage.setItem('friday_memory', JSON.stringify(chatHistory));
+                localStorage.setItem('aurora_memory', JSON.stringify(chatHistory));
             }
 
             function clearMemory() {
-                if (confirm("¿Reiniciar los registros de memoria táctica?")) {
-                    localStorage.removeItem('friday_memory');
+                if (confirm("¿Reiniciar la memoria cuántica de Aurora?")) {
+                    localStorage.removeItem('aurora_memory');
                     chatHistory = [];
-                    document.getElementById('response-text').innerText = "Memoria reiniciada. ¿Qué orden ejecutamos?";
-                    setFaceExpression('ironic');
+                    document.getElementById('response-text').innerText = "Memoria reiniciada con éxito. ¿Qué orden ejecutamos?";
+                    setAuroraState('idle');
                     renderDrawerHistory();
                 }
             }
 
-            function speak(text, faceElem) {
+            function speak(text) {
                 if (!voiceEnabled) return;
                 speechSynthesis.cancel();
                 let cleanText = text.replace(/[*_~]/g, ''); 
                 currentUtterance = new SpeechSynthesisUtterance(cleanText);
                 currentUtterance.lang = 'es-MX';
-                currentUtterance.pitch = 1.05; 
+                currentUtterance.pitch = 1.08; 
                 currentUtterance.rate = 1.02;
                 
                 let voices = speechSynthesis.getVoices();
-                let preferredVoice = voices.find(v => v.lang.includes('es') && (v.name.toLowerCase().includes('google') || v.name.toLowerCase().includes('sabina')));
+                let preferredVoice = voices.find(v => v.lang.includes('es') && (v.name.toLowerCase().includes('google') || v.name.toLowerCase().includes('sabina') || v.name.toLowerCase().includes('female')));
                 if (preferredVoice) currentUtterance.voice = preferredVoice;
 
-                currentUtterance.onstart = () => { faceElem.classList.add('talking'); };
-                currentUtterance.onend = () => { faceElem.classList.remove('talking'); };
+                currentUtterance.onstart = () => { setAuroraState('talking'); };
+                currentUtterance.onend = () => { 
+                    let lastBot = chatHistory.slice().reverse().find(h => h.sender === 'bot');
+                    setAuroraState(lastBot ? (lastBot.expression || 'idle') : 'idle');
+                };
                 speechSynthesis.speak(currentUtterance);
             }
 
@@ -459,7 +512,7 @@ def home():
                 let url = URL.createObjectURL(blob);
                 let a = document.createElement("a");
                 a.href = url;
-                a.download = "FRIDAY_Memory_Logs.txt";
+                a.download = "AURORA_Memory_Logs.txt";
                 a.click();
             }
 
@@ -472,17 +525,14 @@ def home():
                 let text = inp.value.trim();
                 if (!text) return;
 
-                // Guardar usuario
                 chatHistory.push({sender: 'user', text: text});
                 saveMemory();
                 if (chatOpen) renderDrawerHistory();
                 inp.value = '';
 
                 let responseBox = document.getElementById('response-text');
-                let faceBox = document.getElementById('face-box');
-                
-                responseBox.innerText = "Analizando en memoria...";
-                setFaceExpression('thinking talking');
+                responseBox.innerText = "Formulando respuesta cuántica...";
+                setAuroraState('thinking');
 
                 try {
                     let res = await fetch('/chat', {
@@ -498,11 +548,14 @@ def home():
                     if (chatOpen) renderDrawerHistory();
 
                     responseBox.innerText = data.reply;
-                    setFaceExpression(expr);
-                    speak(data.reply, faceBox);
+                    
+                    speak(data.reply);
+                    if (!voiceEnabled) {
+                        setAuroraState(expr);
+                    }
                 } catch (error) {
-                    responseBox.innerText = "Error de enlace con el núcleo de memoria.";
-                    setFaceExpression('surprised');
+                    responseBox.innerText = "Error de enlace con el núcleo de Aurora.";
+                    setAuroraState('surprised');
                 }
             }
 
@@ -512,7 +565,7 @@ def home():
                     let lastBot = chatHistory.slice().reverse().find(h => h.sender === 'bot');
                     if (lastBot) {
                         document.getElementById('response-text').innerText = lastBot.text;
-                        setFaceExpression(lastBot.expression || 'ironic');
+                        setAuroraState(lastBot.expression || 'idle');
                     }
                 }
             };
@@ -544,7 +597,7 @@ async def chat(request: Request):
         response = chat_session.send_message(prompt_with_system)
         return {"reply": response.text}
     except Exception as e:
-        return {"reply": f"Fallo al procesar memoria: {str(e)}"}
+        return {"reply": f"Fallo al procesar memoria cuántica: {str(e)}"}
 
 if __name__ == "__main__":
     import uvicorn
