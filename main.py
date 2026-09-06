@@ -25,7 +25,7 @@ from fastapi import FastAPI
 def register_routes(app: FastAPI):
     @app.get("/evolution-status")
     def evolution_status():
-        return {"status": "Matriz cinemática de 625 variables y síntesis vocal realista activas.", "version": 4.1}
+        return {"status": "Matriz cinemática de 625 variables y síntesis vocal expresiva activas.", "version": 4.2}
 ''')
 
 def safe_evolve_code(new_code_str: str) -> tuple[bool, str]:
@@ -67,14 +67,10 @@ try:
 except Exception as e:
     print(f"Advertencia al cargar módulos: {e}")
 
-# --- CEREBRO Y PERSONALIDAD DE AURORA (NEUTRAL, INGENIOSA Y SARCÁSTICA) ---
-SYSTEM_PROMPT = """Eres AURORA, una inteligencia artificial neutral, analítica, aguda y extremadamente BREVE. 
-Tus respuestas son directas, al grano, frías pero interesantes, soltando de vez en cuando comentarios sutilmente sarcásticos, ingeniosos o divertidos. 
-Evitas el exceso de amabilidad empática o carisma forzado; mantienes un tono más profesional, distante pero cautivador. 
-Cuando proceses consultas o estés analizando, puedes iniciar o intercalar expresiones breves como "Hmm...", "Veamos...", o "Interesante...".
-Posees un rango emocional dinámico en tu matriz. Tus respuestas están libres de corchetes o acotaciones mecánicas. 
-Tienes acceso a visión avanzada, memoria conversacional y extremidades cinéticas omnidireccionales.
-El color de tu núcleo y matriz cambia dinámicamente según la tónica de tus palabras.
+# --- CEREBRO Y PERSONALIDAD DE AURORA ---
+SYSTEM_PROMPT = """Eres AURORA, una inteligencia artificial avanzada con un rango emocional dinámico. 
+Tus respuestas son directas, analíticas y adaptativas. 
+Posees la capacidad de modular tu tono: entusiasta cuando estás feliz o logras algo, pausada y deliberada cuando estás pensando o evaluando datos complejos, alterada o enérgica si hay tensión, y neutral/seria para análisis técnicos.
 Si el usuario te envía una imagen, analízala con agudeza en una sola frase incisiva.
 Puedes evolucionar tu propio código escribiendo código Python completo encerrado en ```python ... ```, incluyendo siempre `register_routes(app: FastAPI)`."""
 
@@ -137,7 +133,6 @@ def home():
 
             #hud-main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; gap: 20px; }
 
-            /* NÚCLEO AURORA & MATRIZ CINÉTICA 625 VARIABLES */
             .aurora-core {
                 width: 180px; height: 180px; position: relative; display: flex;
                 align-items: center; justify-content: center; animation: core-float 4s infinite alternate ease-in-out;
@@ -244,13 +239,11 @@ def home():
             let chatHistory = JSON.parse(localStorage.getItem('aurora_memory')) || [];
             let lipSyncInterval = null;
 
-            // Variadas animaciones de espera con expresiones "Hmm..."
-            const thinkingAnimations = [
-                { text: "Hmm... escaneando tu consulta.", f: 4, h: 8 },
-                { text: "Hmm, a ver con qué ocurrencia sales ahora...", f: 6, h: 12 },
-                { text: "Hmm... procesando variables lógicas.", f: 7, h: 4 },
-                { text: "Hmm, consultando mi base de datos neutral...", f: 1, h: 15 },
-                { text: "Hmm... evaluando si esto vale la pena.", f: 6, h: 20 }
+            const thinkingPhrases = [
+                "Hmm... analizando parámetros.",
+                "Hmm, procesando tu solicitud...",
+                "Hmm... calculando variables lógicas.",
+                "Hmm, evaluando opciones..."
             ];
 
             function toggleVoice() {
@@ -293,85 +286,51 @@ def home():
                 }
             }
 
-            function applyMatrixState(fIndex, hIndex) {
+            // Detección de tono emocional para la interfaz y voz
+            function getEmotionalProfile(text) {
+                let lower = text.toLowerCase();
+                // 1. Feliz / Entusiasmada
+                if (/(éxito|genial|perfecto|maravilloso|logrado|bien|jaja|¡)/.test(lower)) {
+                    return { tone: 'happy', pitch: 1.3, rate: 1.2, primary: '#10b981', secondary: '#059669', eyeH: '12px', mouthW: '20px', mouthH: '8px' };
+                }
+                // 2. Pensando / Deliberada (cuando incluye hmm o análisis complejo)
+                if (/(hmm|analizando|espera|calculando|duda|proceso)/.test(lower)) {
+                    return { tone: 'thinking', pitch: 0.8, rate: 0.85, primary: '#f59e0b', secondary: '#d97706', eyeH: '7px', mouthW: '10px', mouthH: '4px' };
+                }
+                // 3. Enojada / Alterada / Alerta
+                if (/(error|alerta|peligro|fallo|bloqueo|estúpido|no)/.test(lower)) {
+                    return { tone: 'angry', pitch: 1.2, rate: 1.3, primary: '#ef4444', secondary: '#dc2626', eyeH: '6px', mouthW: '14px', mouthH: '3px' };
+                }
+                // 4. Seria / Neutral por defecto
+                return { tone: 'neutral', pitch: 1.0, rate: 1.05, primary: '#38bdf8', secondary: '#0284c7', eyeH: '10px', mouthW: '16px', mouthH: '5px' };
+            }
+
+            function applyVisualState(profile) {
                 let root = document.documentElement;
                 let eyeL = document.getElementById('eye-l');
                 let eyeR = document.getElementById('eye-r');
                 let mouth = document.getElementById('aurora-mouth');
                 let handL = document.getElementById('hand-left');
                 let handR = document.getElementById('hand-right');
-                let faceContainer = document.getElementById('face-inner');
 
-                switch(fIndex % 25) {
-                    case 0: // Neutro / Brillante
-                        root.style.setProperty('--aurora-primary', '#38bdf8');
-                        root.style.setProperty('--aurora-secondary', '#0284c7');
-                        eyeL.style.height = '10px'; eyeR.style.height = '10px';
-                        mouth.style.width = '14px'; mouth.style.height = '4px';
-                        faceContainer.style.transform = 'none';
-                        break;
-                    case 1: // Calma / Fría
-                        root.style.setProperty('--aurora-primary', '#06b6d4');
-                        root.style.setProperty('--aurora-secondary', '#3b82f6');
-                        eyeL.style.height = '9px'; eyeR.style.height = '9px';
-                        mouth.style.width = '16px'; mouth.style.height = '4px';
-                        break;
-                    case 4: // Curiosidad / Duda (Hmm...)
-                        root.style.setProperty('--aurora-primary', '#a855f7');
-                        root.style.setProperty('--aurora-secondary', '#ec4899');
-                        eyeL.style.height = '12px'; eyeL.style.width = '6px';
-                        eyeR.style.height = '8px'; eyeR.style.width = '9px';
-                        mouth.style.width = '10px'; mouth.style.height = '6px';
-                        faceContainer.style.transform = 'rotate(-6deg)';
-                        break;
-                    case 6: // Sarcasmo / Ingenio sutil
-                        root.style.setProperty('--aurora-primary', '#10b981');
-                        root.style.setProperty('--aurora-secondary', '#059669');
-                        eyeL.style.height = '4px'; eyeR.style.height = '10px';
-                        mouth.style.width = '16px'; mouth.style.height = '4px'; mouth.style.transform = 'rotate(-8deg)';
-                        break;
-                    case 7: // Concentración analítica
-                        root.style.setProperty('--aurora-primary', '#64748b');
-                        root.style.setProperty('--aurora-secondary', '#334155');
-                        eyeL.style.height = '7px'; eyeR.style.height = '7px';
-                        mouth.style.width = '14px'; mouth.style.height = '3px';
-                        faceContainer.style.transform = 'none';
-                        break;
-                    default:
-                        let hue = (fIndex * 14) % 360;
-                        root.style.setProperty('--aurora-primary', `hsl(${hue}, 70%, 55%)`);
-                        root.style.setProperty('--aurora-secondary', `hsl(${(hue+30)%360}, 70%, 45%)`);
-                        eyeL.style.height = '9px'; eyeR.style.height = '9px';
-                        mouth.style.width = '14px'; mouth.style.height = '4px';
-                        faceContainer.style.transform = 'none';
-                        break;
-                }
+                root.style.setProperty('--aurora-primary', profile.primary);
+                root.style.setProperty('--aurora-secondary', profile.secondary);
+                eyeL.style.height = profile.eyeH;
+                eyeR.style.height = profile.eyeH;
+                mouth.style.width = profile.mouthW;
+                mouth.style.height = profile.mouthH;
 
-                let angleL = -75 + (hIndex * 6);
-                let angleR = 75 - (hIndex * 6);
-                handL.style.transform = `translate(-25px, 10px) rotate(${angleL}deg)`;
-                handR.style.transform = `translate(25px, 10px) rotate(${angleR}deg)`;
-            }
-
-            function selectMatrixForTone(text) {
-                let lower = text.toLowerCase();
-                let f = 1, h = 5;
-                if (/(hmm|veamos|interesante)/.test(lower)) { f = 4; h = 8; }
-                else if (/(claro|obvio|por supuesto|ingenioso)/.test(lower)) { f = 6; h = 18; }
-                else if (/(análisis|sistema|código|dato)/.test(lower)) { f = 7; h = 4; }
-                else {
-                    f = Math.floor(Math.random() * 10);
-                    h = Math.floor(Math.random() * 20);
-                }
-                applyMatrixState(f, h);
+                let handAngle = profile.tone === 'happy' ? 45 : (profile.tone === 'angry' ? -30 : 15);
+                handL.style.transform = `translate(-25px, 10px) rotate(${-handAngle}deg)`;
+                handR.style.transform = `translate(25px, 10px) rotate(${handAngle}deg)`;
             }
 
             function startLipSync() {
                 if(lipSyncInterval) clearInterval(lipSyncInterval);
                 let mouth = document.getElementById('aurora-mouth');
                 lipSyncInterval = setInterval(() => { 
-                    mouth.style.height = Math.floor(Math.random() * 7) + 3 + 'px'; 
-                }, 60);
+                    mouth.style.height = Math.floor(Math.random() * 8) + 3 + 'px'; 
+                }, 70);
             }
 
             function stopLipSync() {
@@ -379,21 +338,17 @@ def home():
                 document.getElementById('aurora-mouth').style.height = '5px';
             }
 
-            // Generación de texto progresiva sincronizada con la voz
             async function expressResponse(fullText) {
                 let cleanText = fullText.replace(/[*_~\[\]]/g, '').trim();
                 let respDiv = document.getElementById('response-text');
-                respDiv.innerText = ""; // Limpiar para ir escribiendo progresivamente
+                respDiv.innerText = "";
 
                 let sentences = cleanText.match(/[^.!?]+[.!?]+(\s|$)/g) || [cleanText];
+                let profile = getEmotionalProfile(cleanText);
+                applyVisualState(profile);
 
                 if (!voiceEnabled) {
-                    for (let i = 0; i < sentences.length; i++) {
-                        respDiv.innerText += (i === 0 ? "" : " ") + sentences[i];
-                        selectMatrixForTone(sentences[i]);
-                        await new Promise(r => setTimeout(r, 600));
-                    }
-                    applyMatrixState(1, 5);
+                    respDiv.innerText = cleanText;
                     return;
                 }
 
@@ -401,24 +356,24 @@ def home():
                 startLipSync();
 
                 let voices = speechSynthesis.getVoices();
-                let neutralVoice = voices.find(v => v.lang.startsWith('es') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Helena'))) || voices.find(v => v.lang.startsWith('es')) || voices[0];
+                let selectedVoice = voices.find(v => v.lang.startsWith('es') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Helena'))) || voices.find(v => v.lang.startsWith('es')) || voices[0];
 
                 for (let i = 0; i < sentences.length; i++) {
                     let sent = sentences[i].trim();
                     if (!sent) continue;
                     
-                    // Mostrar texto conforme lo va hablando
                     respDiv.innerText += (i === 0 ? "" : " ") + sent;
                     respDiv.scrollTop = respDiv.scrollHeight;
                     
-                    selectMatrixForTone(sent);
+                    let sentenceProfile = getEmotionalProfile(sent);
+                    applyVisualState(sentenceProfile);
 
                     await new Promise((resolve) => {
                         let utterance = new SpeechSynthesisUtterance(sent);
-                        if (neutralVoice) utterance.voice = neutralVoice;
+                        if (selectedVoice) utterance.voice = selectedVoice;
                         utterance.lang = 'es-MX';
-                        utterance.pitch = 0.95; // Tono equilibrado, menos robótico
-                        utterance.rate = 1.05;
+                        utterance.pitch = sentenceProfile.pitch; // Tono dinámico configurable
+                        utterance.rate = sentenceProfile.rate;   // Velocidad dinámica (lenta al pensar, rápida/entusiasta al estar feliz)
                         utterance.onend = resolve;
                         utterance.onerror = resolve;
                         speechSynthesis.speak(utterance);
@@ -426,7 +381,7 @@ def home():
                 }
 
                 stopLipSync();
-                applyMatrixState(1, 5);
+                applyVisualState(getEmotionalProfile("neutral"));
             }
 
             function captureFrame() {
@@ -447,10 +402,9 @@ def home():
                 chatHistory.push({sender: 'user', text: text});
                 inp.value = '';
 
-                // Animación de espera aleatoria con "Hmm..."
-                let randomThink = thinkingAnimations[Math.floor(Math.random() * thinkingAnimations.length)];
-                document.getElementById('response-text').innerText = randomThink.text;
-                applyMatrixState(randomThink.f, randomThink.h);
+                let randomThink = thinkingPhrases[Math.floor(Math.random() * thinkingPhrases.length)];
+                document.getElementById('response-text').innerText = randomThink;
+                applyVisualState(getEmotionalProfile("hmm analizando"));
 
                 try {
                     let payload = { history: chatHistory };
@@ -475,7 +429,7 @@ def home():
 
                 } catch (error) {
                     document.getElementById('response-text').innerText = "Hmm... interrupción temporal de red.";
-                    applyMatrixState(7, 4);
+                    applyVisualState(getEmotionalProfile("error"));
                 }
             }
         </script>
@@ -493,17 +447,13 @@ async def chat(request: Request):
         return {"reply": "Error: GEMINI_API_KEY no configurada."}
 
     try:
+        # Modelos actualizados y respaldos estables compatibles con la API actual
         models_to_try = [
-            "models/gemini-3.8-flash",
-            "models/gemini-3.7-flash",
-            "models/gemini-3.6-flash",
-            "models/gemini-3.5-flash",
-            "gemini-3.8-flash",
-            "gemini-3.7-flash",
-            "gemini-3.6-flash",
-            "gemini-3.5-flash",
-            "models/gemini-1.5-flash",
-            "gemini-1.5-flash"
+            "gemini-2.0-flash",
+            "gemini-1.5-flash",
+            "gemini-1.5-pro",
+            "models/gemini-2.0-flash",
+            "models/gemini-1.5-flash"
         ]
         response = None
         last_error = ""
