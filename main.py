@@ -570,17 +570,14 @@ async def chat(request: Request):
         return {"reply": "Error: GEMINI_API_KEY no detectada."}
 
     try:
+        # Modelos válidos corregidos para evitar errores 401 / Auth
         models_to_try = [
-            "models/gemini-3.8-flash",
-            "models/gemini-3.7-flash",
-            "models/gemini-3.6-flash",
-            "models/gemini-3.5-flash",
-            "gemini-3.8-flash",
-            "gemini-3.7-flash",
-            "gemini-3.6-flash",
-            "gemini-3.5-flash",
+            "gemini-2.0-flash",
+            "models/gemini-2.0-flash",
+            "gemini-1.5-flash",
             "models/gemini-1.5-flash",
-            "gemini-1.5-flash"
+            "gemini-1.5-pro",
+            "models/gemini-1.5-pro"
         ]
         
         current_prompt = SYSTEM_PROMPT
@@ -649,7 +646,6 @@ async def chat(request: Request):
                 
         final_reply = reply_text + evolution_flag
         
-        # Guardar historial actualizado incluyendo la respuesta del bot en el servidor
         full_updated_history = history + [{"sender": "bot", "text": final_reply.strip()}]
         save_server_history(full_updated_history)
         
